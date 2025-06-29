@@ -337,11 +337,12 @@
         "item_NJbjKF": {
           "type": "item",
           "settings": {
+            "image": "shopify://shop_images/Group_32.png",
             "image_rotation_degrees": 0,
             "subheading": "★★★★★",
             "title": "Rebecca R",
             "content": "<p>Je suis vraiment impressionnée : la configuration était simple et très intuitive. J’avais quelques doutes avant de commander, mais c’est excellent – et même <strong>plus rapide qu’un AirTag</strong>, que j’utilisais avant.</p>",
-            "button_url": "",
+            "button_url": "shopify://products/google-review-plate",
             "button_text": ""
           }
         }
@@ -391,6 +392,7 @@
         },
         "liquid_dVVAbH": {
           "type": "liquid",
+          "disabled": true,
           "settings": {
             "liquid": "<img src=\"https://cdn.shopify.com/s/files/1/0961/7018/0957/files/1_ACHETE_1_OFFERT_430x.gif?v=1750975940&amp;width=750\" alt=\"\" srcset=\"https://cdn.shopify.com/s/files/1/0961/7018/0957/files/1_ACHETE_1_OFFERT_430x.gif?v=1750975940&amp;width=500 500w, https://cdn.shopify.com/s/files/1/0961/7018/0957/files/1_ACHETE_1_OFFERT_430x.gif?v=1750975940&amp;width=750 750w\" width=\"750\" height=\"251\" loading=\"lazy\" style=\"width: 500px; \" sizes=\"500px\">"
           }
@@ -424,7 +426,7 @@
         "buy_buttons_CJEpyr": {
           "type": "buy_buttons",
           "settings": {
-            "show_payment_button": true,
+            "show_payment_button": false,
             "show_gift_card_recipient": true,
             "atc_button_background": "",
             "atc_button_text_color": "",
@@ -504,7 +506,7 @@
       "name": "Featured product",
       "settings": {
         "full_width": false,
-        "product": "mytrackerr-card",
+        "product": "google-review-plate",
         "desktop_media_width": 50,
         "desktop_media_layout": "carousel_thumbnails_bottom",
         "mobile_media_size": "contained",
@@ -513,8 +515,8 @@
         "enable_video_looping": false,
         "enable_image_zoom": true,
         "max_image_zoom_level": 2,
-        "background": "",
-        "background_gradient": "",
+        "background": "#ffffff",
+        "background_gradient": "linear-gradient(127deg, rgba(255, 255, 255, 1) 11%, rgba(255, 255, 255, 1) 81%)",
         "text_color": "",
         "input_background": "rgba(0,0,0,0)",
         "input_text_color": ""
