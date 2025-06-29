@@ -72,6 +72,22 @@
         "background_gradient": "linear-gradient(60deg, rgba(60, 65, 68, 1), rgba(23, 29, 33, 1) 98%)"
       }
     },
+    "scrolling_text_inFLU7": {
+      "type": "scrolling-text",
+      "name": "Scrolling text",
+      "settings": {
+        "full_width": true,
+        "text": "Promotion text",
+        "text_size": "medium",
+        "text_style": "fill",
+        "scrolling_mode": "auto",
+        "scrolling_speed": 10,
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "text_gradient": "linear-gradient(270deg, rgba(204, 155, 199, 1), rgba(255, 198, 249, 1) 100%)"
+      }
+    },
     "logo_list_AEtWMc": {
       "type": "logo-list",
       "blocks": {
@@ -673,6 +689,7 @@
   },
   "order": [
     "slideshow",
+    "scrolling_text_inFLU7",
     "logo_list_AEtWMc",
     "image_with_text_overlay_cbNJpF",
     "image_with_text_overlay_rh8xqp",
