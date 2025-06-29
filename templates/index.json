@@ -82,7 +82,7 @@
         "text_style": "fill",
         "scrolling_mode": "auto",
         "scrolling_speed": 10,
-        "background": "",
+        "background": "#ffffff",
         "background_gradient": "",
         "text_color": "",
         "text_gradient": "linear-gradient(270deg, rgba(204, 155, 199, 1), rgba(255, 198, 249, 1) 100%)"
@@ -94,28 +94,32 @@
         "logo_cwBGfw": {
           "type": "logo",
           "settings": {
-            "logo_width": 120,
+            "logo": "shopify://shop_images/veezodark.png",
+            "logo_width": 300,
             "link": ""
           }
         },
         "logo_wadxwd": {
           "type": "logo",
           "settings": {
-            "logo_width": 120,
+            "logo": "shopify://shop_images/Logo_M6__2020__fond_clair__svg.png",
+            "logo_width": 300,
             "link": ""
           }
         },
         "logo_iVHWP6": {
           "type": "logo",
           "settings": {
-            "logo_width": 120,
+            "logo": "shopify://shop_images/Le_Monde.svg_-1.png",
+            "logo_width": 300,
             "link": ""
           }
         },
         "logo_GBTkEe": {
           "type": "logo",
           "settings": {
-            "logo_width": 140,
+            "logo": "shopify://shop_images/Capture_d_ecran_2025-05-31_a_00.12.07.png",
+            "logo_width": 300,
             "link": ""
           }
         }
@@ -130,11 +134,11 @@
       "settings": {
         "full_width": true,
         "stack_mobile": true,
-        "title": "Vu sur",
+        "title": "Ils nous font confiance",
         "content": "",
         "text_alignment": "center",
         "items_per_row": 4,
-        "background": "#000000",
+        "background": "#cc9bc7",
         "background_gradient": "",
         "text_color": "#f2f2f2",
         "heading_color": "",
