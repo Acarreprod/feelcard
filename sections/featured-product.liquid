@@ -111,20 +111,23 @@
 
                   {%- liquid
                     assign quantity_rules = ''
+    
                     if variant.quantity_rule.min > 1
                       assign rule = 'product.quantity.minimum_of' | t: min: variant.quantity_rule.min
                       assign quantity_rules = quantity_rules | append: ' / ' | append: rule
                     endif
+    
                     if variant.quantity_rule.max != nil
                       assign rule = 'product.quantity.maximum_of' | t: max: variant.quantity_rule.max
                       assign quantity_rules = quantity_rules | append: ' / ' | append: rule
                     endif
+    
                     if variant.quantity_rule.increment > 1
                       assign rule = 'product.quantity.increment_of' | t: step: variant.quantity_rule.increment
                       assign quantity_rules = quantity_rules | append: ' / ' | append: rule
                     endif
                   -%}
-
+    
                   {%- if quantity_rules != blank -%}
                     <p class="text-subdued text-sm">{{ quantity_rules | remove_first: ' / ' | capitalize }}</p>
                   {%- endif -%}
@@ -144,7 +147,6 @@
     </div>
   </product-rerender>
 </div>
-
 
 {% schema %}
 {
