@@ -1,0 +1,690 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "slideshow": {
+      "type": "slideshow",
+      "blocks": {
+        "image_r7X3rF": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/portrait-of-illuminated-laptop.jpg",
+            "content_max_width": 740,
+            "mobile_text_position": "place-self-center text-center",
+            "desktop_text_position": "sm:place-self-center sm:text-center",
+            "subheading": "Tell your story",
+            "title": "Slide title",
+            "heading_tag": "h0",
+            "button_text": "",
+            "button_link": "",
+            "text_color": "#ffffff",
+            "button_background": "#ffffff",
+            "button_text_color": "#000000",
+            "overlay_color": "#000000",
+            "overlay_opacity": 30,
+            "background": "",
+            "background_gradient": "linear-gradient(127deg, rgba(255, 206, 251, 1) 11%, rgba(204, 155, 199, 1) 80%)"
+          }
+        },
+        "image_WxVzwJ": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/iphone-6-7-phone-cases.jpg",
+            "content_max_width": 780,
+            "mobile_text_position": "place-self-center text-center",
+            "desktop_text_position": "sm:place-self-center sm:text-center",
+            "subheading": "Tell your story",
+            "title": "Slide title",
+            "heading_tag": "h0",
+            "button_text": "",
+            "button_link": "",
+            "text_color": "#ffffff",
+            "button_background": "#ffffff",
+            "button_text_color": "#000000",
+            "overlay_color": "#000000",
+            "overlay_opacity": 30,
+            "background": "",
+            "background_gradient": "radial-gradient(rgba(204, 155, 199, 1), rgba(215, 204, 250, 1) 100%, rgba(247, 197, 204, 1) 100%)"
+          }
+        }
+      },
+      "block_order": [
+        "image_r7X3rF",
+        "image_WxVzwJ"
+      ],
+      "settings": {
+        "full_width": false,
+        "allow_transparent_header": false,
+        "show_initial_transition": false,
+        "image_size": "lg",
+        "controls_type": "numbers",
+        "transition_type": "fade_with_text",
+        "autoplay": true,
+        "cycle_speed": 6,
+        "background": "#f2f2f2",
+        "background_gradient": "linear-gradient(60deg, rgba(60, 65, 68, 1), rgba(23, 29, 33, 1) 98%)"
+      }
+    },
+    "logo_list_AEtWMc": {
+      "type": "logo-list",
+      "blocks": {
+        "logo_cwBGfw": {
+          "type": "logo",
+          "settings": {
+            "logo_width": 120,
+            "link": ""
+          }
+        },
+        "logo_wadxwd": {
+          "type": "logo",
+          "settings": {
+            "logo_width": 120,
+            "link": ""
+          }
+        },
+        "logo_iVHWP6": {
+          "type": "logo",
+          "settings": {
+            "logo_width": 120,
+            "link": ""
+          }
+        },
+        "logo_GBTkEe": {
+          "type": "logo",
+          "settings": {
+            "logo_width": 140,
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "logo_cwBGfw",
+        "logo_wadxwd",
+        "logo_iVHWP6",
+        "logo_GBTkEe"
+      ],
+      "name": "Logo list",
+      "settings": {
+        "full_width": true,
+        "stack_mobile": true,
+        "title": "Vu sur",
+        "content": "",
+        "text_alignment": "center",
+        "items_per_row": 4,
+        "background": "#000000",
+        "background_gradient": "",
+        "text_color": "#f2f2f2",
+        "heading_color": "",
+        "heading_gradient": "",
+        "logo_item_background": "",
+        "logo_item_border": ""
+      }
+    },
+    "image_with_text_overlay_cbNJpF": {
+      "type": "image-with-text-overlay",
+      "disabled": true,
+      "name": "Image with text overlay",
+      "settings": {
+        "full_width": true,
+        "allow_transparent_header": false,
+        "enable_parallax": false,
+        "image_size": "auto",
+        "image": "shopify://shop_images/woman-in-fur-under-neon.jpg",
+        "mobile_text_position": "place-self-center text-center",
+        "desktop_text_position": "sm:place-self-center sm:text-center",
+        "text_color": "#ffffff",
+        "overlay_color": "#000000",
+        "overlay_opacity": 0
+      }
+    },
+    "image_with_text_overlay_rh8xqp": {
+      "type": "image-with-text-overlay",
+      "disabled": true,
+      "name": "Image with text overlay",
+      "settings": {
+        "full_width": true,
+        "allow_transparent_header": false,
+        "enable_parallax": false,
+        "image_size": "auto",
+        "image": "shopify://shop_images/woman-infront-of-tree-with-berries.jpeg",
+        "mobile_text_position": "place-self-center text-center",
+        "desktop_text_position": "sm:place-self-center sm:text-center",
+        "text_color": "#ffffff",
+        "overlay_color": "#000000",
+        "overlay_opacity": 30
+      }
+    },
+    "impact-text": {
+      "type": "impact-text",
+      "blocks": {
+        "1664424181b38582d5-0": {
+          "type": "item",
+          "settings": {
+            "title": "100%",
+            "subheading": "Fiable et sécurisé, aucune collecte de données",
+            "content": "",
+            "button_text": "",
+            "button_url": "",
+            "animate_impact_text": false,
+            "animate_impact_text_duration": 2
+          }
+        }
+      },
+      "block_order": [
+        "1664424181b38582d5-0"
+      ],
+      "disabled": true,
+      "settings": {
+        "full_width": true,
+        "stack_mobile": true,
+        "text_alignment": "center",
+        "impact_text_style": "fill",
+        "text_divider": "none",
+        "impact_text_size_ratio": 1,
+        "background": "",
+        "background_gradient": "",
+        "heading_text_color": "",
+        "heading_gradient": "linear-gradient(180deg, rgba(26, 26, 26, 0.2), rgba(26, 26, 26, 0) 100%)",
+        "text_color": "",
+        "button_background": "",
+        "button_text_color": ""
+      }
+    },
+    "custom_html_NxaKET": {
+      "type": "custom-html",
+      "name": "Custom HTML",
+      "settings": {
+        "full_width": true,
+        "remove_vertical_spacing": false,
+        "remove_horizontal_spacing": false,
+        "html": "",
+        "background": "",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "image_with_text_overlay_6rndAF": {
+      "type": "image-with-text-overlay",
+      "disabled": true,
+      "name": "Image with text overlay",
+      "settings": {
+        "full_width": true,
+        "allow_transparent_header": false,
+        "enable_parallax": false,
+        "image_size": "auto",
+        "image": "shopify://shop_images/hand-holds-up-a-two-scoop-ice-cream-cone.jpg",
+        "mobile_text_position": "place-self-center text-center",
+        "desktop_text_position": "sm:place-self-center sm:text-center",
+        "text_color": "#ffffff",
+        "overlay_color": "#000000",
+        "overlay_opacity": 0
+      }
+    },
+    "multi_column_PaeCEz": {
+      "type": "multi-column",
+      "blocks": {
+        "item_AFgm7j": {
+          "type": "item",
+          "settings": {
+            "column_size": "3",
+            "title": "1. Connectez- la à Apple Find MY",
+            "heading_tag": "h4",
+            "content": "<p>Approchez-la simplement de votre iPhone et appuyez une fois. <br/>C'est tout. <strong>Pas d'application à installer, pas de prise de tête. </strong>Votre carte est prête en quelques secondes.</p>",
+            "link_url": "",
+            "link_text": "",
+            "link_style": "link"
+          }
+        },
+        "item_GxK6UU": {
+          "type": "item",
+          "settings": {
+            "column_size": "3",
+            "title": "2. Glissez-la en sécurité",
+            "heading_tag": "h4",
+            "content": "<p>Rangez-la dans votre portefeuille, sac ou passeport. <br/>Elle est <strong>ultra-fine, discrète</strong> et reste à sa place jusqu'à ce que vous en ayez besoin.</p>",
+            "link_url": "",
+            "link_text": "",
+            "link_style": "link"
+          }
+        },
+        "item_JKgM99": {
+          "type": "item",
+          "settings": {
+            "column_size": "3",
+            "title": "3. Suivez-la, faites la sonner, retrouvez-la",
+            "heading_tag": "h4",
+            "content": "<p>Utilisez l'app <strong>Localiser </strong>(Find My) pour connaître sa position.<br/>Si elle est à proximité, appusez sur <strong>Faire sonner</strong> pour l'entendre, même à travers un sac ou un coussin.</p>",
+            "link_url": "",
+            "link_text": "",
+            "link_style": "link"
+          }
+        }
+      },
+      "block_order": [
+        "item_AFgm7j",
+        "item_GxK6UU",
+        "item_JKgM99"
+      ],
+      "name": "Multi-column",
+      "settings": {
+        "full_width": true,
+        "stack_on_mobile": false,
+        "gap": "medium",
+        "text_alignment": "start",
+        "subheading": "",
+        "title": "Installation en moins de 45 secondes",
+        "content": "<p>La plupart de nos clients connectent et commencent à utiliser leur carte en moins d'une minute. Voici comment ça fonctionne :</p>",
+        "background": "",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    },
+    "multiple-images-with-text": {
+      "type": "multiple-images-with-text",
+      "blocks": {
+        "1664424486a2b084ab-0": {
+          "type": "item",
+          "settings": {
+            "image_rotation_degrees": -2,
+            "subheading": "★★★★★",
+            "title": "Tony M.",
+            "content": "<p>Après avoir « perdu » mon portefeuille (il était en fait sous le siège de la voiture),  j’ai commandé une carte myTRACKERR. Deux mois plus tard, elle m’a déjà évité une nouvelle chasse au portefeuille. Meilleur achat de ma vie !</p>",
+            "button_url": "",
+            "button_text": ""
+          }
+        },
+        "1664424486a2b084ab-1": {
+          "type": "item",
+          "settings": {
+            "image_rotation_degrees": 1.5,
+            "subheading": "★★★★★",
+            "title": "Martin K.",
+            "content": "<p>Fonctionne bien et n’est pas trop épais. Je ne le remarque même pas dans mon portefeuille, et l’alarme est plus forte que celle d’un AirTag.</p>",
+            "button_url": "",
+            "button_text": ""
+          }
+        },
+        "item_NJbjKF": {
+          "type": "item",
+          "settings": {
+            "image_rotation_degrees": 0,
+            "subheading": "★★★★★",
+            "title": "Rebecca R",
+            "content": "<p>Je suis vraiment impressionnée : la configuration était simple et très intuitive. J’avais quelques doutes avant de commander, mais c’est excellent – et même <strong>plus rapide qu’un AirTag</strong>, que j’utilisais avant.</p>",
+            "button_url": "",
+            "button_text": ""
+          }
+        }
+      },
+      "block_order": [
+        "1664424486a2b084ab-0",
+        "1664424486a2b084ab-1",
+        "item_NJbjKF"
+      ],
+      "custom_css": [],
+      "name": "avis image",
+      "settings": {
+        "full_width": true,
+        "images_layout": "scattered",
+        "collage_images_alignment": "middle",
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "button_background": "",
+        "button_text_color": ""
+      }
+    },
+    "featured_product_RFmzrc": {
+      "type": "featured-product",
+      "blocks": {
+        "liquid_LaHTzH": {
+          "type": "liquid",
+          "settings": {
+            "liquid": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Trustpilot Rating</title>\n    <style>\n        .container-trustpilot {\n            background-color: #e9f8fe;\n            border: 1px dashed #006400; /* Koyu yeşil border */\n            padding: 5px 5px;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            border-radius: 10px;\n        }\n        .container-trustpilot img {\n            margin: 0 10px;\n        }\n        .container-trustpilot .stars {\n            max-width: 80px; /* Increased size for the star image */\n        }\n        .container-trustpilot .logo {\n            max-width: 70px;\n        }\n        .container-trustpilot span {\n            margin: 0 5px;\n        }\n        .excellent {\n            color: #000;\n            font-size: 12px;\n        }\n        .rating-text {\n            color: #000;\n            font-size: 10px;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container-trustpilot\">\n        <span class=\"excellent\"><b>\"Tellement mieux qu'un Air Tag\"</b></span>\n        <img class=\"stars\" src=\"https://cdn.shopify.com/s/files/1/0647/2148/6072/files/4.5-stars-trustpilot_2157d8d9-101e-46a2-a3fe-ac80f2fecf10.png?v=1688082792\" alt=\"4.8/5 Rating\">\n        <span class=\"rating-text\">noté 4.8/5 sur</span>\n        <img class=\"logo\" src=\"https://cdn.shopify.com/s/files/1/0647/2148/6072/files/Trustpilot_Logo__2022_.svg_2.png?v=1687091440\" alt=\"Trustpilot Logo\">\n    </div>\n</body>\n</html>"
+          }
+        },
+        "title_fNaCkn": {
+          "type": "title",
+          "settings": {
+            "heading_tag": "h2"
+          }
+        },
+        "rating_PyGHjx": {
+          "type": "rating",
+          "settings": {
+            "show_empty": false
+          }
+        },
+        "separator_Cdr8Ua": {
+          "type": "separator",
+          "settings": {}
+        },
+        "liquid_dVVAbH": {
+          "type": "liquid",
+          "settings": {
+            "liquid": "<img src=\"https://cdn.shopify.com/s/files/1/0961/7018/0957/files/1_ACHETE_1_OFFERT_430x.gif?v=1750975940&amp;width=750\" alt=\"\" srcset=\"https://cdn.shopify.com/s/files/1/0961/7018/0957/files/1_ACHETE_1_OFFERT_430x.gif?v=1750975940&amp;width=500 500w, https://cdn.shopify.com/s/files/1/0961/7018/0957/files/1_ACHETE_1_OFFERT_430x.gif?v=1750975940&amp;width=750 750w\" width=\"750\" height=\"251\" loading=\"lazy\" style=\"width: 500px; \" sizes=\"500px\">"
+          }
+        },
+        "description_qdyztB": {
+          "type": "description",
+          "settings": {
+            "icon": "none",
+            "icon_width": 20,
+            "collapse_content": false
+          }
+        },
+        "text_fwPWy7": {
+          "type": "text",
+          "settings": {
+            "text": "<h5>🎁 <strong>La plupart de nos clients offrent une carte à un membre de leur famille </strong>🎁</h5>"
+          }
+        },
+        "text_hCEVyt": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Livraison sous 5 à 10 jours</p>"
+          }
+        },
+        "liquid_yFaPEA": {
+          "type": "liquid",
+          "settings": {
+            "liquid": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Rotating Warnings</title>\n<style>\n  body.unique-body-Xyz789 {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    height: 100vh;\n    margin: 0;\n    background-color: #fff;\n  }\n\n  .unique-warning-container-Abc123 {\n    position: relative;\n    width: 100%;\n    max-width: 600px; /* Genişliği maksimum yap */\n    height: 40px; /* Yüksekliği azalt */\n    overflow: hidden;\n  }\n\n  .unique-warning-Def456 {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    border-radius: 10px;\n    color: #333;\n    font-size: 13px;\n    padding: 10px;\n    border: 1px solid #E2E2E2;\n    box-sizing: border-box;\n    opacity: 0;\n    transition: opacity 0.5s ease-in-out; /* Animasyonun süresini ve şiddetini azalt */\n  }\n\n  .unique-warning-container-Abc123 .unique-warning-Def456:nth-child(1) {\n    animation: unique-showWarning-Ghi789 8s linear infinite 0s;\n  }\n\n  .unique-warning-container-Abc123 .unique-warning-Def456:nth-child(2) {\n    animation: unique-showWarning-Ghi789 8s linear infinite 4s;\n  }\n\n  @keyframes unique-showWarning-Ghi789 {\n    0%, 50% {\n      opacity: 1;\n    }\n    50.01%, 100% {\n      opacity: 0;\n    }\n  }\n\n  .unique-red-warning-Jkl012 {\n    background-color: #ffe6e6;\n  }\n\n  .unique-green-warning-Mno345 {\n    background-color: #f0fff0;\n  }\n\n  @keyframes unique-glowRed-Pqr678 {\n    0% { box-shadow: 0 0 3px 0 rgba(255, 0, 0, 0.7); }\n    50% { box-shadow: 0 0 8px 3px rgba(255, 0, 0, 0.5); }\n    100% { box-shadow: 0 0 3px 0 rgba(255, 0, 0, 0.7); }\n  }\n\n  .unique-circleRed-Stu901 {\n    width: 10px;\n    height: 10px;\n    border-radius: 50%;\n    background-color: #8b0000;\n    display: inline-block;\n    animation: unique-glowRed-Pqr678 1s infinite ease-in-out;\n  }\n\n  .unique-tickIcon-Vwx234 {\n    width: 14px;\n    height: 14px;\n    fill: #006400;\n    margin-right: 5px; /* Metni ikona yaklaştır */\n  }\n</style>\n</head>\n<body class=\"unique-body-Xyz789\">\n\n<div class=\"unique-warning-container-Abc123\">\n  <div class=\"unique-warning-Def456 unique-red-warning-Jkl012\">\n    <div class=\"unique-circleRed-Stu901\"></div>\n    <span style=\"margin-left: 10px;\">Dépêchez-vous ! Stock bientôt épuisé !</span>\n  </div>\n  <div class=\"unique-warning-Def456 unique-green-warning-Mno345\">\n    <svg class=\"unique-tickIcon-Vwx234\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n      <path d=\"M9 16.2l-4.2-4.2-1.4 1.4 5.6 5.6 12-12-1.4-1.4z\"/>\n    </svg>\n    <span>Garanti satisfait ou remboursé.</span>\n  </div>\n</div>\n\n</body>\n</html>"
+          }
+        },
+        "buy_buttons_CJEpyr": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_payment_button": true,
+            "show_gift_card_recipient": true,
+            "atc_button_background": "",
+            "atc_button_text_color": "",
+            "payment_button_background": "",
+            "payment_button_text_color": ""
+          }
+        },
+        "offer_4PekFp": {
+          "type": "offer",
+          "settings": {
+            "text_alignment": "start",
+            "icon_position": "aligned",
+            "icon": "picto-customer-support",
+            "icon_width": 20,
+            "title": "Service client 7j/7",
+            "content": "",
+            "background": "#eaf2ed",
+            "text_color": "#00a341"
+          }
+        },
+        "offer_MNj38X": {
+          "type": "offer",
+          "settings": {
+            "text_alignment": "start",
+            "icon_position": "aligned",
+            "icon": "picto-credit-card",
+            "icon_width": 20,
+            "title": "Paiement sécurisé",
+            "content": "",
+            "background": "#eaf2ed",
+            "text_color": "#00a341"
+          }
+        },
+        "offer_Re7HiP": {
+          "type": "offer",
+          "settings": {
+            "text_alignment": "start",
+            "icon_position": "aligned",
+            "icon": "picto-box",
+            "icon_width": 20,
+            "title": "Livraison gratuite",
+            "content": "",
+            "background": "#eaf2ed",
+            "text_color": "#00a341"
+          }
+        },
+        "offer_6iGVpc": {
+          "type": "offer",
+          "settings": {
+            "text_alignment": "start",
+            "icon_position": "aligned",
+            "icon": "picto-happy",
+            "icon_width": 20,
+            "title": "Satisfait ou remboursé",
+            "content": "",
+            "background": "#eaf2ed",
+            "text_color": "#00a341"
+          }
+        }
+      },
+      "block_order": [
+        "liquid_LaHTzH",
+        "title_fNaCkn",
+        "rating_PyGHjx",
+        "separator_Cdr8Ua",
+        "liquid_dVVAbH",
+        "description_qdyztB",
+        "text_fwPWy7",
+        "text_hCEVyt",
+        "liquid_yFaPEA",
+        "buy_buttons_CJEpyr",
+        "offer_4PekFp",
+        "offer_MNj38X",
+        "offer_Re7HiP",
+        "offer_6iGVpc"
+      ],
+      "name": "Featured product",
+      "settings": {
+        "full_width": false,
+        "product": "mytrackerr-card",
+        "desktop_media_width": 50,
+        "desktop_media_layout": "carousel_thumbnails_bottom",
+        "mobile_media_size": "contained",
+        "mobile_carousel_control": "floating_dots",
+        "enable_video_autoplay": true,
+        "enable_video_looping": false,
+        "enable_image_zoom": true,
+        "max_image_zoom_level": 2,
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "input_background": "rgba(0,0,0,0)",
+        "input_text_color": ""
+      }
+    },
+    "tabs_8g6iLH": {
+      "type": "tabs",
+      "blocks": {
+        "tab_jQVtGx": {
+          "type": "tab",
+          "settings": {
+            "title": "Caractéristiques",
+            "content": "<p><strong>1. Design ultra-fin</strong><br/><br/>La carte myTRACKERR mesure seulement <em>1,6 mm d’épaisseur </em>(l’équivalent de 2 cartes bancaires). Elle se glisse discrètement dans n’importe quel portefeuille.<br/><br/>Fixez-la à votre portefeuille, badge, valise, passeport ou appareil électronique – pour une vie plus simple au quotidien.</p><p><strong>2. Recharge sans fil</strong><br/><br/>Recharge facile grâce à la technologie sans fil.<br/><br/>Une charge complète de 2 heures offre jusqu’à 5 mois d’autonomie. Une LED vous indique l’état de charge en changeant de couleur. Réutilisable à volonté, pour une solution plus économique.</p><p><strong>3. Faites-la sonner pour la retrouver</strong><br/><br/>Dans un rayon Bluetooth allant jusqu’à 90 mètres, faites sonner la carte pour retrouver votre portefeuille à l’aide de votre téléphone.<br/><br/>Fonction compatible avec les appareils Apple via l’application Localiser (Find My).<br/><br/><em>(Non compatible avec Android.)</em></p><p><strong>4. Étanche</strong><br/><br/>La carte est certifiée waterproof: elle reste totalement fonctionnelle après une immersion de 30 minutes à 1 mètre de profondeur.<br/><br/>Utilisable en toute sécurité sous la pluie ou lors de vos activités en extérieur.</p><p><strong>5. Alerte en cas d’oubli</strong><br/><br/>Dès que votre carte sort de portée Bluetooth, votre iPhone vous envoie une alerte de déconnexion, avec la dernière position connue.<br/><br/>Suivi disponible via l’app Localiser, sans abonnement, ni frais cachés.</p><p><strong>6. Mode Perdu</strong><br/><br/>Activez le mode perdu dans l’app Find My pour retrouver vos objets grâce au réseau mondial Apple (des centaines de millions d’appareils).<br/><br/>Dès qu’un appareil Apple croise votre carte, vous recevez une notification instantanée.</p><p><strong>7. Protection de la vie privée</strong><br/><br/>Sécurité des données garantie : nous ne stockons jamais votre historique de localisation.<br/><br/>Toutes les données sont anonymes et chiffrées, pour une utilisation 100 % confidentielle.</p>",
+            "page": ""
+          }
+        },
+        "tab_aWJMHp": {
+          "type": "tab",
+          "settings": {
+            "title": "Satisfait ou remboursé",
+            "content": "<p>Si vous n'êtes pas complètement satisfaite, nous remboursons votre boîtes de gummies sous 30 jours.</p>",
+            "page": ""
+          }
+        },
+        "tab_bFRPRb": {
+          "type": "tab",
+          "settings": {
+            "title": "Livraison gratuite",
+            "content": "<p>La livraison est totalement gratuite. Selon le volume de commande à traiter, le délai de livraison est estimé entre 5 et 10 jours ouvrés.</p>",
+            "page": ""
+          }
+        },
+        "tab_37jKG3": {
+          "type": "tab",
+          "settings": {
+            "title": "Service client 7j/7",
+            "content": "<p>Notre équipe est à votre disposition pour répondre à vos questions sept jours sur sept.</p><p>Vous pouvez nous contacter par email à l'adresse suivante : hello@mytrackerr.com</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "tab_jQVtGx",
+        "tab_aWJMHp",
+        "tab_bFRPRb",
+        "tab_37jKG3"
+      ],
+      "name": "Tabs",
+      "settings": {
+        "full_width": true,
+        "content_size": "medium",
+        "subheading": "",
+        "title": "",
+        "text_alignment": "center",
+        "first_tab_open": false,
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": ""
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "166442457738b23caf-0": {
+          "type": "item",
+          "settings": {
+            "title": "Comment fonctionne la carte myTRACKERR ?",
+            "content": "<p>La carte de localisation myTRACKERR utilise le réseau <strong>Apple Find My</strong> pour suivre en toute simplicité votre portefeuille et vos objets essentiels. Il vous suffit de l’intégrer à votre appareil iOS via l’application <strong>Find My</strong> pour localiser vos affaires à tout moment.</p>"
+          }
+        },
+        "166442457738b23caf-1": {
+          "type": "item",
+          "settings": {
+            "title": "Quelle est l'épaisseur de la carte myTRACKERR ?",
+            "content": "<p>La carte <strong>myTRACKERR</strong> possède un design ultra-fin, avec seulement <strong>1,8 mm d’épaisseur</strong>. Elle se glisse discrètement dans votre portefeuille, sans l’alourdir ni le déformer.</p>"
+          }
+        },
+        "166442457738b23caf-2": {
+          "type": "item",
+          "settings": {
+            "title": "La carte a-t-elle besoin d’être rechargée ?",
+            "content": "<p>Oui, la carte myTRACKERR se recharge sans fil pour plus de praticité. Il suffit de la poser sur un support de charge compatible. Une charge complète offre jusqu’à <strong>5 mois d’autonomie</strong>. Une LED change de couleur pour indiquer l’état de la batterie. <strong>Réutilisable à volonté</strong>, elle est aussi bien plus économique que les cartes jetables.</p>"
+          }
+        },
+        "item_7RDEtm": {
+          "type": "item",
+          "settings": {
+            "title": "Comment puis-je contacter le service client pour obtenir de l’aide ?",
+            "content": "<p>Pour toute question ou demande d’assistance concernant les produits myTRACKERR, vous pouvez nous contacter par e-mail à <a><strong>hello@mytrackerr.com</strong></a> ou via notre formulaire de contact sur le site.<br/><br/>Notre équipe est là pour vous aider !</p>"
+          }
+        },
+        "item_n8gTAC": {
+          "type": "item",
+          "settings": {
+            "title": "La carte est-elle compatible avec des appareils non-Apple ?",
+            "content": "<p>Actuellement, la carte myTRACKERR est conçue exclusivement pour les appareils Apple et fonctionne via l’application <strong>Find My</strong>. Cependant, nous explorons activement des options pour élargir la compatibilité à d’autres plateformes à l’avenir.</p>"
+          }
+        },
+        "item_VWm8Vn": {
+          "type": "item",
+          "settings": {
+            "title": "Puis-je suivre plusieurs objets avec la carte myTRACKERR ?",
+            "content": "<p>Oui, la carte myTRACKERR ne se limite pas à votre portefeuille. Vous pouvez également l’utiliser pour suivre d’autres objets du quotidien comme vos bagages, sacs, passeports, téléphones, etc. Elle offre une solution de localisation complète pour vos essentiels.</p>"
+          }
+        },
+        "item_JVGUxq": {
+          "type": "item",
+          "settings": {
+            "title": "La carte est-elle waterproof ?",
+            "content": "<p>Oui, la carte myTRACKERR est <strong>waterproof</strong>. Elle reste parfaitement fonctionnelle après une immersion dans l’eau jusqu’à 1 mètre de profondeur pendant 30 minutes. Vous pouvez donc l’utiliser en toute confiance, même dans des conditions difficiles.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "166442457738b23caf-0",
+        "166442457738b23caf-1",
+        "166442457738b23caf-2",
+        "item_7RDEtm",
+        "item_n8gTAC",
+        "item_VWm8Vn",
+        "item_JVGUxq"
+      ],
+      "settings": {
+        "full_width": false,
+        "subheading": "",
+        "title": "FAQ",
+        "content": "",
+        "team_avatar_width": 160,
+        "support_hours": "Notre service client est disponible du lundi au vendredi, de 8h00 à 20h30.",
+        "answer_time": "Délai moyen de réponse : 4 heures.",
+        "button_text": "",
+        "button_url": "",
+        "text_position": "center",
+        "background": "#ffffff",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": "",
+        "button_background": "",
+        "button_text_color": "",
+        "accordion_background": "",
+        "accordion_text_color": ""
+      }
+    },
+    "contact_iLnFCw": {
+      "type": "contact",
+      "name": "Contact form",
+      "settings": {
+        "full_width": true,
+        "subheading": "",
+        "title": "Une question ?",
+        "content": "<p>Écrivez-nous via le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.</p>",
+        "text_position": "start",
+        "contact_form_size": "large",
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": "",
+        "contact_background": "",
+        "contact_text_color": "",
+        "button_background": "",
+        "button_text_color": ""
+      }
+    },
+    "17511353467e04f9df": {
+      "type": "apps",
+      "settings": {
+        "full_width": true,
+        "remove_vertical_spacing": false,
+        "remove_horizontal_spacing": false,
+        "background": "",
+        "background_gradient": "",
+        "text_color": ""
+      }
+    }
+  },
+  "order": [
+    "slideshow",
+    "logo_list_AEtWMc",
+    "image_with_text_overlay_cbNJpF",
+    "image_with_text_overlay_rh8xqp",
+    "impact-text",
+    "custom_html_NxaKET",
+    "image_with_text_overlay_6rndAF",
+    "multi_column_PaeCEz",
+    "multiple-images-with-text",
+    "featured_product_RFmzrc",
+    "tabs_8g6iLH",
+    "faq",
+    "contact_iLnFCw",
+    "17511353467e04f9df"
+  ]
+}
