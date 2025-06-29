@@ -132,7 +132,7 @@
       ],
       "name": "Logo list",
       "settings": {
-        "full_width": true,
+        "full_width": false,
         "stack_mobile": true,
         "title": "Ils nous font confiance",
         "content": "",
@@ -254,9 +254,9 @@
           "type": "item",
           "settings": {
             "column_size": "3",
-            "title": "1. Connectez- la à Apple Find MY",
+            "title": "① Créez votre compte Feelcard",
             "heading_tag": "h4",
-            "content": "<p>Approchez-la simplement de votre iPhone et appuyez une fois. <br/>C'est tout. <strong>Pas d'application à installer, pas de prise de tête. </strong>Votre carte est prête en quelques secondes.</p>",
+            "content": "<p>Vous accédez immédiatement à votre <strong>espace client Feelcard</strong> pour configurer la plaque et suivre les statistiques de vos avis.</p>",
             "link_url": "",
             "link_text": "",
             "link_style": "link"
@@ -266,9 +266,9 @@
           "type": "item",
           "settings": {
             "column_size": "3",
-            "title": "2. Glissez-la en sécurité",
+            "title": "② Activez votre plaque",
             "heading_tag": "h4",
-            "content": "<p>Rangez-la dans votre portefeuille, sac ou passeport. <br/>Elle est <strong>ultra-fine, discrète</strong> et reste à sa place jusqu'à ce que vous en ayez besoin.</p>",
+            "content": "<p>À réception de votre produit, rendez-vous dans l’application, puis <strong>activez votre plaque en 2 clics</strong> (liée à votre établissement Google).</p>",
             "link_url": "",
             "link_text": "",
             "link_style": "link"
@@ -278,9 +278,9 @@
           "type": "item",
           "settings": {
             "column_size": "3",
-            "title": "3. Suivez-la, faites la sonner, retrouvez-la",
+            "title": "③ Vous êtes prêt(e) !",
             "heading_tag": "h4",
-            "content": "<p>Utilisez l'app <strong>Localiser </strong>(Find My) pour connaître sa position.<br/>Si elle est à proximité, appusez sur <strong>Faire sonner</strong> pour l'entendre, même à travers un sac ou un coussin.</p>",
+            "content": "<p>Et… c’est tout ! Vous êtes maintenant prêt(e) à <strong>collecter vos premiers avis</strong> en magasin, de façon instantanée et efficace.</p>",
             "link_url": "",
             "link_text": "",
             "link_style": "link"
@@ -299,7 +299,7 @@
         "gap": "medium",
         "text_alignment": "start",
         "subheading": "",
-        "title": "Installation en moins de 45 secondes",
+        "title": "Installation en moins de 20 secondes",
         "content": "<p>La plupart de nos clients connectent et commencent à utiliser leur carte en moins d'une minute. Voici comment ça fonctionne :</p>",
         "background": "",
         "background_gradient": "",
