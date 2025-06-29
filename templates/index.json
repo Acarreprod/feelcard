@@ -443,8 +443,8 @@
             "icon_width": 20,
             "title": "Service client 7j/7",
             "content": "",
-            "background": "#eaf2ed",
-            "text_color": "#00a341"
+            "background": "#fff2fc",
+            "text_color": "#cc9bc7"
           }
         },
         "offer_MNj38X": {
@@ -456,8 +456,8 @@
             "icon_width": 20,
             "title": "Paiement sécurisé",
             "content": "",
-            "background": "#eaf2ed",
-            "text_color": "#00a341"
+            "background": "#fff2fc",
+            "text_color": "#cc9bc7"
           }
         },
         "offer_Re7HiP": {
@@ -469,8 +469,8 @@
             "icon_width": 20,
             "title": "Livraison gratuite",
             "content": "",
-            "background": "#eaf2ed",
-            "text_color": "#00a341"
+            "background": "#fff2fc",
+            "text_color": "#cc9bc7"
           }
         },
         "offer_6iGVpc": {
@@ -482,8 +482,8 @@
             "icon_width": 20,
             "title": "Satisfait ou remboursé",
             "content": "",
-            "background": "#eaf2ed",
-            "text_color": "#00a341"
+            "background": "#fff2fc",
+            "text_color": "#cc9bc7"
           }
         }
       },
