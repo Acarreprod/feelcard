@@ -253,8 +253,9 @@
         "item_AFgm7j": {
           "type": "item",
           "settings": {
+            "image": "shopify://shop_images/Visuels_Digifeel_30_c96aa528-3f4d-40de-9c3e-7cc001cd2676.webp",
             "column_size": "3",
-            "title": "① Créez votre compte Feelcard",
+            "title": "Créez votre compte Feelcard",
             "heading_tag": "h4",
             "content": "<p>Vous accédez immédiatement à votre <strong>espace client Feelcard</strong> pour configurer la plaque et suivre les statistiques de vos avis.</p>",
             "link_url": "",
@@ -265,8 +266,9 @@
         "item_GxK6UU": {
           "type": "item",
           "settings": {
+            "image": "shopify://shop_images/io_2.webp",
             "column_size": "3",
-            "title": "② Activez votre plaque",
+            "title": "Activez votre plaque",
             "heading_tag": "h4",
             "content": "<p>À réception de votre produit, rendez-vous dans l’application, puis <strong>activez votre plaque en 2 clics</strong> (liée à votre établissement Google).</p>",
             "link_url": "",
@@ -277,8 +279,9 @@
         "item_JKgM99": {
           "type": "item",
           "settings": {
+            "image": "shopify://shop_images/Visuels_Digifeel_28_1.webp",
             "column_size": "3",
-            "title": "③ Vous êtes prêt(e) !",
+            "title": "Vous êtes prêt(e) !",
             "heading_tag": "h4",
             "content": "<p>Et… c’est tout ! Vous êtes maintenant prêt(e) à <strong>collecter vos premiers avis</strong> en magasin, de façon instantanée et efficace.</p>",
             "link_url": "",
