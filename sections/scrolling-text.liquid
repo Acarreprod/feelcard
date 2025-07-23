@@ -3,10 +3,7 @@
 
   <style>
     #shopify-section-{{ section.id }} {
-      --section-spacing-inline: 0;
       --scroll-speed: {{ section.settings.animation_speed }}s;
-      --scroll-direction: {{ section.settings.direction }};
-      --pause-on-hover: {{ section.settings.pause_on_hover }};
       --background-color: {{ section.settings.background_color | default: 'transparent' }};
       --text-color: {{ section.settings.text_color | default: '#000' }};
       --separator-color: {{ section.settings.separator_color | default: '#ccc' }};
@@ -23,6 +20,9 @@
       width: 100%;
       overflow: hidden;
       background: var(--background-color);
+      {% if section.settings.background_gradient != blank %}
+        background: {{ section.settings.background_gradient }};
+      {% endif %}
       color: var(--text-color);
       padding: {{ section.settings.section_padding_top }}px 0 {{ section.settings.section_padding_bottom }}px;
     }
@@ -31,6 +31,8 @@
     .scroll-mask {
       position: relative;
       overflow: hidden;
+      height: auto;
+      min-height: 60px;
     }
 
     .scroll-mask::before,
@@ -38,7 +40,7 @@
       content: '';
       position: absolute;
       top: 0;
-      width: 100px;
+      width: 50px;
       height: 100%;
       z-index: 2;
       pointer-events: none;
@@ -46,12 +48,12 @@
 
     .scroll-mask::before {
       left: 0;
-      background: linear-gradient(to right, var(--background-color), transparent);
+      background: linear-gradient(to right, var(--background-color, rgba(255,255,255,1)), transparent);
     }
 
     .scroll-mask::after {
       right: 0;
-      background: linear-gradient(to left, var(--background-color), transparent);
+      background: linear-gradient(to left, var(--background-color, rgba(255,255,255,1)), transparent);
     }
 
     /* Piste de défilement */
@@ -59,60 +61,76 @@
       display: flex;
       align-items: center;
       gap: var(--item-gap);
-      will-change: transform;
-      transform: translateZ(0);
-      backface-visibility: hidden;
-      animation: scroll-horizontal var(--scroll-speed) linear infinite;
+      white-space: nowrap;
+      width: fit-content;
+      /* Animation par défaut */
+      animation: scrollHorizontal var(--scroll-speed) linear infinite;
     }
 
-    /* Types d'animations */
+    /* Animations selon la direction */
     .scroll-track--horizontal {
-      animation: scroll-horizontal var(--scroll-speed) linear infinite;
+      animation: scrollHorizontal var(--scroll-speed) linear infinite;
     }
 
     .scroll-track--horizontal-reverse {
-      animation: scroll-horizontal-reverse var(--scroll-speed) linear infinite;
+      animation: scrollHorizontalReverse var(--scroll-speed) linear infinite;
     }
 
     .scroll-track--vertical {
       flex-direction: column;
-      animation: scroll-vertical var(--scroll-speed) linear infinite;
+      animation: scrollVertical var(--scroll-speed) linear infinite;
+      height: fit-content;
     }
 
     .scroll-track--fade {
-      animation: scroll-fade var(--scroll-speed) ease-in-out infinite;
+      animation: scrollFade var(--scroll-speed) ease-in-out infinite;
     }
 
-    /* Keyframes pour les animations */
-    @keyframes scroll-horizontal {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+    /* Keyframes d'animation */
+    @keyframes scrollHorizontal {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
     }
 
-    @keyframes scroll-horizontal-reverse {
-      0% { transform: translateX(-50%); }
-      100% { transform: translateX(0); }
+    @keyframes scrollHorizontalReverse {
+      0% {
+        transform: translateX(-50%);
+      }
+      100% {
+        transform: translateX(0);
+      }
     }
 
-    @keyframes scroll-vertical {
-      0% { transform: translateY(100%); }
-      100% { transform: translateY(-100%); }
+    @keyframes scrollVertical {
+      0% {
+        transform: translateY(100%);
+      }
+      100% {
+        transform: translateY(-100%);
+      }
     }
 
-    @keyframes scroll-fade {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+    @keyframes scrollFade {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.3;
+      }
     }
 
     /* Éléments de défilement */
     .scroll-item {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: calc(var(--separator-spacing) / 2);
-      white-space: nowrap;
       font-size: var(--font-size);
       flex-shrink: 0;
-      transition: transform 0.3s ease, opacity 0.3s ease;
+      transition: transform 0.3s ease;
     }
 
     .scroll-item:hover {
@@ -124,6 +142,7 @@
       font-weight: {{ section.settings.font_weight }};
       text-transform: {{ section.settings.text_transform }};
       letter-spacing: {{ section.settings.letter_spacing }}px;
+      white-space: nowrap;
     }
 
     .scroll-item--image .image-content {
@@ -139,7 +158,7 @@
     }
 
     .scroll-item--icon .icon-content {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
     }
@@ -150,7 +169,7 @@
       height: var(--icon-size);
       font-size: var(--icon-size);
       color: currentColor;
-      transition: transform 0.3s ease, color 0.3s ease;
+      transition: transform 0.3s ease;
     }
 
     .scroll-item--icon:hover svg,
@@ -181,20 +200,29 @@
       display: flex;
       gap: 8px;
       z-index: 10;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .scroll-controls:hover {
+      opacity: 1;
     }
 
     .scroll-control-btn {
       background: rgba(0, 0, 0, 0.1);
-      border: none;
+      border: 1px solid rgba(0, 0, 0, 0.2);
       border-radius: 4px;
-      padding: 8px;
+      padding: 6px 8px;
       cursor: pointer;
-      font-size: 14px;
-      transition: background 0.3s ease;
+      font-size: 12px;
+      transition: all 0.3s ease;
+      min-width: 30px;
+      text-align: center;
     }
 
     .scroll-control-btn:hover {
       background: rgba(0, 0, 0, 0.2);
+      transform: translateY(-1px);
     }
 
     .scroll-control-btn.active {
@@ -210,7 +238,6 @@
     /* Mode statique pour accessibilité */
     .scroll-track--static {
       animation: none !important;
-      transform: none !important;
     }
 
     .static-mode {
@@ -227,7 +254,6 @@
     @media screen and (max-width: 768px) {
       #shopify-section-{{ section.id }} {
         --font-size: clamp({{ section.settings.mobile_min_font }}px, {{ section.settings.mobile_font_vw }}vw, {{ section.settings.mobile_max_font }}px);
-        --scroll-speed: calc(var(--scroll-speed) * 0.8);
         --item-gap: calc(var(--item-gap) * 0.7);
       }
       
@@ -237,8 +263,14 @@
       }
       
       .scroll-control-btn {
-        padding: 6px;
-        font-size: 12px;
+        padding: 4px 6px;
+        font-size: 10px;
+        min-width: 25px;
+      }
+
+      .scroll-mask::before,
+      .scroll-mask::after {
+        width: 30px;
       }
     }
 
@@ -246,7 +278,6 @@
     @media (prefers-reduced-motion: reduce) {
       .scroll-track {
         animation: none !important;
-        transform: none !important;
       }
       
       .advanced-scroll-container {
@@ -263,50 +294,37 @@
       }
     }
 
-    /* Container Queries pour contrôle précis */
-    .advanced-scroll-container {
-      container-type: inline-size;
+    /* Force l'animation même si d'autres CSS l'interfèrent */
+    .scroll-track[data-animated="true"] {
+      animation-play-state: running !important;
     }
 
-    @container (max-width: 500px) {
-      .scroll-track {
-        --scroll-speed: calc(var(--scroll-speed) * 0.6);
-      }
-    }
-
-    @container (min-width: 1200px) {
-      .scroll-track {
-        --scroll-speed: calc(var(--scroll-speed) * 1.2);
-      }
-    }
-
-    /* Optimisations performance */
-    .scroll-track {
-      contain: layout style paint;
+    .scroll-track[data-paused="true"] {
+      animation-play-state: paused !important;
     }
   </style>
 
   <div class="advanced-scroll-container" 
        id="scroll-container-{{ section.id }}"
        data-pause-hover="{{ section.settings.pause_on_hover }}"
-       data-auto-start="{{ section.settings.auto_start }}"
        data-speed="{{ section.settings.animation_speed }}"
        data-direction="{{ section.settings.direction }}">
     
     {% if section.settings.show_controls %}
       <div class="scroll-controls" role="group" aria-label="Contrôles d'animation">
         <button type="button" class="scroll-control-btn pause-btn" aria-label="Pause/Lecture" data-action="toggle">
-          <span class="pause-icon">⏸️</span>
-          <span class="play-icon hidden">▶️</span>
+          <span class="pause-icon">⏸</span>
+          <span class="play-icon" style="display: none;">▶</span>
         </button>
-        <button type="button" class="scroll-control-btn stop-btn" aria-label="Arrêter" data-action="stop">⏹️</button>
+        <button type="button" class="scroll-control-btn stop-btn" aria-label="Arrêter" data-action="stop">⏹</button>
         <button type="button" class="scroll-control-btn speed-btn" aria-label="Vitesse" data-action="speed">🏃</button>
       </div>
     {% endif %}
 
     <div class="scroll-mask">
       <div class="scroll-track scroll-track--{{ section.settings.direction }}" 
-           id="scroll-track-{{ section.id }}">
+           id="scroll-track-{{ section.id }}"
+           data-animated="true">
         
         {%- capture scroll_content -%}
           {% for block in section.blocks %}
@@ -335,8 +353,6 @@
                       <i class="fas fa-{{ block.settings.fontawesome_icon }}"></i>
                     {% elsif block.settings.icon_type == 'emoji' %}
                       <span style="font-size: var(--icon-size);">{{ block.settings.emoji_icon }}</span>
-                    {% else %}
-                      {% render 'icon', icon: block.settings.icon_name %}
                     {% endif %}
                   </div>
                   
@@ -355,8 +371,9 @@
           {% endfor %}
         {%- endcapture -%}
 
-        {%- comment -%} Dupliquer le contenu pour un défilement infini {%- endcomment -%}
+        {%- comment -%} Contenu original {%- endcomment -%}
         {{ scroll_content }}
+        {%- comment -%} Contenu dupliqué pour effet infini {%- endcomment -%}
         {{ scroll_content }}
         
       </div>
@@ -364,67 +381,72 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    (function() {
+      'use strict';
+      
       class AdvancedScrollingText {
         constructor(container) {
           this.container = container;
           this.track = container.querySelector('.scroll-track');
           this.controls = container.querySelector('.scroll-controls');
           
+          if (!this.track) return;
+          
           this.config = {
             speed: parseInt(container.dataset.speed) || 20,
             direction: container.dataset.direction || 'horizontal',
-            pauseHover: container.dataset.pauseHover === 'true',
-            autoStart: container.dataset.autoStart === 'true'
+            pauseHover: container.dataset.pauseHover === 'true'
           };
           
           this.state = {
-            isPlaying: this.config.autoStart,
+            isPlaying: true,
             isPaused: false,
             currentSpeed: this.config.speed,
-            speedIndex: 1 // 0: lent, 1: normal, 2: rapide
+            speedIndex: 1
           };
           
           this.speeds = [40, 20, 10]; // Lent, Normal, Rapide
+          this.speedLabels = ['🐌', '🏃', '⚡'];
           
           this.init();
         }
         
         init() {
-          this.setupIntersectionObserver();
-          this.setupControls();
-          this.setupAccessibility();
-          this.handleReducedMotion();
+          // Forcer l'animation au démarrage
+          this.forceAnimation();
           
-          if (this.config.autoStart) {
-            this.play();
-          }
+          // Configurer les contrôles
+          this.setupControls();
+          
+          // Gestion de l'accessibilité
+          this.setupAccessibility();
+          
+          // Observer l'intersection
+          this.setupIntersectionObserver();
+          
+          console.log('Scrolling text initialized for:', this.container.id);
         }
         
-        setupIntersectionObserver() {
-          const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -10% 0px'
-          };
-          
-          this.observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting && this.config.autoStart) {
-                this.play();
-              } else if (!entry.isIntersecting) {
-                this.pause();
-              }
-            });
-          }, observerOptions);
-          
-          this.observer.observe(this.container);
+        forceAnimation() {
+          // S'assurer que l'animation fonctionne
+          if (this.track) {
+            this.track.style.animationDuration = this.config.speed + 's';
+            this.track.style.animationPlayState = 'running';
+            this.track.setAttribute('data-animated', 'true');
+            
+            // Force un reflow pour démarrer l'animation
+            this.track.offsetHeight;
+          }
         }
         
         setupControls() {
           if (!this.controls) return;
           
           this.controls.addEventListener('click', (e) => {
-            const action = e.target.closest('[data-action]')?.dataset.action;
+            const btn = e.target.closest('[data-action]');
+            if (!btn) return;
+            
+            const action = btn.dataset.action;
             
             switch (action) {
               case 'toggle':
@@ -441,23 +463,7 @@
         }
         
         setupAccessibility() {
-          // Gestion du focus clavier
-          this.container.addEventListener('keydown', (e) => {
-            if (e.key === ' ' || e.key === 'Spacebar') {
-              e.preventDefault();
-              this.toggle();
-            } else if (e.key === 'Escape') {
-              this.stop();
-            }
-          });
-          
-          // Tabindex pour l'accessibilité
-          this.container.setAttribute('tabindex', '0');
-          this.container.setAttribute('role', 'region');
-          this.container.setAttribute('aria-label', 'Texte défilant animé');
-        }
-        
-        handleReducedMotion() {
+          // Gestion du mouvement réduit
           const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
           
           const handleMotionPreference = (mediaQuery) => {
@@ -470,26 +476,73 @@
           
           prefersReducedMotion.addEventListener('change', handleMotionPreference);
           handleMotionPreference(prefersReducedMotion);
+          
+          // Contrôles clavier
+          this.container.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'Spacebar') {
+              e.preventDefault();
+              this.toggle();
+            } else if (e.key === 'Escape') {
+              this.stop();
+            }
+          });
+          
+          this.container.setAttribute('tabindex', '0');
+          this.container.setAttribute('role', 'region');
+          this.container.setAttribute('aria-label', 'Contenu défilant animé');
+        }
+        
+        setupIntersectionObserver() {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                this.play();
+              } else {
+                // Optionnel: pause quand hors vue
+                // this.pause();
+              }
+            });
+          }, {
+            threshold: 0.1
+          });
+          
+          observer.observe(this.container);
         }
         
         play() {
           this.state.isPlaying = true;
           this.state.isPaused = false;
-          this.track.style.animationPlayState = 'running';
+          
+          if (this.track) {
+            this.track.style.animationPlayState = 'running';
+            this.track.setAttribute('data-animated', 'true');
+            this.track.removeAttribute('data-paused');
+          }
+          
           this.updateControlsUI();
         }
         
         pause() {
           this.state.isPaused = true;
-          this.track.style.animationPlayState = 'paused';
+          
+          if (this.track) {
+            this.track.style.animationPlayState = 'paused';
+            this.track.setAttribute('data-paused', 'true');
+          }
+          
           this.updateControlsUI();
         }
         
         stop() {
           this.state.isPlaying = false;
           this.state.isPaused = false;
-          this.track.style.animationPlayState = 'paused';
-          this.track.style.transform = 'translateX(0)';
+          
+          if (this.track) {
+            this.track.style.animationPlayState = 'paused';
+            this.track.style.transform = 'translateX(0)';
+            this.track.removeAttribute('data-animated');
+          }
+          
           this.updateControlsUI();
         }
         
@@ -508,24 +561,37 @@
         }
         
         setSpeed(speed) {
-          this.track.style.setProperty('--scroll-speed', `${speed}s`);
-          this.track.style.animationDuration = `${speed}s`;
+          if (this.track) {
+            this.track.style.animationDuration = speed + 's';
+            // Force restart animation with new speed
+            this.track.style.animation = 'none';
+            this.track.offsetHeight; // Force reflow
+            this.track.style.animation = null;
+          }
         }
         
         enableStaticMode() {
-          this.track.classList.add('scroll-track--static');
+          if (this.track) {
+            this.track.classList.add('scroll-track--static');
+          }
           this.container.classList.add('static-mode');
+          
           if (this.controls) {
             this.controls.style.display = 'none';
           }
         }
         
         disableStaticMode() {
-          this.track.classList.remove('scroll-track--static');
+          if (this.track) {
+            this.track.classList.remove('scroll-track--static');
+          }
           this.container.classList.remove('static-mode');
+          
           if (this.controls) {
             this.controls.style.display = 'flex';
           }
+          
+          this.forceAnimation();
         }
         
         updateControlsUI() {
@@ -538,27 +604,39 @@
           
           if (pauseIcon && playIcon) {
             if (this.state.isPlaying && !this.state.isPaused) {
-              pauseIcon.classList.remove('hidden');
-              playIcon.classList.add('hidden');
+              pauseIcon.style.display = 'inline';
+              playIcon.style.display = 'none';
             } else {
-              pauseIcon.classList.add('hidden');
-              playIcon.classList.remove('hidden');
+              pauseIcon.style.display = 'none';
+              playIcon.style.display = 'inline';
             }
           }
           
           if (speedBtn) {
-            const speedLabels = ['🐌', '🏃', '⚡'];
-            speedBtn.textContent = speedLabels[this.state.speedIndex];
+            speedBtn.textContent = this.speedLabels[this.state.speedIndex];
           }
         }
       }
       
-      // Initialiser toutes les sections de texte défilant
-      const scrollContainers = document.querySelectorAll('.advanced-scroll-container');
-      scrollContainers.forEach(container => {
-        new AdvancedScrollingText(container);
-      });
-    });
+      // Initialiser au chargement du DOM
+      function initScrollingSections() {
+        const containers = document.querySelectorAll('.advanced-scroll-container');
+        containers.forEach(container => {
+          new AdvancedScrollingText(container);
+        });
+      }
+      
+      // Multiple points d'initialisation pour s'assurer que ça fonctionne
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initScrollingSections);
+      } else {
+        initScrollingSections();
+      }
+      
+      // Fallback après un délai
+      setTimeout(initScrollingSections, 100);
+      
+    })();
   </script>
 {%- endif -%}
 
@@ -574,13 +652,6 @@
     {
       "type": "header",
       "content": "Configuration générale"
-    },
-    {
-      "type": "checkbox",
-      "id": "auto_start",
-      "label": "Démarrage automatique",
-      "default": true,
-      "info": "L'animation démarre automatiquement quand la section est visible"
     },
     {
       "type": "checkbox",
@@ -625,7 +696,7 @@
       "step": 1,
       "unit": "s",
       "label": "Vitesse d'animation",
-      "default": 20,
+      "default": 15,
       "info": "Plus la valeur est faible, plus l'animation est rapide"
     },
     {
@@ -679,7 +750,7 @@
           "label": "Losange (◆)"
         }
       ],
-      "default": "dot"
+      "default": "arrow"
     },
     {
       "type": "range",
@@ -866,7 +937,8 @@
     {
       "type": "color",
       "id": "background_color",
-      "label": "Couleur de fond"
+      "label": "Couleur de fond",
+      "default": "#000000"
     },
     {
       "type": "color_background",
@@ -877,13 +949,13 @@
       "type": "color",
       "id": "text_color",
       "label": "Couleur du texte",
-      "default": "#000000"
+      "default": "#ffffff"
     },
     {
       "type": "color",
       "id": "separator_color",
       "label": "Couleur des séparateurs",
-      "default": "#cccccc"
+      "default": "#ffffff"
     },
     {
       "type": "header",
@@ -897,7 +969,7 @@
       "step": 5,
       "unit": "px",
       "label": "Espacement haut",
-      "default": 40
+      "default": 20
     },
     {
       "type": "range",
@@ -907,7 +979,7 @@
       "step": 5,
       "unit": "px",
       "label": "Espacement bas",
-      "default": 40
+      "default": 20
     }
   ],
   "blocks": [
@@ -1023,6 +1095,13 @@
   "presets": [
     {
       "name": "Texte Défilant Avancé",
+      "settings": {
+        "background_color": "#000000",
+        "text_color": "#ffffff",
+        "separator_color": "#ffffff",
+        "separator_type": "arrow",
+        "animation_speed": 15
+      },
       "blocks": [
         {
           "type": "text_item",
