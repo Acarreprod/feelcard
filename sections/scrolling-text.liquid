@@ -1,44 +1,273 @@
-{%- if section.settings.text != blank -%}
+{%- if section.blocks.size > 0 -%}
   {%- render 'section-spacing-collapsing' -%}
 
   <style>
     #shopify-section-{{ section.id }} {
       --section-spacing-inline: 0;
       --scrolling-text-font-size: {% if section.settings.text_size == 'xsmall' %}1.125rem{% elsif section.settings.text_size == 'small' %}2.5rem{% elsif section.settings.text_size == 'medium' %}3.75rem{% elsif section.settings.text_size == 'large' %}5rem{% else %}7.5rem{% endif %};
+      --scrolling-background: {{ section.settings.background | default: 'transparent' }};
+      --scrolling-background-gradient: {{ section.settings.background_gradient | default: 'none' }};
+      --scrolling-text-color: {{ section.settings.text_color | default: '#000000' }};
+      --scrolling-text-gradient: {{ section.settings.text_gradient | default: 'none' }};
+      --scrolling-border-color: {{ section.settings.border_color | default: 'transparent' }};
+      --scrolling-gap: {{ section.settings.element_spacing | default: 40 }}px;
+      --scrolling-padding: {{ section.settings.section_padding_y | default: 20 }}px {{ section.settings.section_padding_x | default: 0 }}px;
+      --scrolling-border-radius: {{ section.settings.border_radius | default: 0 }}px;
+      --scrolling-border-width: {{ section.settings.border_width | default: 0 }}px;
+      
+      {%- if section.settings.background != blank -%}
+        background: var(--scrolling-background);
+      {%- endif -%}
+      
+      {%- if section.settings.background_gradient != blank -%}
+        background: var(--scrolling-background-gradient);
+      {%- endif -%}
+
+      {%- if section.settings.box_shadow -%}
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      {%- endif -%}
+
+      border: var(--scrolling-border-width) solid var(--scrolling-border-color);
+      border-radius: var(--scrolling-border-radius);
+      padding: var(--scrolling-padding);
+      
+      {%- if section.settings.overflow_hidden -%}
+        overflow: hidden;
+      {%- endif -%}
     }
 
     @media screen and (min-width: 700px) {
       #shopify-section-{{ section.id }} {
         --scrolling-text-font-size: {% if section.settings.text_size == 'xsmall' %}1.5rem{% elsif section.settings.text_size == 'small' %}3.75rem{% elsif section.settings.text_size == 'medium' %}5rem{% elsif section.settings.text_size == 'large' %}8.75rem{% else %}12.5rem{% endif %};
+        --scrolling-gap: {{ section.settings.desktop_element_spacing | default: section.settings.element_spacing | default: 60 }}px;
       }
     }
+
+    #shopify-section-{{ section.id }} .scrolling-text__wrapper {
+      gap: var(--scrolling-gap);
+      align-items: {{ section.settings.vertical_alignment | default: 'center' }};
+    }
+
+    #shopify-section-{{ section.id }} .scrolling-text__item {
+      display: inline-flex;
+      align-items: {{ section.settings.vertical_alignment | default: 'center' }};
+      gap: {{ section.settings.item_inner_spacing | default: 15 }}px;
+      white-space: nowrap;
+    }
+
+    #shopify-section-{{ section.id }} .scrolling-text__text {
+      font-size: var(--scrolling-text-font-size);
+      color: var(--scrolling-text-color);
+      
+      {%- if section.settings.text_gradient != blank -%}
+        background: var(--scrolling-text-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      {%- endif -%}
+
+      {%- if section.settings.text_shadow -%}
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      {%- endif -%}
+
+      {%- if section.settings.text_weight != blank -%}
+        font-weight: {{ section.settings.text_weight }};
+      {%- endif -%}
+
+      {%- if section.settings.text_transform != blank -%}
+        text-transform: {{ section.settings.text_transform }};
+      {%- endif -%}
+
+      {%- if section.settings.letter_spacing != blank -%}
+        letter-spacing: {{ section.settings.letter_spacing }}px;
+      {%- endif -%}
+    }
+
+    #shopify-section-{{ section.id }} .scrolling-text__image {
+      height: {{ section.settings.image_height | default: 60 }}px;
+      width: auto;
+      object-fit: contain;
+      
+      {%- if section.settings.image_border_radius > 0 -%}
+        border-radius: {{ section.settings.image_border_radius }}px;
+      {%- endif -%}
+    }
+
+    #shopify-section-{{ section.id }} .scrolling-text__icon {
+      font-size: {{ section.settings.icon_size | default: 40 }}px;
+      color: {{ section.settings.icon_color | default: section.settings.text_color | default: '#000000' }};
+      
+      {%- if section.settings.icon_background != blank -%}
+        background: {{ section.settings.icon_background }};
+        padding: {{ section.settings.icon_padding | default: 10 }}px;
+        border-radius: {{ section.settings.icon_border_radius | default: 50 }}%;
+      {%- endif -%}
+    }
+
+    #shopify-section-{{ section.id }} .scrolling-text__separator {
+      width: {{ section.settings.separator_width | default: 2 }}px;
+      height: {{ section.settings.separator_height | default: 30 }}px;
+      background: {{ section.settings.separator_color | default: section.settings.text_color | default: '#000000' }};
+      
+      {%- if section.settings.separator_style == 'dashed' -%}
+        background: none;
+        border-left: {{ section.settings.separator_width | default: 2 }}px dashed {{ section.settings.separator_color | default: section.settings.text_color | default: '#000000' }};
+      {%- elsif section.settings.separator_style == 'dotted' -%}
+        background: none;
+        border-left: {{ section.settings.separator_width | default: 2 }}px dotted {{ section.settings.separator_color | default: section.settings.text_color | default: '#000000' }};
+      {%- endif -%}
+    }
+
+    #shopify-section-{{ section.id }} .scrolling-text__spacer {
+      width: {{ section.settings.spacer_width | default: 50 }}px;
+      height: 1px;
+    }
+
+    /* Hover effects */
+    {%- if section.settings.enable_hover_effects -%}
+      #shopify-section-{{ section.id }} .scrolling-text__wrapper:hover {
+        animation-play-state: paused;
+      }
+
+      #shopify-section-{{ section.id }} .scrolling-text__text:hover {
+        transform: scale({{ section.settings.hover_scale | divided_by: 100.0 }});
+        transition: transform 0.3s ease;
+      }
+
+      #shopify-section-{{ section.id }} .scrolling-text__image:hover {
+        transform: scale({{ section.settings.hover_scale | divided_by: 100.0 }});
+        transition: transform 0.3s ease;
+      }
+    {%- endif -%}
+
+    /* Mobile responsiveness */
+    @media screen and (max-width: 699px) {
+      #shopify-section-{{ section.id }} {
+        --scrolling-gap: {{ section.settings.mobile_element_spacing | default: 30 }}px;
+      }
+
+      #shopify-section-{{ section.id }} .scrolling-text__image {
+        height: {{ section.settings.mobile_image_height | default: 40 }}px;
+      }
+
+      #shopify-section-{{ section.id }} .scrolling-text__icon {
+        font-size: {{ section.settings.mobile_icon_size | default: 30 }}px;
+      }
+    }
+
+    /* Animation customization */
+    {%- if section.settings.animation_direction == 'reverse' -%}
+      #shopify-section-{{ section.id }} .scrolling-text__wrapper {
+        animation-direction: reverse;
+      }
+    {%- endif -%}
+
+    {%- if section.settings.animation_timing == 'ease-in-out' -%}
+      #shopify-section-{{ section.id }} .scrolling-text__wrapper {
+        animation-timing-function: ease-in-out;
+      }
+    {%- elsif section.settings.animation_timing == 'ease-in' -%}
+      #shopify-section-{{ section.id }} .scrolling-text__wrapper {
+        animation-timing-function: ease-in;
+      }
+    {%- elsif section.settings.animation_timing == 'ease-out' -%}
+      #shopify-section-{{ section.id }} .scrolling-text__wrapper {
+        animation-timing-function: ease-out;
+      }
+    {%- endif -%}
   </style>
 
   {%- if section.settings.text_size == 'xsmall' -%}
     {%- assign is_tight = true -%}
   {%- endif -%}
 
-  <div {% render 'section-properties', tight: is_tight %}>
+  <section 
+    {% render 'section-properties', tight: is_tight %} 
+    aria-label="{{ section.settings.section_label | default: 'Scrolling content section' }}"
+    itemscope 
+    itemtype="https://schema.org/WebPageElement"
+  >
     {%- capture section_content -%}
-      {%- for i in (1..10) -%}
-        <span class="scrolling-text__text heading {% unless forloop.first %}motion-reduce:hidden{% endunless %}" {% unless forloop.first %}aria-hidden="true"{% endunless %}>
-          {%- render 'styled-text', content: section.settings.text, gradient: section.settings.text_gradient, style: section.settings.text_style -%}
-        </span>
+      {%- for i in (1..section.settings.repetitions) -%}
+        {%- for block in section.blocks -%}
+          <div class="scrolling-text__item" {% unless forloop.first and forloop.parentloop.first %}aria-hidden="true"{% endunless %}>
+            {%- case block.type -%}
+              {%- when 'text' -%}
+                {%- if block.settings.text != blank -%}
+                  <span class="scrolling-text__text heading" itemprop="text">
+                    {%- render 'styled-text', content: block.settings.text, gradient: block.settings.text_gradient, style: section.settings.text_style -%}
+                  </span>
+                {%- endif -%}
+
+              {%- when 'image' -%}
+                {%- if block.settings.image != blank -%}
+                  <img 
+                    src="{{ block.settings.image | image_url: width: 200 }}" 
+                    srcset="{{ block.settings.image | image_url: width: 100 }} 100w, {{ block.settings.image | image_url: width: 200 }} 200w, {{ block.settings.image | image_url: width: 300 }} 300w"
+                    sizes="(max-width: 699px) 60px, 100px"
+                    alt="{{ block.settings.alt_text | default: block.settings.image.alt | escape }}"
+                    class="scrolling-text__image"
+                    loading="lazy"
+                    itemprop="image"
+                  >
+                {%- endif -%}
+
+              {%- when 'icon' -%}
+                {%- if block.settings.icon_svg != blank -%}
+                  <div class="scrolling-text__icon" aria-hidden="true">
+                    {{ block.settings.icon_svg }}
+                  </div>
+                {%- elsif block.settings.icon_text != blank -%}
+                  <span class="scrolling-text__icon" aria-hidden="true">
+                    {{ block.settings.icon_text }}
+                  </span>
+                {%- endif -%}
+
+              {%- when 'separator' -%}
+                <div class="scrolling-text__separator" aria-hidden="true"></div>
+
+              {%- when 'spacer' -%}
+                <div class="scrolling-text__spacer" aria-hidden="true"></div>
+
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+        
+        {%- unless forloop.last -%}
+          {%- if section.settings.add_separator_between_repetitions -%}
+            <div class="scrolling-text__separator" aria-hidden="true"></div>
+          {%- endif -%}
+        {%- endunless -%}
       {%- endfor -%}
     {%- endcapture -%}
 
     <div class="scrolling-text {% if section.settings.scrolling_mode == 'scroll' %}scrolling-text--scroll{% else %}scrolling-text--auto{% endif %}">
       {%- if section.settings.scrolling_mode == 'scroll' -%}
-        <scrolling-text class="scrolling-text__wrapper">
+        <scrolling-text class="scrolling-text__wrapper" role="marquee" aria-live="off">
           {{- section_content -}}
         </scrolling-text>
        {%- else -%}
-         <marquee-text scrolling-speed="{{ section.settings.scrolling_speed }}" class="scrolling-text__wrapper">
+         <marquee-text scrolling-speed="{{ section.settings.scrolling_speed }}" class="scrolling-text__wrapper" role="marquee" aria-live="off">
            {{- section_content -}}
          </marquee-text>
       {%- endif -%}
     </div>
-  </div>
+
+    {%- if section.settings.enable_structured_data -%}
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPageElement",
+        "name": "{{ section.settings.section_label | default: 'Scrolling Content' | escape }}",
+        "description": "Scrolling text and media content",
+        "mainEntity": {
+          "@type": "CreativeWork",
+          "text": "{% for block in section.blocks %}{% if block.type == 'text' and block.settings.text != blank %}{{ block.settings.text | strip_html | escape }}{% unless forloop.last %} {% endunless %}{% endif %}{% endfor %}"
+        }
+      }
+      </script>
+    {%- endif -%}
+  </section>
 {%- endif -%}
 
 {% schema %}
@@ -49,7 +278,12 @@
   "disabled_on": {
     "groups": ["header", "custom.overlay"]
   },
+  "max_blocks": 20,
   "settings": [
+    {
+      "type": "header",
+      "content": "Layout & Behavior"
+    },
     {
       "type": "checkbox",
       "id": "full_width",
@@ -57,10 +291,219 @@
       "default": true
     },
     {
-      "type": "text",
-      "id": "text",
-      "label": "Text",
-      "default": "Promotion text"
+      "type": "select",
+      "id": "scrolling_mode",
+      "label": "Scrolling mode",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Automatic"
+        },
+        {
+          "value": "scroll",
+          "label": "On scroll"
+        }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "range",
+      "id": "scrolling_speed",
+      "min": 3,
+      "max": 30,
+      "step": 1,
+      "unit": "s",
+      "label": "Automatic scrolling speed",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "animation_direction",
+      "label": "Animation direction",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Left to right"
+        },
+        {
+          "value": "reverse",
+          "label": "Right to left"
+        }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "select",
+      "id": "animation_timing",
+      "label": "Animation timing",
+      "options": [
+        {
+          "value": "linear",
+          "label": "Linear"
+        },
+        {
+          "value": "ease-in-out",
+          "label": "Ease in-out"
+        },
+        {
+          "value": "ease-in",
+          "label": "Ease in"
+        },
+        {
+          "value": "ease-out",
+          "label": "Ease out"
+        }
+      ],
+      "default": "linear"
+    },
+    {
+      "type": "range",
+      "id": "repetitions",
+      "min": 1,
+      "max": 15,
+      "step": 1,
+      "label": "Number of repetitions",
+      "info": "How many times to repeat the content sequence",
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "add_separator_between_repetitions",
+      "label": "Add separator between repetitions",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Spacing & Alignment"
+    },
+    {
+      "type": "range",
+      "id": "element_spacing",
+      "min": 10,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Spacing between elements",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "desktop_element_spacing",
+      "min": 10,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "label": "Desktop spacing between elements",
+      "info": "Leave empty to use mobile spacing",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "mobile_element_spacing",
+      "min": 5,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile spacing between elements",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "item_inner_spacing",
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Spacing within items",
+      "info": "Space between text, images, icons within each item",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_y",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section vertical padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "section_padding_x",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section horizontal padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#000000"
+    },
+    {
+      "type": "checkbox",
+      "id": "box_shadow",
+      "label": "Add shadow",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "overflow_hidden",
+      "label": "Hide overflow",
+      "info": "Recommended for clean edges",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text Styling"
     },
     {
       "type": "select",
@@ -108,39 +551,235 @@
     },
     {
       "type": "select",
-      "id": "scrolling_mode",
-      "label": "Scrolling mode",
+      "id": "text_weight",
+      "label": "Text weight",
       "options": [
         {
-          "value": "auto",
-          "label": "Automatic"
+          "value": "300",
+          "label": "Light"
         },
         {
-          "value": "scroll",
-          "label": "On scroll"
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        },
+        {
+          "value": "800",
+          "label": "Extra Bold"
         }
       ],
-      "default": "auto"
+      "default": "700"
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "uppercase"
     },
     {
       "type": "range",
-      "id": "scrolling_speed",
-      "min": 3,
-      "max": 20,
-      "step": 1,
-      "unit": "s",
-      "label": "Automatic scrolling speed",
-      "default": 10
+      "id": "letter_spacing",
+      "min": -2,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "text_shadow",
+      "label": "Add text shadow",
+      "default": false
     },
     {
       "type": "header",
-      "content": "Colors",
-      "info": "Gradient replaces solid colors when set. Gradient text outline and gradient background cannot be combined."
+      "content": "Image Settings"
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "min": 20,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Image height",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_height",
+      "min": 15,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile image height",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Icon Settings"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_icon_size",
+      "min": 12,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile icon size",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color"
+    },
+    {
+      "type": "color",
+      "id": "icon_background",
+      "label": "Icon background color"
+    },
+    {
+      "type": "range",
+      "id": "icon_padding",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon padding",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "icon_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Icon border radius",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Separator Settings"
+    },
+    {
+      "type": "select",
+      "id": "separator_style",
+      "label": "Separator style",
+      "options": [
+        {
+          "value": "solid",
+          "label": "Solid"
+        },
+        {
+          "value": "dashed",
+          "label": "Dashed"
+        },
+        {
+          "value": "dotted",
+          "label": "Dotted"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "range",
+      "id": "separator_width",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Separator width",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "separator_height",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Separator height",
+      "default": 30
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator color"
+    },
+    {
+      "type": "header",
+      "content": "Spacer Settings"
+    },
+    {
+      "type": "range",
+      "id": "spacer_width",
+      "min": 10,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Spacer width",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Colors"
     },
     {
       "type": "color",
       "id": "background",
-      "label": "Background"
+      "label": "Background color"
     },
     {
       "type": "color_background",
@@ -150,17 +789,167 @@
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text"
+      "label": "Text color",
+      "default": "#000000"
     },
     {
       "type": "color_background",
       "id": "text_gradient",
       "label": "Text gradient"
+    },
+    {
+      "type": "header",
+      "content": "Hover Effects"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_hover_effects",
+      "label": "Enable hover effects",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hover_scale",
+      "min": 90,
+      "max": 120,
+      "step": 5,
+      "unit": "%",
+      "label": "Hover scale",
+      "default": 105
+    },
+    {
+      "type": "header",
+      "content": "SEO & Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "section_label",
+      "label": "Section label",
+      "info": "For screen readers",
+      "default": "Scrolling content section"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_structured_data",
+      "label": "Enable structured data",
+      "info": "Helps search engines understand content",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text content",
+          "default": "Your text here"
+        },
+        {
+          "type": "color_background",
+          "id": "text_gradient",
+          "label": "Custom text gradient",
+          "info": "Overrides section text gradient"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Alt text",
+          "info": "Important for accessibility and SEO"
+        }
+      ]
+    },
+    {
+      "type": "icon",
+      "name": "Icon",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "icon_svg",
+          "label": "SVG Icon code",
+          "info": "Paste your SVG code here"
+        },
+        {
+          "type": "text",
+          "id": "icon_text",
+          "label": "Or use text/emoji",
+          "info": "Alternative to SVG (★ ● ▲ ♦ etc.)",
+          "default": "★"
+        }
+      ]
+    },
+    {
+      "type": "separator",
+      "name": "Separator",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Adds a vertical line separator between elements"
+        }
+      ]
+    },
+    {
+      "type": "spacer",
+      "name": "Spacer",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Adds extra space between elements"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Scrolling text"
+      "name": "Scrolling text",
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "text": "🎉 LIVRAISON GRATUITE"
+          }
+        },
+        {
+          "type": "separator"
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "SERVICE CLIENT 7J/7"
+          }
+        },
+        {
+          "type": "separator"
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "PAIEMENT SÉCURISÉ"
+          }
+        },
+        {
+          "type": "separator"
+        },
+        {
+          "type": "text",
+          "settings": {
+            "text": "SATISFAIT OU REMBOURSÉ"
+          }
+        }
+      ]
     }
   ]
 }
