@@ -78,7 +78,7 @@
       "settings": {
         "full_width": true,
         "text": "Promotion text",
-        "text_size": "medium",
+        "text_size": "small",
         "text_style": "fill",
         "scrolling_mode": "auto",
         "scrolling_speed": 10,
@@ -139,12 +139,12 @@
         "text_alignment": "center",
         "items_per_row": 4,
         "background": "#000000",
-        "background_gradient": "radial-gradient(rgba(255, 154, 98, 1), rgba(255, 204, 75, 1) 100%)",
-        "text_color": "#f2f2f2",
-        "heading_color": "",
+        "background_gradient": "radial-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 1) 100%)",
+        "text_color": "#ffffff",
+        "heading_color": "#ffffff",
         "heading_gradient": "",
-        "logo_item_background": "",
-        "logo_item_border": ""
+        "logo_item_background": "#000000",
+        "logo_item_border": "#000000"
       }
     },
     "image_with_text_overlay_cbNJpF": {
