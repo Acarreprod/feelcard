@@ -74,18 +74,66 @@
     },
     "scrolling_text_inFLU7": {
       "type": "scrolling-text",
+      "blocks": {
+        "text_item_kWhCPx": {
+          "type": "text_item",
+          "settings": {
+            "text": "Texte promotionnel",
+            "custom_color": "#ffffff"
+          }
+        },
+        "image_item_MJi3nL": {
+          "type": "image_item",
+          "settings": {
+            "image": "shopify://shop_images/65b8e8fc2db4490440dcb2ef_feekr_logo.png",
+            "image_width": 60,
+            "alt_text": ""
+          }
+        },
+        "icon_item_3HfnVY": {
+          "type": "icon_item",
+          "settings": {
+            "icon_type": "emoji",
+            "emoji_icon": "⭐🔥",
+            "fontawesome_icon": "star",
+            "custom_svg": "",
+            "icon_color": "#ffb74a"
+          }
+        }
+      },
+      "block_order": [
+        "text_item_kWhCPx",
+        "image_item_MJi3nL",
+        "icon_item_3HfnVY"
+      ],
       "name": "Scrolling text",
       "settings": {
-        "full_width": true,
-        "text": "Promotion text",
-        "text_size": "small",
-        "text_style": "fill",
-        "scrolling_mode": "auto",
-        "scrolling_speed": 10,
-        "background": "#000000",
+        "auto_start": true,
+        "show_controls": false,
+        "direction": "fade",
+        "animation_speed": 5,
+        "pause_on_hover": false,
+        "item_gap": 30,
+        "separator_type": "arrow",
+        "separator_spacing": 20,
+        "min_font_size": 16,
+        "font_size_vw": 4,
+        "max_font_size": 48,
+        "font_weight": "500",
+        "text_transform": "none",
+        "letter_spacing": 0,
+        "icon_size": 32,
+        "image_height": 40,
+        "image_border_radius": 4,
+        "mobile_min_font": 14,
+        "mobile_font_vw": 3.5,
+        "mobile_max_font": 32,
+        "background_color": "#000000",
         "background_gradient": "",
         "text_color": "",
-        "text_gradient": "linear-gradient(270deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 1) 100%)"
+        "separator_color": "#cccccc",
+        "section_padding_top": 40,
+        "section_padding_bottom": 40
       }
     },
     "multi_column_PaeCEz": {
