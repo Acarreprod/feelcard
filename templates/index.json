@@ -88,6 +88,68 @@
         "text_gradient": "linear-gradient(270deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 1) 100%)"
       }
     },
+    "multi_column_PaeCEz": {
+      "type": "multi-column",
+      "blocks": {
+        "item_AFgm7j": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Visuels_Digifeel_30_c96aa528-3f4d-40de-9c3e-7cc001cd2676.webp",
+            "column_size": "3",
+            "title": "Créez votre compte Feelcard",
+            "heading_tag": "h4",
+            "content": "<p>Vous accédez immédiatement à votre <strong>espace client Feelcard</strong> pour configurer la plaque et suivre les statistiques de vos avis.</p>",
+            "link_url": "",
+            "link_text": "",
+            "link_style": "link"
+          }
+        },
+        "item_GxK6UU": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/io_2.webp",
+            "column_size": "3",
+            "title": "Activez votre plaque",
+            "heading_tag": "h4",
+            "content": "<p>À réception de votre produit, rendez-vous dans l’application, puis <strong>activez votre plaque en 2 clics</strong> (liée à votre établissement Google).</p>",
+            "link_url": "",
+            "link_text": "",
+            "link_style": "link"
+          }
+        },
+        "item_JKgM99": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Visuels_Digifeel_28_1.webp",
+            "column_size": "3",
+            "title": "Vous êtes prêt(e) !",
+            "heading_tag": "h4",
+            "content": "<p>Et… c’est tout ! Vous êtes maintenant prêt(e) à <strong>collecter vos premiers avis</strong> en magasin, de façon instantanée et efficace.</p>",
+            "link_url": "",
+            "link_text": "",
+            "link_style": "link"
+          }
+        }
+      },
+      "block_order": [
+        "item_AFgm7j",
+        "item_GxK6UU",
+        "item_JKgM99"
+      ],
+      "name": "Multi-column",
+      "settings": {
+        "full_width": true,
+        "stack_on_mobile": false,
+        "gap": "medium",
+        "text_alignment": "start",
+        "subheading": "",
+        "title": "Installation en moins de 20 secondes",
+        "content": "<p>La plupart de nos clients connectent et commencent à utiliser leur carte en moins d'une minute. Voici comment ça fonctionne :</p>",
+        "background": "#000000",
+        "background_gradient": "",
+        "text_color": "#ffffff"
+      }
+    },
     "logo_list_AEtWMc": {
       "type": "logo-list",
       "blocks": {
@@ -157,11 +219,36 @@
         "enable_parallax": false,
         "image_size": "auto",
         "image": "shopify://shop_images/woman-in-fur-under-neon.jpg",
+        "alt_text": "",
         "mobile_text_position": "place-self-center text-center",
         "desktop_text_position": "sm:place-self-center sm:text-center",
+        "section_background_color": "",
+        "section_padding_top": 0,
+        "section_padding_bottom": 0,
+        "border_radius": 0,
+        "box_shadow": false,
+        "content_max_width": 800,
+        "content_background_color": "",
+        "content_padding": 20,
+        "mobile_content_padding": 15,
+        "content_border_radius": 8,
         "text_color": "#ffffff",
+        "heading_color": "",
+        "subheading_color": "",
+        "heading_font_weight": "700",
+        "heading_text_transform": "none",
+        "heading_letter_spacing": 0,
+        "subheading_font_weight": "600",
+        "subheading_text_transform": "uppercase",
+        "button_background": "#000000",
+        "button_text_color": "#ffffff",
+        "button_border_radius": 6,
+        "button_font_weight": "600",
+        "button_text_transform": "uppercase",
         "overlay_color": "#000000",
-        "overlay_opacity": 0
+        "overlay_opacity": 0,
+        "section_label": "Image with text overlay section",
+        "enable_structured_data": true
       }
     },
     "image_with_text_overlay_rh8xqp": {
@@ -174,11 +261,36 @@
         "enable_parallax": false,
         "image_size": "auto",
         "image": "shopify://shop_images/woman-infront-of-tree-with-berries.jpeg",
+        "alt_text": "",
         "mobile_text_position": "place-self-center text-center",
         "desktop_text_position": "sm:place-self-center sm:text-center",
+        "section_background_color": "",
+        "section_padding_top": 0,
+        "section_padding_bottom": 0,
+        "border_radius": 0,
+        "box_shadow": false,
+        "content_max_width": 800,
+        "content_background_color": "",
+        "content_padding": 20,
+        "mobile_content_padding": 15,
+        "content_border_radius": 8,
         "text_color": "#ffffff",
+        "heading_color": "",
+        "subheading_color": "",
+        "heading_font_weight": "700",
+        "heading_text_transform": "none",
+        "heading_letter_spacing": 0,
+        "subheading_font_weight": "600",
+        "subheading_text_transform": "uppercase",
+        "button_background": "#000000",
+        "button_text_color": "#ffffff",
+        "button_border_radius": 6,
+        "button_font_weight": "600",
+        "button_text_transform": "uppercase",
         "overlay_color": "#000000",
-        "overlay_opacity": 30
+        "overlay_opacity": 30,
+        "section_label": "Image with text overlay section",
+        "enable_structured_data": true
       }
     },
     "impact-text": {
@@ -208,26 +320,13 @@
         "impact_text_style": "fill",
         "text_divider": "none",
         "impact_text_size_ratio": 1,
-        "background": "",
+        "background": "#000000",
         "background_gradient": "",
         "heading_text_color": "",
         "heading_gradient": "linear-gradient(180deg, rgba(26, 26, 26, 0.2), rgba(26, 26, 26, 0) 100%)",
         "text_color": "",
         "button_background": "",
         "button_text_color": ""
-      }
-    },
-    "custom_html_NxaKET": {
-      "type": "custom-html",
-      "name": "Custom HTML",
-      "settings": {
-        "full_width": true,
-        "remove_vertical_spacing": false,
-        "remove_horizontal_spacing": false,
-        "html": "",
-        "background": "",
-        "background_gradient": "",
-        "text_color": ""
       }
     },
     "image_with_text_overlay_6rndAF": {
@@ -240,73 +339,36 @@
         "enable_parallax": false,
         "image_size": "auto",
         "image": "shopify://shop_images/hand-holds-up-a-two-scoop-ice-cream-cone.jpg",
+        "alt_text": "",
         "mobile_text_position": "place-self-center text-center",
         "desktop_text_position": "sm:place-self-center sm:text-center",
+        "section_background_color": "",
+        "section_padding_top": 0,
+        "section_padding_bottom": 0,
+        "border_radius": 0,
+        "box_shadow": false,
+        "content_max_width": 800,
+        "content_background_color": "",
+        "content_padding": 20,
+        "mobile_content_padding": 15,
+        "content_border_radius": 8,
         "text_color": "#ffffff",
+        "heading_color": "",
+        "subheading_color": "",
+        "heading_font_weight": "700",
+        "heading_text_transform": "none",
+        "heading_letter_spacing": 0,
+        "subheading_font_weight": "600",
+        "subheading_text_transform": "uppercase",
+        "button_background": "#000000",
+        "button_text_color": "#ffffff",
+        "button_border_radius": 6,
+        "button_font_weight": "600",
+        "button_text_transform": "uppercase",
         "overlay_color": "#000000",
-        "overlay_opacity": 0
-      }
-    },
-    "multi_column_PaeCEz": {
-      "type": "multi-column",
-      "blocks": {
-        "item_AFgm7j": {
-          "type": "item",
-          "settings": {
-            "image": "shopify://shop_images/Visuels_Digifeel_30_c96aa528-3f4d-40de-9c3e-7cc001cd2676.webp",
-            "column_size": "3",
-            "title": "Créez votre compte Feelcard",
-            "heading_tag": "h4",
-            "content": "<p>Vous accédez immédiatement à votre <strong>espace client Feelcard</strong> pour configurer la plaque et suivre les statistiques de vos avis.</p>",
-            "link_url": "",
-            "link_text": "",
-            "link_style": "link"
-          }
-        },
-        "item_GxK6UU": {
-          "type": "item",
-          "settings": {
-            "image": "shopify://shop_images/io_2.webp",
-            "column_size": "3",
-            "title": "Activez votre plaque",
-            "heading_tag": "h4",
-            "content": "<p>À réception de votre produit, rendez-vous dans l’application, puis <strong>activez votre plaque en 2 clics</strong> (liée à votre établissement Google).</p>",
-            "link_url": "",
-            "link_text": "",
-            "link_style": "link"
-          }
-        },
-        "item_JKgM99": {
-          "type": "item",
-          "settings": {
-            "image": "shopify://shop_images/Visuels_Digifeel_28_1.webp",
-            "column_size": "3",
-            "title": "Vous êtes prêt(e) !",
-            "heading_tag": "h4",
-            "content": "<p>Et… c’est tout ! Vous êtes maintenant prêt(e) à <strong>collecter vos premiers avis</strong> en magasin, de façon instantanée et efficace.</p>",
-            "link_url": "",
-            "link_text": "",
-            "link_style": "link"
-          }
-        }
-      },
-      "block_order": [
-        "item_AFgm7j",
-        "item_GxK6UU",
-        "item_JKgM99"
-      ],
-      "name": "Multi-column",
-      "settings": {
-        "full_width": true,
-        "stack_on_mobile": false,
-        "gap": "medium",
-        "text_alignment": "start",
-        "subheading": "",
-        "title": "Installation en moins de 20 secondes",
-        "content": "<p>La plupart de nos clients connectent et commencent à utiliser leur carte en moins d'une minute. Voici comment ça fonctionne :</p>",
-        "background": "",
-        "background_gradient": "",
-        "text_color": ""
+        "overlay_opacity": 0,
+        "section_label": "Image with text overlay section",
+        "enable_structured_data": true
       }
     },
     "multiple-images-with-text": {
@@ -352,6 +414,7 @@
         "1664424486a2b084ab-1",
         "item_NJbjKF"
       ],
+      "disabled": true,
       "custom_css": [],
       "name": "avis image",
       "settings": {
@@ -556,7 +619,7 @@
           "type": "tab",
           "settings": {
             "title": "Caractéristiques",
-            "content": "<p><strong>1. Design ultra-fin</strong><br/><br/>La carte myTRACKERR mesure seulement <em>1,6 mm d’épaisseur </em>(l’équivalent de 2 cartes bancaires). Elle se glisse discrètement dans n’importe quel portefeuille.<br/><br/>Fixez-la à votre portefeuille, badge, valise, passeport ou appareil électronique – pour une vie plus simple au quotidien.</p><p><strong>2. Recharge sans fil</strong><br/><br/>Recharge facile grâce à la technologie sans fil.<br/><br/>Une charge complète de 2 heures offre jusqu’à 5 mois d’autonomie. Une LED vous indique l’état de charge en changeant de couleur. Réutilisable à volonté, pour une solution plus économique.</p><p><strong>3. Faites-la sonner pour la retrouver</strong><br/><br/>Dans un rayon Bluetooth allant jusqu’à 90 mètres, faites sonner la carte pour retrouver votre portefeuille à l’aide de votre téléphone.<br/><br/>Fonction compatible avec les appareils Apple via l’application Localiser (Find My).<br/><br/><em>(Non compatible avec Android.)</em></p><p><strong>4. Étanche</strong><br/><br/>La carte est certifiée waterproof: elle reste totalement fonctionnelle après une immersion de 30 minutes à 1 mètre de profondeur.<br/><br/>Utilisable en toute sécurité sous la pluie ou lors de vos activités en extérieur.</p><p><strong>5. Alerte en cas d’oubli</strong><br/><br/>Dès que votre carte sort de portée Bluetooth, votre iPhone vous envoie une alerte de déconnexion, avec la dernière position connue.<br/><br/>Suivi disponible via l’app Localiser, sans abonnement, ni frais cachés.</p><p><strong>6. Mode Perdu</strong><br/><br/>Activez le mode perdu dans l’app Find My pour retrouver vos objets grâce au réseau mondial Apple (des centaines de millions d’appareils).<br/><br/>Dès qu’un appareil Apple croise votre carte, vous recevez une notification instantanée.</p><p><strong>7. Protection de la vie privée</strong><br/><br/>Sécurité des données garantie : nous ne stockons jamais votre historique de localisation.<br/><br/>Toutes les données sont anonymes et chiffrées, pour une utilisation 100 % confidentielle.</p>",
+            "content": "",
             "page": ""
           }
         },
@@ -726,13 +789,12 @@
   "order": [
     "slideshow",
     "scrolling_text_inFLU7",
+    "multi_column_PaeCEz",
     "logo_list_AEtWMc",
     "image_with_text_overlay_cbNJpF",
     "image_with_text_overlay_rh8xqp",
     "impact-text",
-    "custom_html_NxaKET",
     "image_with_text_overlay_6rndAF",
-    "multi_column_PaeCEz",
     "multiple-images-with-text",
     "featured_product_RFmzrc",
     "tabs_8g6iLH",
