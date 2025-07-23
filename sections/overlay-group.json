@@ -41,8 +41,8 @@
         "show_checkout_button": true,
         "recommendations_title": "Trending this month",
         "products": [],
-        "product_card_background": "#f2f2f2",
-        "product_card_text_color": ""
+        "product_card_background": "#000000",
+        "product_card_text_color": "#ffffff"
       }
     },
     "search-drawer": {
