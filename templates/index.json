@@ -109,7 +109,7 @@
       "name": "Scrolling text",
       "settings": {
         "auto_start": true,
-        "show_controls": false,
+        "show_controls": true,
         "direction": "fade",
         "animation_speed": 5,
         "pause_on_hover": false,
