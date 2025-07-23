@@ -1,63 +1,15 @@
-{%- if section.settings.text != blank or section.blocks.size > 0 -%}
+{%- if section.settings.text != blank -%}
   {%- render 'section-spacing-collapsing' -%}
 
   <style>
     #shopify-section-{{ section.id }} {
       --section-spacing-inline: 0;
       --scrolling-text-font-size: {% if section.settings.text_size == 'xsmall' %}1.125rem{% elsif section.settings.text_size == 'small' %}2.5rem{% elsif section.settings.text_size == 'medium' %}3.75rem{% elsif section.settings.text_size == 'large' %}5rem{% else %}7.5rem{% endif %};
-      --item-spacing: {{ section.settings.item_spacing | default: 30 }}px;
-      --icon-size: {{ section.settings.icon_size | default: 32 }}px;
-      --image-height: {{ section.settings.image_height | default: 40 }}px;
     }
 
     @media screen and (min-width: 700px) {
       #shopify-section-{{ section.id }} {
         --scrolling-text-font-size: {% if section.settings.text_size == 'xsmall' %}1.5rem{% elsif section.settings.text_size == 'small' %}3.75rem{% elsif section.settings.text_size == 'medium' %}5rem{% elsif section.settings.text_size == 'large' %}8.75rem{% else %}12.5rem{% endif %};
-      }
-    }
-
-    /* Styles pour les éléments de contenu */
-    .scrolling-text__item {
-      display: inline-flex;
-      align-items: center;
-      margin-right: var(--item-spacing);
-    }
-
-    .scrolling-text__item--text {
-      white-space: nowrap;
-    }
-
-    .scrolling-text__item--icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .scrolling-text__item--icon svg,
-    .scrolling-text__item--icon i {
-      width: var(--icon-size);
-      height: var(--icon-size);
-      font-size: var(--icon-size);
-    }
-
-    .scrolling-text__item--icon .emoji-icon {
-      font-size: var(--icon-size);
-      line-height: 1;
-    }
-
-    .scrolling-text__item--image img {
-      height: var(--image-height);
-      width: auto;
-      object-fit: contain;
-      vertical-align: middle;
-    }
-
-    /* Responsive pour mobile */
-    @media screen and (max-width: 699px) {
-      #shopify-section-{{ section.id }} {
-        --item-spacing: calc({{ section.settings.item_spacing | default: 30 }}px * 0.7);
-        --icon-size: calc({{ section.settings.icon_size | default: 32 }}px * 0.8);
-        --image-height: calc({{ section.settings.image_height | default: 40 }}px * 0.8);
       }
     }
   </style>
@@ -68,48 +20,11 @@
 
   <div {% render 'section-properties', tight: is_tight %}>
     {%- capture section_content -%}
-      {%- comment -%} Contenu des blocs si présents {%- endcomment -%}
-      {%- if section.blocks.size > 0 -%}
-        {%- for i in (1..10) -%}
-          {%- for block in section.blocks -%}
-            <span class="scrolling-text__item scrolling-text__item--{{ block.type }} heading {% unless forloop.first and forloop.parentloop.first %}motion-reduce:hidden{% endunless %}" 
-                  {% unless forloop.first and forloop.parentloop.first %}aria-hidden="true"{% endunless %} 
-                  {{ block.shopify_attributes }}>
-              
-              {%- case block.type -%}
-                {%- when 'text_item' -%}
-                  {%- render 'styled-text', content: block.settings.text, gradient: section.settings.text_gradient, style: section.settings.text_style -%}
-                
-                {%- when 'icon_item' -%}
-                  {%- if block.settings.icon_type == 'emoji' -%}
-                    <span class="emoji-icon">{{ block.settings.emoji_icon }}</span>
-                  {%- elsif block.settings.icon_type == 'fontawesome' -%}
-                    <i class="fas fa-{{ block.settings.fontawesome_icon }}"></i>
-                  {%- elsif block.settings.icon_type == 'svg' and block.settings.custom_svg != blank -%}
-                    {{ block.settings.custom_svg }}
-                  {%- endif -%}
-                
-                {%- when 'image_item' -%}
-                  {%- if block.settings.image != blank -%}
-                    <img src="{{ block.settings.image | image_url: width: block.settings.image_width }}" 
-                         alt="{{ block.settings.alt_text | escape | default: block.settings.image.alt }}"
-                         loading="lazy"
-                         width="{{ block.settings.image_width }}"
-                         height="auto">
-                  {%- endif -%}
-                
-              {%- endcase -%}
-            </span>
-          {%- endfor -%}
-        {%- endfor -%}
-      {%- else -%}
-        {%- comment -%} Contenu texte original si pas de blocs {%- endcomment -%}
-        {%- for i in (1..10) -%}
-          <span class="scrolling-text__text heading {% unless forloop.first %}motion-reduce:hidden{% endunless %}" {% unless forloop.first %}aria-hidden="true"{% endunless %}>
-            {%- render 'styled-text', content: section.settings.text, gradient: section.settings.text_gradient, style: section.settings.text_style -%}
-          </span>
-        {%- endfor -%}
-      {%- endif -%}
+      {%- for i in (1..10) -%}
+        <span class="scrolling-text__text heading {% unless forloop.first %}motion-reduce:hidden{% endunless %}" {% unless forloop.first %}aria-hidden="true"{% endunless %}>
+          {%- render 'styled-text', content: section.settings.text, gradient: section.settings.text_gradient, style: section.settings.text_style -%}
+        </span>
+      {%- endfor -%}
     {%- endcapture -%}
 
     <div class="scrolling-text {% if section.settings.scrolling_mode == 'scroll' %}scrolling-text--scroll{% else %}scrolling-text--auto{% endif %}">
@@ -145,8 +60,7 @@
       "type": "text",
       "id": "text",
       "label": "Text",
-      "default": "Promotion text",
-      "info": "Utilisé uniquement si aucun bloc n'est ajouté"
+      "default": "Promotion text"
     },
     {
       "type": "select",
@@ -220,40 +134,6 @@
     },
     {
       "type": "header",
-      "content": "Spacing & Elements"
-    },
-    {
-      "type": "range",
-      "id": "item_spacing",
-      "min": 10,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Spacing between elements",
-      "default": 30
-    },
-    {
-      "type": "range",
-      "id": "icon_size",
-      "min": 16,
-      "max": 80,
-      "step": 4,
-      "unit": "px",
-      "label": "Icon size",
-      "default": 32
-    },
-    {
-      "type": "range",
-      "id": "image_height",
-      "min": 20,
-      "max": 120,
-      "step": 5,
-      "unit": "px",
-      "label": "Image height",
-      "default": 40
-    },
-    {
-      "type": "header",
       "content": "Colors",
       "info": "Gradient replaces solid colors when set. Gradient text outline and gradient background cannot be combined."
     },
@@ -278,124 +158,9 @@
       "label": "Text gradient"
     }
   ],
-  "blocks": [
-    {
-      "type": "text_item",
-      "name": "Text Element",
-      "settings": [
-        {
-          "type": "text",
-          "id": "text",
-          "label": "Text",
-          "default": "Promotional text"
-        }
-      ]
-    },
-    {
-      "type": "icon_item",
-      "name": "Icon Element",
-      "settings": [
-        {
-          "type": "select",
-          "id": "icon_type",
-          "label": "Icon type",
-          "options": [
-            {
-              "value": "emoji",
-              "label": "Emoji"
-            },
-            {
-              "value": "fontawesome",
-              "label": "Font Awesome"
-            },
-            {
-              "value": "svg",
-              "label": "Custom SVG"
-            }
-          ],
-          "default": "emoji"
-        },
-        {
-          "type": "text",
-          "id": "emoji_icon",
-          "label": "Emoji",
-          "default": "⭐",
-          "info": "Copy and paste an emoji (shown if 'Emoji' is selected)"
-        },
-        {
-          "type": "text",
-          "id": "fontawesome_icon",
-          "label": "Font Awesome icon name",
-          "default": "star",
-          "info": "Icon name without 'fa-' (ex: star, heart, home)"
-        },
-        {
-          "type": "textarea",
-          "id": "custom_svg",
-          "label": "Custom SVG code",
-          "info": "Paste complete SVG code here"
-        }
-      ]
-    },
-    {
-      "type": "image_item",
-      "name": "Image Element",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "range",
-          "id": "image_width",
-          "min": 20,
-          "max": 200,
-          "step": 10,
-          "unit": "px",
-          "label": "Image width",
-          "default": 60
-        },
-        {
-          "type": "text",
-          "id": "alt_text",
-          "label": "Alt text",
-          "info": "Image description for accessibility"
-        }
-      ]
-    }
-  ],
   "presets": [
     {
-      "name": "Scrolling text",
-      "blocks": [
-        {
-          "type": "text_item",
-          "settings": {
-            "text": "Free shipping over 50€"
-          }
-        },
-        {
-          "type": "icon_item",
-          "settings": {
-            "icon_type": "emoji",
-            "emoji_icon": "🚚"
-          }
-        },
-        {
-          "type": "text_item",
-          "settings": {
-            "text": "30-day free returns"
-          }
-        },
-        {
-          "type": "icon_item",
-          "settings": {
-            "icon_type": "emoji",
-            "emoji_icon": "↩️"
-          }
-        }
-      ]
+      "name": "Scrolling text"
     }
   ]
 }
