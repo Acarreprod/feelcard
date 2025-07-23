@@ -21,8 +21,8 @@
             "mobile_icon_width": 24,
             "icon_width": 24,
             "icon_background_type": "none",
-            "icon_background": "",
-            "icon_color": "",
+            "icon_background": "#1a1a1a",
+            "icon_color": "#ffffff",
             "title": "Livraison gratuite",
             "content": ""
           }
@@ -35,7 +35,7 @@
             "icon_width": 24,
             "icon_background_type": "none",
             "icon_background": "",
-            "icon_color": "",
+            "icon_color": "#ffffff",
             "title": "Service client 7j/7",
             "content": ""
           }
@@ -48,7 +48,7 @@
             "icon_width": 24,
             "icon_background_type": "none",
             "icon_background": "",
-            "icon_color": "",
+            "icon_color": "#ffffff",
             "title": "Paiement sécurisé",
             "content": ""
           }
@@ -61,7 +61,7 @@
             "icon_width": 24,
             "icon_background_type": "none",
             "icon_background": "",
-            "icon_color": "",
+            "icon_color": "#ffffff",
             "title": "Satisfait ou remboursé",
             "content": ""
           }
@@ -77,12 +77,12 @@
         "full_width": true,
         "stack_on_mobile": false,
         "title": "",
-        "heading_tag": "h6",
+        "heading_tag": "h5",
         "text_alignment": "center",
-        "icon_spacing": "small",
-        "background": "",
+        "icon_spacing": "medium",
+        "background": "#000000",
         "background_gradient": "",
-        "text_color": ""
+        "text_color": "#ffffff"
       }
     },
     "footer": {
@@ -100,7 +100,7 @@
           "type": "text",
           "settings": {
             "title": "Contact",
-            "content": "<p><strong>Service client : </strong>hello@mytrackerr.com</p>",
+            "content": "<p><strong>Service client : </strong>hello@feelcard.io</p>",
             "enable_follow_on_shop": true
           }
         }
