@@ -619,7 +619,7 @@
           "type": "tab",
           "settings": {
             "title": "Caractéristiques",
-            "content": "",
+            "content": "<p><strong>1. Design ultra-fin</strong><br/><br/>La carte myTRACKERR mesure seulement <em>1,6 mm d’épaisseur </em>(l’équivalent de 2 cartes bancaires). Elle se glisse discrètement dans n’importe quel portefeuille.<br/><br/>Fixez-la à votre portefeuille, badge, valise, passeport ou appareil électronique – pour une vie plus simple au quotidien.</p><p><strong>2. Recharge sans fil</strong><br/><br/>Recharge facile grâce à la technologie sans fil.<br/><br/>Une charge complète de 2 heures offre jusqu’à 5 mois d’autonomie. Une LED vous indique l’état de charge en changeant de couleur. Réutilisable à volonté, pour une solution plus économique.</p><p><strong>3. Faites-la sonner pour la retrouver</strong><br/><br/>Dans un rayon Bluetooth allant jusqu’à 90 mètres, faites sonner la carte pour retrouver votre portefeuille à l’aide de votre téléphone.<br/><br/>Fonction compatible avec les appareils Apple via l’application Localiser (Find My).<br/><br/><em>(Non compatible avec Android.)</em></p><p><strong>4. Étanche</strong><br/><br/>La carte est certifiée waterproof: elle reste totalement fonctionnelle après une immersion de 30 minutes à 1 mètre de profondeur.<br/><br/>Utilisable en toute sécurité sous la pluie ou lors de vos activités en extérieur.</p><p><strong>5. Alerte en cas d’oubli</strong><br/><br/>Dès que votre carte sort de portée Bluetooth, votre iPhone vous envoie une alerte de déconnexion, avec la dernière position connue.<br/><br/>Suivi disponible via l’app Localiser, sans abonnement, ni frais cachés.</p><p><strong>6. Mode Perdu</strong><br/><br/>Activez le mode perdu dans l’app Find My pour retrouver vos objets grâce au réseau mondial Apple (des centaines de millions d’appareils).<br/><br/>Dès qu’un appareil Apple croise votre carte, vous recevez une notification instantanée.</p><p><strong>7. Protection de la vie privée</strong><br/><br/>Sécurité des données garantie : nous ne stockons jamais votre historique de localisation.<br/><br/>Toutes les données sont anonymes et chiffrées, pour une utilisation 100 % confidentielle.</p>",
             "page": ""
           }
         },
@@ -654,6 +654,7 @@
         "tab_bFRPRb",
         "tab_37jKG3"
       ],
+      "disabled": true,
       "name": "Tabs",
       "settings": {
         "full_width": true,
