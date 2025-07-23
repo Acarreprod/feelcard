@@ -431,172 +431,75 @@
     "featured_product_RFmzrc": {
       "type": "featured-product",
       "blocks": {
-        "liquid_LaHTzH": {
-          "type": "liquid",
-          "settings": {
-            "liquid": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Trustpilot Rating</title>\n    <style>\n        .container-trustpilot {\n            background-color: #e9f8fe;\n            border: 1px dashed #006400; /* Koyu yeşil border */\n            padding: 5px 5px;\n            display: flex;\n            align-items: center;\n            justify-content: center;\n            border-radius: 10px;\n        }\n        .container-trustpilot img {\n            margin: 0 10px;\n        }\n        .container-trustpilot .stars {\n            max-width: 80px; /* Increased size for the star image */\n        }\n        .container-trustpilot .logo {\n            max-width: 70px;\n        }\n        .container-trustpilot span {\n            margin: 0 5px;\n        }\n        .excellent {\n            color: #000;\n            font-size: 12px;\n        }\n        .rating-text {\n            color: #000;\n            font-size: 10px;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container-trustpilot\">\n        <span class=\"excellent\"><b>\"Tellement mieux qu'un Air Tag\"</b></span>\n        <img class=\"stars\" src=\"https://cdn.shopify.com/s/files/1/0647/2148/6072/files/4.5-stars-trustpilot_2157d8d9-101e-46a2-a3fe-ac80f2fecf10.png?v=1688082792\" alt=\"4.8/5 Rating\">\n        <span class=\"rating-text\">noté 4.8/5 sur</span>\n        <img class=\"logo\" src=\"https://cdn.shopify.com/s/files/1/0647/2148/6072/files/Trustpilot_Logo__2022_.svg_2.png?v=1687091440\" alt=\"Trustpilot Logo\">\n    </div>\n</body>\n</html>"
-          }
-        },
         "title_fNaCkn": {
           "type": "title",
           "settings": {
             "heading_tag": "h2"
           }
-        },
-        "rating_PyGHjx": {
-          "type": "rating",
-          "settings": {
-            "show_empty": false
-          }
-        },
-        "separator_Cdr8Ua": {
-          "type": "separator",
-          "settings": {}
-        },
-        "liquid_dVVAbH": {
-          "type": "liquid",
-          "disabled": true,
-          "settings": {
-            "liquid": "<img src=\"https://cdn.shopify.com/s/files/1/0961/7018/0957/files/1_ACHETE_1_OFFERT_430x.gif?v=1750975940&amp;width=750\" alt=\"\" srcset=\"https://cdn.shopify.com/s/files/1/0961/7018/0957/files/1_ACHETE_1_OFFERT_430x.gif?v=1750975940&amp;width=500 500w, https://cdn.shopify.com/s/files/1/0961/7018/0957/files/1_ACHETE_1_OFFERT_430x.gif?v=1750975940&amp;width=750 750w\" width=\"750\" height=\"251\" loading=\"lazy\" style=\"width: 500px; \" sizes=\"500px\">"
-          }
-        },
-        "description_qdyztB": {
-          "type": "description",
-          "settings": {
-            "icon": "none",
-            "icon_width": 20,
-            "collapse_content": false
-          }
-        },
-        "liquid_XiprVi": {
-          "type": "liquid",
-          "settings": {
-            "liquid": ""
-          }
-        },
-        "text_fwPWy7": {
-          "type": "text",
-          "settings": {
-            "text": "<h5>🎁 <strong>La plupart de nos clients offrent une carte à un membre de leur famille </strong>🎁</h5>"
-          }
-        },
-        "text_hCEVyt": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Livraison sous 5 à 10 jours</p>"
-          }
-        },
-        "liquid_yFaPEA": {
-          "type": "liquid",
-          "settings": {
-            "liquid": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Rotating Warnings</title>\n<style>\n  body.unique-body-Xyz789 {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    height: 100vh;\n    margin: 0;\n    background-color: #fff;\n  }\n\n  .unique-warning-container-Abc123 {\n    position: relative;\n    width: 100%;\n    max-width: 600px; /* Genişliği maksimum yap */\n    height: 40px; /* Yüksekliği azalt */\n    overflow: hidden;\n  }\n\n  .unique-warning-Def456 {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    border-radius: 10px;\n    color: #333;\n    font-size: 13px;\n    padding: 10px;\n    border: 1px solid #E2E2E2;\n    box-sizing: border-box;\n    opacity: 0;\n    transition: opacity 0.5s ease-in-out; /* Animasyonun süresini ve şiddetini azalt */\n  }\n\n  .unique-warning-container-Abc123 .unique-warning-Def456:nth-child(1) {\n    animation: unique-showWarning-Ghi789 8s linear infinite 0s;\n  }\n\n  .unique-warning-container-Abc123 .unique-warning-Def456:nth-child(2) {\n    animation: unique-showWarning-Ghi789 8s linear infinite 4s;\n  }\n\n  @keyframes unique-showWarning-Ghi789 {\n    0%, 50% {\n      opacity: 1;\n    }\n    50.01%, 100% {\n      opacity: 0;\n    }\n  }\n\n  .unique-red-warning-Jkl012 {\n    background-color: #ffe6e6;\n  }\n\n  .unique-green-warning-Mno345 {\n    background-color: #f0fff0;\n  }\n\n  @keyframes unique-glowRed-Pqr678 {\n    0% { box-shadow: 0 0 3px 0 rgba(255, 0, 0, 0.7); }\n    50% { box-shadow: 0 0 8px 3px rgba(255, 0, 0, 0.5); }\n    100% { box-shadow: 0 0 3px 0 rgba(255, 0, 0, 0.7); }\n  }\n\n  .unique-circleRed-Stu901 {\n    width: 10px;\n    height: 10px;\n    border-radius: 50%;\n    background-color: #8b0000;\n    display: inline-block;\n    animation: unique-glowRed-Pqr678 1s infinite ease-in-out;\n  }\n\n  .unique-tickIcon-Vwx234 {\n    width: 14px;\n    height: 14px;\n    fill: #006400;\n    margin-right: 5px; /* Metni ikona yaklaştır */\n  }\n</style>\n</head>\n<body class=\"unique-body-Xyz789\">\n\n<div class=\"unique-warning-container-Abc123\">\n  <div class=\"unique-warning-Def456 unique-red-warning-Jkl012\">\n    <div class=\"unique-circleRed-Stu901\"></div>\n    <span style=\"margin-left: 10px;\">Dépêchez-vous ! Stock bientôt épuisé !</span>\n  </div>\n  <div class=\"unique-warning-Def456 unique-green-warning-Mno345\">\n    <svg class=\"unique-tickIcon-Vwx234\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n      <path d=\"M9 16.2l-4.2-4.2-1.4 1.4 5.6 5.6 12-12-1.4-1.4z\"/>\n    </svg>\n    <span>Garanti satisfait ou remboursé.</span>\n  </div>\n</div>\n\n</body>\n</html>"
-          }
-        },
-        "liquid_bVrATE": {
-          "type": "liquid",
-          "settings": {
-            "liquid": ""
-          }
-        },
-        "buy_buttons_CJEpyr": {
-          "type": "buy_buttons",
-          "settings": {
-            "show_payment_button": false,
-            "show_gift_card_recipient": true,
-            "atc_button_background": "",
-            "atc_button_text_color": "",
-            "payment_button_background": "",
-            "payment_button_text_color": ""
-          }
-        },
-        "button_bFagJD": {
-          "type": "button",
-          "settings": {
-            "link": "shopify://products/google-review-plate",
-            "text": "Button",
-            "size": "xl",
-            "style": "fill",
-            "stretch": true,
-            "background": "",
-            "text_color": ""
-          }
-        },
-        "offer_4PekFp": {
-          "type": "offer",
-          "settings": {
-            "text_alignment": "start",
-            "icon_position": "aligned",
-            "icon": "picto-customer-support",
-            "icon_width": 20,
-            "title": "Service client 7j/7",
-            "content": "",
-            "background": "#fff2fc",
-            "text_color": "#cc9bc7"
-          }
-        },
-        "offer_MNj38X": {
-          "type": "offer",
-          "settings": {
-            "text_alignment": "start",
-            "icon_position": "aligned",
-            "icon": "picto-credit-card",
-            "icon_width": 20,
-            "title": "Paiement sécurisé",
-            "content": "",
-            "background": "#fff2fc",
-            "text_color": "#cc9bc7"
-          }
-        },
-        "offer_Re7HiP": {
-          "type": "offer",
-          "settings": {
-            "text_alignment": "start",
-            "icon_position": "aligned",
-            "icon": "picto-box",
-            "icon_width": 20,
-            "title": "Livraison gratuite",
-            "content": "",
-            "background": "#fff2fc",
-            "text_color": "#cc9bc7"
-          }
-        },
-        "offer_6iGVpc": {
-          "type": "offer",
-          "settings": {
-            "text_alignment": "start",
-            "icon_position": "aligned",
-            "icon": "picto-happy",
-            "icon_width": 20,
-            "title": "Satisfait ou remboursé",
-            "content": "",
-            "background": "#fff2fc",
-            "text_color": "#cc9bc7"
-          }
         }
       },
       "block_order": [
-        "liquid_LaHTzH",
-        "title_fNaCkn",
-        "rating_PyGHjx",
-        "separator_Cdr8Ua",
-        "liquid_dVVAbH",
-        "description_qdyztB",
-        "liquid_XiprVi",
-        "text_fwPWy7",
-        "text_hCEVyt",
-        "liquid_yFaPEA",
-        "liquid_bVrATE",
-        "buy_buttons_CJEpyr",
-        "button_bFagJD",
-        "offer_4PekFp",
-        "offer_MNj38X",
-        "offer_Re7HiP",
-        "offer_6iGVpc"
+        "title_fNaCkn"
       ],
       "name": "Featured product",
       "settings": {
         "full_width": false,
         "product": "google-review-plate",
+        "product_badge": "Professionnel",
+        "reviews_count": 247,
+        "product_description": "Plaque professionnelle de haute qualité, personnalisable selon vos besoins. Matériaux durables et finitions premium pour une présentation impeccable de votre entreprise.",
+        "offers_title": "Choisissez votre offre :",
+        "offer1_enabled": true,
+        "offer1_quantity": 1,
+        "offer1_title": "Plaque",
+        "offer1_price": 4990,
+        "offer1_original_price": 4990,
+        "offer1_savings": 0,
+        "offer1_bonus": "",
+        "offer1_badge": "",
+        "offer1_badge_style": "popular",
+        "offer1_default": false,
+        "offer2_enabled": true,
+        "offer2_quantity": 2,
+        "offer2_title": "Plaques",
+        "offer2_price": 6990,
+        "offer2_original_price": 9980,
+        "offer2_savings": 40,
+        "offer2_bonus": "Ebook Gratuit",
+        "offer2_badge": "Le plus choisi",
+        "offer2_badge_style": "popular",
+        "offer2_default": false,
+        "offer3_enabled": true,
+        "offer3_quantity": 5,
+        "offer3_title": "Plaques",
+        "offer3_price": 9980,
+        "offer3_original_price": 24950,
+        "offer3_savings": 60,
+        "offer3_bonus": "Ebook Gratuit & Cadeau 🎁",
+        "offer3_badge": "Meilleure offre",
+        "offer3_badge_style": "best",
+        "offer3_default": true,
+        "offer4_enabled": true,
+        "offer4_quantity": 10,
+        "offer4_title": "Plaques",
+        "offer4_price": 18990,
+        "offer4_original_price": 49900,
+        "offer4_savings": 65,
+        "offer4_bonus": "Ebook Gratuit & Cadeau 🎁",
+        "offer4_badge": "",
+        "offer4_badge_style": "best",
+        "offer4_default": false,
+        "locations_label": "Sélectionnez le nombre d'emplacements",
+        "max_locations": 5,
+        "company_label": "Configuration : Cherchez votre entreprise ici 👇",
+        "company_placeholder": "Tapez le nom de votre entreprise ici...",
+        "company_note": "*Vous ne trouvez pas votre entreprise ? Pas d'inquiétude. Saisissez le nom de votre entreprise, la ville et le code postal.",
+        "add_to_cart_text": "Ajouter au panier",
+        "show_stock_notice": true,
+        "stock_notice_text": "🔥 Stock Limité – VENTE D'ÉTÉ 🔥",
+        "trust_badge_1": "Livraison rapide",
+        "trust_badge_2": "Garantie qualité",
+        "trust_badge_3": "Retour gratuit",
         "desktop_media_width": 50,
         "desktop_media_layout": "carousel_thumbnails_bottom",
         "mobile_media_size": "contained",
