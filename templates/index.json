@@ -51,7 +51,7 @@
             "overlay_color": "#000000",
             "overlay_opacity": 30,
             "background": "",
-            "background_gradient": "radial-gradient(rgba(204, 155, 199, 1), rgba(215, 204, 250, 1) 100%, rgba(247, 197, 204, 1) 100%)"
+            "background_gradient": "linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 1), rgba(255, 255, 255, 1), rgba(255, 255, 255, 1) 97%)"
           }
         }
       },
