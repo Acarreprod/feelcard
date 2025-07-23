@@ -514,20 +514,6 @@
               <input type="hidden" name="properties[Quantité]" id="selected-quantity" value="">
               <input type="hidden" name="properties[Prix unitaire]" id="selected-unit-price" value="">
 
-              <!-- Configuration Section -->
-              <div class="configuration-section">
-                <label class="config-label">{{ section.settings.locations_label | default: "Sélectionnez le nombre d'emplacements" }}</label>
-                <select class="config-select" name="properties[Emplacements]" id="locations-select">
-                  {%- for i in (1..section.settings.max_locations) -%}
-                    <option value="{{ i }}">{{ i }} Emplacement{% if i > 1 %}s{% endif %}</option>
-                  {%- endfor -%}
-                </select>
-
-                <label class="config-label">{{ section.settings.company_label | default: "Configuration : Cherchez votre entreprise ici 👇" }}</label>
-                <input type="text" class="config-input" name="properties[Entreprise]" placeholder="{{ section.settings.company_placeholder | default: "Tapez le nom de votre entreprise ici..." }}">
-                <p class="config-note">{{ section.settings.company_note | default: "*Vous ne trouvez pas votre entreprise ? Pas d'inquiétude. Saisissez le nom de votre entreprise, la ville et le code postal." }}</p>
-              </div>
-
               <!-- Add to Cart Section -->
               <div class="add-to-cart-section">
                 <button type="submit" class="add-to-cart-btn" id="add-to-cart-button">
@@ -571,18 +557,6 @@
               <div class="trust-badge-text">{{ section.settings.trust_badge_3 | default: 'Retour gratuit' }}</div>
             </div>
           </div>
-
-          <!-- Other blocks -->
-          {%- for block in section.blocks -%}
-            {%- case block.type -%}
-              {%- when 'buy_buttons' -%}
-                <!-- Skip - handled in offers section -->
-              {%- when 'variant_picker' -%}
-                <!-- Skip - handled above -->
-              {%- else -%}
-                {%- render 'product-block', block: block, product: product, product_form_id: product_form_id -%}
-            {%- endcase -%}
-          {%- endfor -%}
         </div>
 
       {%- else -%}
@@ -685,17 +659,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div class="configuration-section">
-              <label class="config-label">{{ section.settings.locations_label | default: "Sélectionnez le nombre d'emplacements" }}</label>
-              <select class="config-select">
-                <option>1 Emplacement</option>
-              </select>
-
-              <label class="config-label">{{ section.settings.company_label | default: "Configuration : Cherchez votre entreprise ici 👇" }}</label>
-              <input type="text" class="config-input" placeholder="{{ section.settings.company_placeholder | default: "Tapez le nom de votre entreprise ici..." }}">
-              <p class="config-note">{{ section.settings.company_note | default: "*Vous ne trouvez pas votre entreprise ? Pas d'inquiétude. Saisissez le nom de votre entreprise, la ville et le code postal." }}</p>
             </div>
 
             <div class="add-to-cart-section">
@@ -970,40 +933,6 @@ document.addEventListener('DOMContentLoaded', function() {
       "id": "offers_title",
       "label": "Offers section title",
       "default": "Choisissez votre offre :"
-    },
-    {
-      "type": "header",
-      "content": "Configuration Section"
-    },
-    {
-      "type": "text",
-      "id": "locations_label",
-      "label": "Locations label",
-      "default": "Sélectionnez le nombre d'emplacements"
-    },
-    {
-      "type": "number",
-      "id": "max_locations",
-      "label": "Maximum locations",
-      "default": 5
-    },
-    {
-      "type": "text",
-      "id": "company_label",
-      "label": "Company search label",
-      "default": "Configuration : Cherchez votre entreprise ici 👇"
-    },
-    {
-      "type": "text",
-      "id": "company_placeholder",
-      "label": "Company search placeholder",
-      "default": "Tapez le nom de votre entreprise ici..."
-    },
-    {
-      "type": "textarea",
-      "id": "company_note",
-      "label": "Company search note",
-      "default": "*Vous ne trouvez pas votre entreprise ? Pas d'inquiétude. Saisissez le nom de votre entreprise, la ville et le code postal."
     },
     {
       "type": "header",
