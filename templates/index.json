@@ -45,13 +45,13 @@
             "heading_tag": "h0",
             "button_text": "",
             "button_link": "",
-            "text_color": "#000000",
+            "text_color": "#ffffff",
             "button_background": "#ffffff",
             "button_text_color": "#000000",
             "overlay_color": "#000000",
             "overlay_opacity": 30,
             "background": "",
-            "background_gradient": "linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 1), rgba(255, 255, 255, 1), rgba(255, 255, 255, 1) 97%)"
+            "background_gradient": "linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 1) 32.33%, rgba(255, 255, 255, 1) 64.67%, rgba(255, 255, 255, 1) 97%)"
           }
         }
       },
