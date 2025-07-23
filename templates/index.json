@@ -82,10 +82,10 @@
         "text_style": "fill",
         "scrolling_mode": "auto",
         "scrolling_speed": 10,
-        "background": "#ffffff",
+        "background": "#000000",
         "background_gradient": "",
         "text_color": "",
-        "text_gradient": "linear-gradient(270deg, rgba(204, 155, 199, 1), rgba(255, 198, 249, 1) 100%)"
+        "text_gradient": "linear-gradient(270deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 1) 100%)"
       }
     },
     "logo_list_AEtWMc": {
@@ -700,14 +700,14 @@
         "content": "<p>Écrivez-nous via le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.</p>",
         "text_position": "start",
         "contact_form_size": "large",
-        "background": "",
+        "background": "#000000",
         "background_gradient": "",
-        "text_color": "",
-        "heading_color": "",
-        "heading_gradient": "",
-        "contact_background": "",
+        "text_color": "#ffffff",
+        "heading_color": "#ffffff",
+        "heading_gradient": "linear-gradient(180deg, rgba(204, 155, 199, 1), rgba(204, 155, 199, 1) 49%, rgba(204, 155, 199, 1) 100%)",
+        "contact_background": "#1c161b",
         "contact_text_color": "",
-        "button_background": "",
+        "button_background": "#cc9bc7",
         "button_text_color": ""
       }
     },
