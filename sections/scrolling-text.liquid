@@ -1,166 +1,1069 @@
-{%- if section.settings.text != blank -%}
+{%- if section.blocks.size > 0 -%}
   {%- render 'section-spacing-collapsing' -%}
 
   <style>
     #shopify-section-{{ section.id }} {
       --section-spacing-inline: 0;
-      --scrolling-text-font-size: {% if section.settings.text_size == 'xsmall' %}1.125rem{% elsif section.settings.text_size == 'small' %}2.5rem{% elsif section.settings.text_size == 'medium' %}3.75rem{% elsif section.settings.text_size == 'large' %}5rem{% else %}7.5rem{% endif %};
+      --scroll-speed: {{ section.settings.animation_speed }}s;
+      --scroll-direction: {{ section.settings.direction }};
+      --pause-on-hover: {{ section.settings.pause_on_hover }};
+      --background-color: {{ section.settings.background_color | default: 'transparent' }};
+      --text-color: {{ section.settings.text_color | default: '#000' }};
+      --separator-color: {{ section.settings.separator_color | default: '#ccc' }};
+      --separator-spacing: {{ section.settings.separator_spacing }}px;
+      --item-gap: {{ section.settings.item_gap }}px;
+      --font-size: clamp({{ section.settings.min_font_size }}px, {{ section.settings.font_size_vw }}vw, {{ section.settings.max_font_size }}px);
+      --icon-size: {{ section.settings.icon_size }}px;
+      --image-height: {{ section.settings.image_height }}px;
     }
 
-    @media screen and (min-width: 700px) {
+    /* Container Principal */
+    .advanced-scroll-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: var(--background-color);
+      color: var(--text-color);
+      padding: {{ section.settings.section_padding_top }}px 0 {{ section.settings.section_padding_bottom }}px;
+    }
+
+    /* Masque de dégradé pour effet de fondu */
+    .scroll-mask {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scroll-mask::before,
+    .scroll-mask::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 100px;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .scroll-mask::before {
+      left: 0;
+      background: linear-gradient(to right, var(--background-color), transparent);
+    }
+
+    .scroll-mask::after {
+      right: 0;
+      background: linear-gradient(to left, var(--background-color), transparent);
+    }
+
+    /* Piste de défilement */
+    .scroll-track {
+      display: flex;
+      align-items: center;
+      gap: var(--item-gap);
+      will-change: transform;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      animation: scroll-horizontal var(--scroll-speed) linear infinite;
+    }
+
+    /* Types d'animations */
+    .scroll-track--horizontal {
+      animation: scroll-horizontal var(--scroll-speed) linear infinite;
+    }
+
+    .scroll-track--horizontal-reverse {
+      animation: scroll-horizontal-reverse var(--scroll-speed) linear infinite;
+    }
+
+    .scroll-track--vertical {
+      flex-direction: column;
+      animation: scroll-vertical var(--scroll-speed) linear infinite;
+    }
+
+    .scroll-track--fade {
+      animation: scroll-fade var(--scroll-speed) ease-in-out infinite;
+    }
+
+    /* Keyframes pour les animations */
+    @keyframes scroll-horizontal {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    @keyframes scroll-horizontal-reverse {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes scroll-vertical {
+      0% { transform: translateY(100%); }
+      100% { transform: translateY(-100%); }
+    }
+
+    @keyframes scroll-fade {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Éléments de défilement */
+    .scroll-item {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--separator-spacing) / 2);
+      white-space: nowrap;
+      font-size: var(--font-size);
+      flex-shrink: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .scroll-item:hover {
+      transform: scale(1.05);
+    }
+
+    /* Types d'éléments */
+    .scroll-item--text .text-content {
+      font-weight: {{ section.settings.font_weight }};
+      text-transform: {{ section.settings.text_transform }};
+      letter-spacing: {{ section.settings.letter_spacing }}px;
+    }
+
+    .scroll-item--image .image-content {
+      height: var(--image-height);
+      width: auto;
+      object-fit: contain;
+      border-radius: {{ section.settings.image_border_radius }}px;
+      transition: transform 0.3s ease;
+    }
+
+    .scroll-item--image:hover .image-content {
+      transform: scale(1.1);
+    }
+
+    .scroll-item--icon .icon-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scroll-item--icon svg,
+    .scroll-item--icon i {
+      width: var(--icon-size);
+      height: var(--icon-size);
+      font-size: var(--icon-size);
+      color: currentColor;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .scroll-item--icon:hover svg,
+    .scroll-item--icon:hover i {
+      transform: rotate(15deg) scale(1.2);
+    }
+
+    /* Séparateurs */
+    .separator {
+      color: var(--separator-color);
+      font-size: 1.2em;
+      font-weight: bold;
+      margin: 0 var(--separator-spacing);
+      flex-shrink: 0;
+    }
+
+    .separator--dot::before { content: '•'; }
+    .separator--pipe::before { content: '|'; }
+    .separator--arrow::before { content: '→'; }
+    .separator--star::before { content: '★'; }
+    .separator--diamond::before { content: '◆'; }
+
+    /* Contrôles d'animation */
+    .scroll-controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .scroll-control-btn {
+      background: rgba(0, 0, 0, 0.1);
+      border: none;
+      border-radius: 4px;
+      padding: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s ease;
+    }
+
+    .scroll-control-btn:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .scroll-control-btn.active {
+      background: var(--text-color);
+      color: var(--background-color);
+    }
+
+    /* Pause au survol */
+    .advanced-scroll-container[data-pause-hover="true"]:hover .scroll-track {
+      animation-play-state: paused;
+    }
+
+    /* Mode statique pour accessibilité */
+    .scroll-track--static {
+      animation: none !important;
+      transform: none !important;
+    }
+
+    .static-mode {
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .static-mode .scroll-track {
+      width: max-content;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 768px) {
       #shopify-section-{{ section.id }} {
-        --scrolling-text-font-size: {% if section.settings.text_size == 'xsmall' %}1.5rem{% elsif section.settings.text_size == 'small' %}3.75rem{% elsif section.settings.text_size == 'medium' %}5rem{% elsif section.settings.text_size == 'large' %}8.75rem{% else %}12.5rem{% endif %};
+        --font-size: clamp({{ section.settings.mobile_min_font }}px, {{ section.settings.mobile_font_vw }}vw, {{ section.settings.mobile_max_font }}px);
+        --scroll-speed: calc(var(--scroll-speed) * 0.8);
+        --item-gap: calc(var(--item-gap) * 0.7);
       }
+      
+      .scroll-controls {
+        top: 5px;
+        right: 5px;
+      }
+      
+      .scroll-control-btn {
+        padding: 6px;
+        font-size: 12px;
+      }
+    }
+
+    /* Préférence mouvement réduit */
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-track {
+        animation: none !important;
+        transform: none !important;
+      }
+      
+      .advanced-scroll-container {
+        overflow-x: auto;
+        scroll-behavior: smooth;
+      }
+      
+      .scroll-track {
+        width: max-content;
+      }
+      
+      .scroll-controls {
+        display: none;
+      }
+    }
+
+    /* Container Queries pour contrôle précis */
+    .advanced-scroll-container {
+      container-type: inline-size;
+    }
+
+    @container (max-width: 500px) {
+      .scroll-track {
+        --scroll-speed: calc(var(--scroll-speed) * 0.6);
+      }
+    }
+
+    @container (min-width: 1200px) {
+      .scroll-track {
+        --scroll-speed: calc(var(--scroll-speed) * 1.2);
+      }
+    }
+
+    /* Optimisations performance */
+    .scroll-track {
+      contain: layout style paint;
     }
   </style>
 
-  {%- if section.settings.text_size == 'xsmall' -%}
-    {%- assign is_tight = true -%}
-  {%- endif -%}
+  <div class="advanced-scroll-container" 
+       id="scroll-container-{{ section.id }}"
+       data-pause-hover="{{ section.settings.pause_on_hover }}"
+       data-auto-start="{{ section.settings.auto_start }}"
+       data-speed="{{ section.settings.animation_speed }}"
+       data-direction="{{ section.settings.direction }}">
+    
+    {% if section.settings.show_controls %}
+      <div class="scroll-controls" role="group" aria-label="Contrôles d'animation">
+        <button type="button" class="scroll-control-btn pause-btn" aria-label="Pause/Lecture" data-action="toggle">
+          <span class="pause-icon">⏸️</span>
+          <span class="play-icon hidden">▶️</span>
+        </button>
+        <button type="button" class="scroll-control-btn stop-btn" aria-label="Arrêter" data-action="stop">⏹️</button>
+        <button type="button" class="scroll-control-btn speed-btn" aria-label="Vitesse" data-action="speed">🏃</button>
+      </div>
+    {% endif %}
 
-  <div {% render 'section-properties', tight: is_tight %}>
-    {%- capture section_content -%}
-      {%- for i in (1..10) -%}
-        <span class="scrolling-text__text heading {% unless forloop.first %}motion-reduce:hidden{% endunless %}" {% unless forloop.first %}aria-hidden="true"{% endunless %}>
-          {%- render 'styled-text', content: section.settings.text, gradient: section.settings.text_gradient, style: section.settings.text_style -%}
-        </span>
-      {%- endfor -%}
-    {%- endcapture -%}
+    <div class="scroll-mask">
+      <div class="scroll-track scroll-track--{{ section.settings.direction }}" 
+           id="scroll-track-{{ section.id }}">
+        
+        {%- capture scroll_content -%}
+          {% for block in section.blocks %}
+            <div class="scroll-item scroll-item--{{ block.type }}" {{ block.shopify_attributes }}>
+              {% case block.type %}
+                {% when 'text_item' %}
+                  <span class="text-content" {% if block.settings.custom_color != blank %}style="color: {{ block.settings.custom_color }}"{% endif %}>
+                    {{ block.settings.text | escape }}
+                  </span>
+                  
+                {% when 'image_item' %}
+                  {% if block.settings.image != blank %}
+                    <img src="{{ block.settings.image | image_url: width: block.settings.image_width }}" 
+                         alt="{{ block.settings.alt_text | escape | default: block.settings.image.alt }}"
+                         class="image-content"
+                         loading="lazy"
+                         width="{{ block.settings.image_width }}"
+                         height="auto">
+                  {% endif %}
+                  
+                {% when 'icon_item' %}
+                  <div class="icon-content" {% if block.settings.icon_color != blank %}style="color: {{ block.settings.icon_color }}"{% endif %}>
+                    {% if block.settings.icon_type == 'svg' and block.settings.custom_svg != blank %}
+                      {{ block.settings.custom_svg }}
+                    {% elsif block.settings.icon_type == 'fontawesome' %}
+                      <i class="fas fa-{{ block.settings.fontawesome_icon }}"></i>
+                    {% elsif block.settings.icon_type == 'emoji' %}
+                      <span style="font-size: var(--icon-size);">{{ block.settings.emoji_icon }}</span>
+                    {% else %}
+                      {% render 'icon', icon: block.settings.icon_name %}
+                    {% endif %}
+                  </div>
+                  
+                {% when 'custom_html' %}
+                  <div class="custom-content">
+                    {{ block.settings.custom_html }}
+                  </div>
+              {% endcase %}
+              
+              {% unless forloop.last %}
+                {% if section.settings.separator_type != 'none' %}
+                  <span class="separator separator--{{ section.settings.separator_type }}"></span>
+                {% endif %}
+              {% endunless %}
+            </div>
+          {% endfor %}
+        {%- endcapture -%}
 
-    <div class="scrolling-text {% if section.settings.scrolling_mode == 'scroll' %}scrolling-text--scroll{% else %}scrolling-text--auto{% endif %}">
-      {%- if section.settings.scrolling_mode == 'scroll' -%}
-        <scrolling-text class="scrolling-text__wrapper">
-          {{- section_content -}}
-        </scrolling-text>
-       {%- else -%}
-         <marquee-text scrolling-speed="{{ section.settings.scrolling_speed }}" class="scrolling-text__wrapper">
-           {{- section_content -}}
-         </marquee-text>
-      {%- endif -%}
+        {%- comment -%} Dupliquer le contenu pour un défilement infini {%- endcomment -%}
+        {{ scroll_content }}
+        {{ scroll_content }}
+        
+      </div>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      class AdvancedScrollingText {
+        constructor(container) {
+          this.container = container;
+          this.track = container.querySelector('.scroll-track');
+          this.controls = container.querySelector('.scroll-controls');
+          
+          this.config = {
+            speed: parseInt(container.dataset.speed) || 20,
+            direction: container.dataset.direction || 'horizontal',
+            pauseHover: container.dataset.pauseHover === 'true',
+            autoStart: container.dataset.autoStart === 'true'
+          };
+          
+          this.state = {
+            isPlaying: this.config.autoStart,
+            isPaused: false,
+            currentSpeed: this.config.speed,
+            speedIndex: 1 // 0: lent, 1: normal, 2: rapide
+          };
+          
+          this.speeds = [40, 20, 10]; // Lent, Normal, Rapide
+          
+          this.init();
+        }
+        
+        init() {
+          this.setupIntersectionObserver();
+          this.setupControls();
+          this.setupAccessibility();
+          this.handleReducedMotion();
+          
+          if (this.config.autoStart) {
+            this.play();
+          }
+        }
+        
+        setupIntersectionObserver() {
+          const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -10% 0px'
+          };
+          
+          this.observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting && this.config.autoStart) {
+                this.play();
+              } else if (!entry.isIntersecting) {
+                this.pause();
+              }
+            });
+          }, observerOptions);
+          
+          this.observer.observe(this.container);
+        }
+        
+        setupControls() {
+          if (!this.controls) return;
+          
+          this.controls.addEventListener('click', (e) => {
+            const action = e.target.closest('[data-action]')?.dataset.action;
+            
+            switch (action) {
+              case 'toggle':
+                this.toggle();
+                break;
+              case 'stop':
+                this.stop();
+                break;
+              case 'speed':
+                this.cycleSpeed();
+                break;
+            }
+          });
+        }
+        
+        setupAccessibility() {
+          // Gestion du focus clavier
+          this.container.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'Spacebar') {
+              e.preventDefault();
+              this.toggle();
+            } else if (e.key === 'Escape') {
+              this.stop();
+            }
+          });
+          
+          // Tabindex pour l'accessibilité
+          this.container.setAttribute('tabindex', '0');
+          this.container.setAttribute('role', 'region');
+          this.container.setAttribute('aria-label', 'Texte défilant animé');
+        }
+        
+        handleReducedMotion() {
+          const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+          
+          const handleMotionPreference = (mediaQuery) => {
+            if (mediaQuery.matches) {
+              this.enableStaticMode();
+            } else {
+              this.disableStaticMode();
+            }
+          };
+          
+          prefersReducedMotion.addEventListener('change', handleMotionPreference);
+          handleMotionPreference(prefersReducedMotion);
+        }
+        
+        play() {
+          this.state.isPlaying = true;
+          this.state.isPaused = false;
+          this.track.style.animationPlayState = 'running';
+          this.updateControlsUI();
+        }
+        
+        pause() {
+          this.state.isPaused = true;
+          this.track.style.animationPlayState = 'paused';
+          this.updateControlsUI();
+        }
+        
+        stop() {
+          this.state.isPlaying = false;
+          this.state.isPaused = false;
+          this.track.style.animationPlayState = 'paused';
+          this.track.style.transform = 'translateX(0)';
+          this.updateControlsUI();
+        }
+        
+        toggle() {
+          if (this.state.isPlaying && !this.state.isPaused) {
+            this.pause();
+          } else {
+            this.play();
+          }
+        }
+        
+        cycleSpeed() {
+          this.state.speedIndex = (this.state.speedIndex + 1) % this.speeds.length;
+          this.state.currentSpeed = this.speeds[this.state.speedIndex];
+          this.setSpeed(this.state.currentSpeed);
+        }
+        
+        setSpeed(speed) {
+          this.track.style.setProperty('--scroll-speed', `${speed}s`);
+          this.track.style.animationDuration = `${speed}s`;
+        }
+        
+        enableStaticMode() {
+          this.track.classList.add('scroll-track--static');
+          this.container.classList.add('static-mode');
+          if (this.controls) {
+            this.controls.style.display = 'none';
+          }
+        }
+        
+        disableStaticMode() {
+          this.track.classList.remove('scroll-track--static');
+          this.container.classList.remove('static-mode');
+          if (this.controls) {
+            this.controls.style.display = 'flex';
+          }
+        }
+        
+        updateControlsUI() {
+          if (!this.controls) return;
+          
+          const pauseBtn = this.controls.querySelector('.pause-btn');
+          const pauseIcon = pauseBtn?.querySelector('.pause-icon');
+          const playIcon = pauseBtn?.querySelector('.play-icon');
+          const speedBtn = this.controls.querySelector('.speed-btn');
+          
+          if (pauseIcon && playIcon) {
+            if (this.state.isPlaying && !this.state.isPaused) {
+              pauseIcon.classList.remove('hidden');
+              playIcon.classList.add('hidden');
+            } else {
+              pauseIcon.classList.add('hidden');
+              playIcon.classList.remove('hidden');
+            }
+          }
+          
+          if (speedBtn) {
+            const speedLabels = ['🐌', '🏃', '⚡'];
+            speedBtn.textContent = speedLabels[this.state.speedIndex];
+          }
+        }
+      }
+      
+      // Initialiser toutes les sections de texte défilant
+      const scrollContainers = document.querySelectorAll('.advanced-scroll-container');
+      scrollContainers.forEach(container => {
+        new AdvancedScrollingText(container);
+      });
+    });
+  </script>
 {%- endif -%}
 
 {% schema %}
 {
-  "name": "Scrolling text",
-  "class": "shopify-section--scrolling-text",
+  "name": "Texte Défilant Avancé",
+  "class": "shopify-section--advanced-scrolling-text",
   "tag": "section",
   "disabled_on": {
     "groups": ["header", "custom.overlay"]
   },
   "settings": [
     {
+      "type": "header",
+      "content": "Configuration générale"
+    },
+    {
       "type": "checkbox",
-      "id": "full_width",
-      "label": "Full width",
-      "default": true
+      "id": "auto_start",
+      "label": "Démarrage automatique",
+      "default": true,
+      "info": "L'animation démarre automatiquement quand la section est visible"
     },
     {
-      "type": "text",
-      "id": "text",
-      "label": "Text",
-      "default": "Promotion text"
-    },
-    {
-      "type": "select",
-      "id": "text_size",
-      "label": "Text size",
-      "options": [
-        {
-          "value": "xsmall",
-          "label": "X-Small"
-        },
-        {
-          "value": "small",
-          "label": "Small"
-        },
-        {
-          "value": "medium",
-          "label": "Medium"
-        },
-        {
-          "value": "large",
-          "label": "Large"
-        },
-        {
-          "value": "xlarge",
-          "label": "X-Large"
-        }
-      ],
-      "default": "large"
-    },
-    {
-      "type": "select",
-      "id": "text_style",
-      "label": "Text style",
-      "options": [
-        {
-          "value": "outline",
-          "label": "Outline"
-        },
-        {
-          "value": "fill",
-          "label": "Fill"
-        }
-      ],
-      "default": "fill"
-    },
-    {
-      "type": "select",
-      "id": "scrolling_mode",
-      "label": "Scrolling mode",
-      "options": [
-        {
-          "value": "auto",
-          "label": "Automatic"
-        },
-        {
-          "value": "scroll",
-          "label": "On scroll"
-        }
-      ],
-      "default": "auto"
-    },
-    {
-      "type": "range",
-      "id": "scrolling_speed",
-      "min": 3,
-      "max": 20,
-      "step": 1,
-      "unit": "s",
-      "label": "Automatic scrolling speed",
-      "default": 10
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "Afficher les contrôles",
+      "default": true,
+      "info": "Boutons de contrôle pour pause, arrêt et vitesse"
     },
     {
       "type": "header",
-      "content": "Colors",
-      "info": "Gradient replaces solid colors when set. Gradient text outline and gradient background cannot be combined."
+      "content": "Animation"
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Direction de l'animation",
+      "options": [
+        {
+          "value": "horizontal",
+          "label": "Horizontal (gauche → droite)"
+        },
+        {
+          "value": "horizontal-reverse",
+          "label": "Horizontal inversé (droite → gauche)"
+        },
+        {
+          "value": "vertical",
+          "label": "Vertical (bas → haut)"
+        },
+        {
+          "value": "fade",
+          "label": "Fondu enchaîné"
+        }
+      ],
+      "default": "horizontal"
+    },
+    {
+      "type": "range",
+      "id": "animation_speed",
+      "min": 5,
+      "max": 50,
+      "step": 1,
+      "unit": "s",
+      "label": "Vitesse d'animation",
+      "default": 20,
+      "info": "Plus la valeur est faible, plus l'animation est rapide"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause au survol",
+      "default": true,
+      "info": "L'animation se met en pause quand on survole la section"
+    },
+    {
+      "type": "header",
+      "content": "Espacement et séparateurs"
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Espacement entre les éléments",
+      "default": 30
+    },
+    {
+      "type": "select",
+      "id": "separator_type",
+      "label": "Type de séparateur",
+      "options": [
+        {
+          "value": "none",
+          "label": "Aucun"
+        },
+        {
+          "value": "dot",
+          "label": "Point (•)"
+        },
+        {
+          "value": "pipe",
+          "label": "Barre verticale (|)"
+        },
+        {
+          "value": "arrow",
+          "label": "Flèche (→)"
+        },
+        {
+          "value": "star",
+          "label": "Étoile (★)"
+        },
+        {
+          "value": "diamond",
+          "label": "Losange (◆)"
+        }
+      ],
+      "default": "dot"
+    },
+    {
+      "type": "range",
+      "id": "separator_spacing",
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Espacement des séparateurs",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Typographie"
+    },
+    {
+      "type": "range",
+      "id": "min_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Taille de police minimum",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "font_size_vw",
+      "min": 1,
+      "max": 10,
+      "step": 0.5,
+      "unit": "vw",
+      "label": "Taille de police responsive",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "max_font_size",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Taille de police maximum",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Graisse de la police",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        },
+        {
+          "value": "800",
+          "label": "Extra-bold"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Transformation du texte",
+      "options": [
+        {
+          "value": "none",
+          "label": "Aucune"
+        },
+        {
+          "value": "uppercase",
+          "label": "MAJUSCULES"
+        },
+        {
+          "value": "lowercase",
+          "label": "minuscules"
+        },
+        {
+          "value": "capitalize",
+          "label": "Première Lettre"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "min": -2,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Espacement des lettres",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Images et Icônes"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Taille des icônes",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Hauteur des images",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Arrondi des images",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "range",
+      "id": "mobile_min_font",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Taille police mobile min",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mobile_font_vw",
+      "min": 2,
+      "max": 6,
+      "step": 0.5,
+      "unit": "vw",
+      "label": "Taille police mobile responsive",
+      "default": 3.5
+    },
+    {
+      "type": "range",
+      "id": "mobile_max_font",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Taille police mobile max",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Couleurs"
     },
     {
       "type": "color",
-      "id": "background",
-      "label": "Background"
+      "id": "background_color",
+      "label": "Couleur de fond"
     },
     {
       "type": "color_background",
       "id": "background_gradient",
-      "label": "Background gradient"
+      "label": "Dégradé de fond"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text"
+      "label": "Couleur du texte",
+      "default": "#000000"
     },
     {
-      "type": "color_background",
-      "id": "text_gradient",
-      "label": "Text gradient"
+      "type": "color",
+      "id": "separator_color",
+      "label": "Couleur des séparateurs",
+      "default": "#cccccc"
+    },
+    {
+      "type": "header",
+      "content": "Espacement de section"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Espacement haut",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Espacement bas",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_item",
+      "name": "Élément Texte",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Texte promotionnel"
+        },
+        {
+          "type": "color",
+          "id": "custom_color",
+          "label": "Couleur personnalisée (optionnel)",
+          "info": "Laissez vide pour utiliser la couleur de texte globale"
+        }
+      ]
+    },
+    {
+      "type": "image_item",
+      "name": "Élément Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "min": 20,
+          "max": 200,
+          "step": 10,
+          "unit": "px",
+          "label": "Largeur de l'image",
+          "default": 60
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Texte alternatif",
+          "info": "Description de l'image pour l'accessibilité"
+        }
+      ]
+    },
+    {
+      "type": "icon_item",
+      "name": "Élément Icône",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon_type",
+          "label": "Type d'icône",
+          "options": [
+            {
+              "value": "emoji",
+              "label": "Emoji"
+            },
+            {
+              "value": "fontawesome",
+              "label": "Font Awesome"
+            },
+            {
+              "value": "svg",
+              "label": "SVG personnalisé"
+            }
+          ],
+          "default": "emoji"
+        },
+        {
+          "type": "text",
+          "id": "emoji_icon",
+          "label": "Emoji",
+          "default": "⭐",
+          "info": "Copiez-collez un emoji (affiché si 'Emoji' est sélectionné)"
+        },
+        {
+          "type": "text",
+          "id": "fontawesome_icon",
+          "label": "Nom de l'icône Font Awesome",
+          "default": "star",
+          "info": "Nom de l'icône sans 'fa-' (ex: star, heart, home)"
+        },
+        {
+          "type": "textarea",
+          "id": "custom_svg",
+          "label": "Code SVG personnalisé",
+          "info": "Collez le code SVG complet ici"
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Couleur de l'icône (optionnel)"
+        }
+      ]
+    },
+    {
+      "type": "custom_html",
+      "name": "HTML Personnalisé",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "custom_html",
+          "label": "Code HTML",
+          "info": "Utilisez du HTML personnalisé pour des éléments avancés"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Scrolling text"
+      "name": "Texte Défilant Avancé",
+      "blocks": [
+        {
+          "type": "text_item",
+          "settings": {
+            "text": "Livraison gratuite dès 50€"
+          }
+        },
+        {
+          "type": "icon_item",
+          "settings": {
+            "icon_type": "emoji",
+            "emoji_icon": "🚚"
+          }
+        },
+        {
+          "type": "text_item",
+          "settings": {
+            "text": "Retours gratuits sous 30 jours"
+          }
+        },
+        {
+          "type": "icon_item",
+          "settings": {
+            "icon_type": "emoji",
+            "emoji_icon": "↩️"
+          }
+        },
+        {
+          "type": "text_item",
+          "settings": {
+            "text": "Support client 7j/7"
+          }
+        },
+        {
+          "type": "icon_item",
+          "settings": {
+            "icon_type": "emoji",
+            "emoji_icon": "💬"
+          }
+        }
+      ]
     }
   ]
 }
