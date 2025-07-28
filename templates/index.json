@@ -33,7 +33,7 @@
         "desktop_image_effect": "reveal",
         "image_position": "end",
         "background": "#f2f2f2",
-        "background_gradient": "linear-gradient(60deg, rgba(60, 65, 68, 1), rgba(23, 29, 33, 1) 98%)",
+        "background_gradient": "linear-gradient(60deg, rgba(26, 26, 26, 1), rgba(23, 29, 33, 1) 98%)",
         "text_color": "#ffffff",
         "heading_color": "",
         "heading_gradient": ""
