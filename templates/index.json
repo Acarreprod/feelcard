@@ -21,10 +21,32 @@
             "title": "Obtenez plus d’avis Google en 3 secondes",
             "content": "<h5>Un client satisfait ? Il scanne, il note, c’est fait.<br/>Zéro appli. Zéro friction. Juste plus de visibilité, tout de suite.</h5>"
           }
+        },
+        "item_nqGcYU": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Visuels_Digifeel_28_1.webp",
+            "icon": "none",
+            "icon_width": 48,
+            "title": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "item_Hdq6kF": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/Visuels_Digifeel_30_c96aa528-3f4d-40de-9c3e-7cc001cd2676.webp",
+            "icon": "none",
+            "icon_width": 48,
+            "title": "Heading",
+            "content": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
         }
       },
       "block_order": [
-        "item_XNLY7X"
+        "item_XNLY7X",
+        "item_nqGcYU",
+        "item_Hdq6kF"
       ],
       "settings": {
         "full_width": false,
