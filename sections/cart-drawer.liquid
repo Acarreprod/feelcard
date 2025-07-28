@@ -1,4 +1,6 @@
-<cart-drawer {% if request.design_mode %}handle-section-events{% endif %} class="cart-drawer drawer drawer--lg" id="cart-drawer">
+<cart-drawer {% if request.design_mode %}handle-section-events{% endif %} class="cart-drawer-overlay" id="cart-drawer">
+  <div class="cart-drawer-backdrop"></div>
+  <div class="cart-drawer-container">
   {%- if cart.item_count == 0 -%}
     <button is="close-button" aria-label="{{ 'general.accessibility.close' | t | escape }}" class="cart-close-btn">
       {%- render 'icon' with 'close' -%}
@@ -266,29 +268,28 @@
   --feelcard-transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Cart Drawer Overlay System */
-.drawer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 9999;
+/* Cart Drawer Overlay System - FEELCARD */
+.cart-drawer-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99999 !important;
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
   transition: var(--feelcard-transition);
 }
 
-.drawer.drawer--open {
+.cart-drawer-overlay.is-open {
   pointer-events: auto;
   visibility: visible;
   opacity: 1;
 }
 
 /* Backdrop */
-.drawer::before {
-  content: '';
+.cart-drawer-backdrop {
   position: absolute;
   top: 0;
   left: 0;
@@ -296,16 +297,12 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
-  opacity: 0;
   transition: var(--feelcard-transition);
+  cursor: pointer;
 }
 
-.drawer.drawer--open::before {
-  opacity: 1;
-}
-
-/* Cart Drawer Base */
-.cart-drawer {
+/* Cart Drawer Container */
+.cart-drawer-container {
   position: absolute;
   top: 0;
   right: 0;
@@ -321,11 +318,11 @@
   transition: var(--feelcard-transition);
 }
 
-.drawer.drawer--open .cart-drawer {
+.cart-drawer-overlay.is-open .cart-drawer-container {
   transform: translateX(0);
 }
 
-.cart-drawer::after {
+.cart-drawer-container::after {
   content: '';
   position: absolute;
   top: 0;
@@ -963,7 +960,7 @@
 }
 
 /* Animation d'entrée pour la drawer */
-.drawer.drawer--open .cart-drawer {
+.cart-drawer-overlay.is-open .cart-drawer-container {
   animation: slideInDrawer 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
@@ -980,18 +977,18 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .cart-drawer {
+  .cart-drawer-container {
     width: 380px;
   }
 }
 
 @media (max-width: 768px) {
-  .cart-drawer {
+  .cart-drawer-container {
     width: 100vw;
     border-radius: 0;
   }
   
-  .cart-drawer::after {
+  .cart-drawer-container::after {
     border-radius: 0;
   }
   
@@ -1029,7 +1026,7 @@
 }
 
 @media (max-width: 480px) {
-  .cart-drawer {
+  .cart-drawer-container {
     width: 100vw;
   }
   
@@ -1053,9 +1050,9 @@
   }
 }
 
-/* Focus states */
-.cart-drawer button:focus,
-.cart-drawer a:focus {
+/* Focus states pour la nouvelle structure */
+.cart-drawer-container button:focus,
+.cart-drawer-container a:focus {
   outline: 3px solid var(--feelcard-primary);
   outline-offset: 2px;
   border-radius: var(--feelcard-radius);
@@ -1073,28 +1070,24 @@
     --feelcard-gradient-light: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   }
 }
-
-/* Prevent body scroll when drawer is open */
-.drawer-open {
-  overflow: hidden !important;
-}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const cartDrawer = document.getElementById('cart-drawer');
+  const cartBackdrop = cartDrawer?.querySelector('.cart-drawer-backdrop');
   const body = document.body;
   
   // Fonction pour ouvrir la cart drawer
   function openCartDrawer() {
     if (cartDrawer) {
-      cartDrawer.classList.add('drawer--open');
-      body.classList.add('drawer-open');
+      cartDrawer.classList.add('is-open');
+      body.style.overflow = 'hidden';
       
       // Focus sur le premier élément focusable
       const firstFocusable = cartDrawer.querySelector('button, a, input, textarea, select');
       if (firstFocusable) {
-        setTimeout(() => firstFocusable.focus(), 100);
+        setTimeout(() => firstFocusable.focus(), 150);
       }
     }
   }
@@ -1102,8 +1095,8 @@ document.addEventListener('DOMContentLoaded', function() {
   // Fonction pour fermer la cart drawer
   function closeCartDrawer() {
     if (cartDrawer) {
-      cartDrawer.classList.remove('drawer--open');
-      body.classList.remove('drawer-open');
+      cartDrawer.classList.remove('is-open');
+      body.style.overflow = '';
     }
   }
   
@@ -1114,26 +1107,33 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // Fermer en cliquant sur le backdrop
-  cartDrawer?.addEventListener('click', function(e) {
-    if (e.target === cartDrawer) {
-      closeCartDrawer();
-    }
-  });
+  cartBackdrop?.addEventListener('click', closeCartDrawer);
   
   // Fermer avec la touche Escape
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && cartDrawer?.classList.contains('drawer--open')) {
+    if (e.key === 'Escape' && cartDrawer?.classList.contains('is-open')) {
       closeCartDrawer();
     }
   });
   
   // Event listeners pour ouvrir la cart drawer
-  // Vous devez ajouter data-cart-drawer-open à vos boutons d'ajout au panier
+  // Pour les boutons avec data-cart-drawer-open
   const cartTriggers = document.querySelectorAll('[data-cart-drawer-open]');
   cartTriggers.forEach(trigger => {
     trigger.addEventListener('click', function(e) {
       e.preventDefault();
       openCartDrawer();
+    });
+  });
+  
+  // Pour les boutons d'ajout au panier classiques
+  const addToCartButtons = document.querySelectorAll('[name="add"], .btn-add-to-cart, [data-add-to-cart]');
+  addToCartButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      // Délai pour laisser le temps à l'ajout au panier de se faire
+      setTimeout(() => {
+        openCartDrawer();
+      }, 500);
     });
   });
   
@@ -1143,7 +1143,7 @@ document.addEventListener('DOMContentLoaded', function() {
     checkoutBtn.addEventListener('click', function() {
       this.classList.add('loading');
       
-      // Simuler le temps de traitement (à adapter selon votre logique)
+      // Simuler le temps de traitement
       setTimeout(() => {
         this.classList.remove('loading');
       }, 2000);
@@ -1181,6 +1181,16 @@ document.addEventListener('DOMContentLoaded', function() {
   window.FEELCARD = window.FEELCARD || {};
   window.FEELCARD.openCartDrawer = openCartDrawer;
   window.FEELCARD.closeCartDrawer = closeCartDrawer;
+  
+  // Écouter les événements cart:update de Shopify
+  document.addEventListener('cart:updated', function() {
+    setTimeout(() => {
+      openCartDrawer();
+    }, 300);
+  });
+  
+  // Test d'ouverture (à supprimer en production)
+  console.log('FEELCARD Cart Drawer initialized. Use FEELCARD.openCartDrawer() to test.');
 });
 </script>
 
