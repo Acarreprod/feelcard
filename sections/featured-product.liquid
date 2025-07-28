@@ -120,7 +120,7 @@
   .offer-content {
     display: flex;
     align-items: flex-start;
-    gap: 20px;
+    gap: 16px;
   }
 
   .offer-radio {
@@ -130,7 +130,7 @@
     border-radius: 50%;
     position: relative;
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 6px;
     transition: all 0.3s ease;
   }
 
@@ -151,8 +151,17 @@
     border-radius: 50%;
   }
 
+  .offer-main-content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+  }
+
   .offer-details {
     flex: 1;
+    min-width: 0;
   }
 
   .offer-title {
@@ -179,6 +188,7 @@
   .offer-pricing {
     text-align: right;
     flex-shrink: 0;
+    margin-left: 16px;
   }
 
   .offer-price {
