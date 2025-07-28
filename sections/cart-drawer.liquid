@@ -1,6 +1,6 @@
 <cart-drawer {% if request.design_mode %}handle-section-events{% endif %} class="cart-drawer drawer drawer--lg" id="cart-drawer">
   {%- if cart.item_count == 0 -%}
-    <button is="close-button" aria-label="{{ 'general.accessibility.close' | t | escape }}" class="absolute top-4 right-4 z-10 p-2 hover:bg-gray-100 rounded-full transition-colors">
+    <button is="close-button" aria-label="{{ 'general.accessibility.close' | t | escape }}" class="absolute top-4 right-4 z-10 p-3 hover:bg-gray-100 rounded-full transition-all duration-200 hover:scale-110 active:scale-95">
       {%- render 'icon' with 'close' -%}
     </button>
 
@@ -175,15 +175,14 @@
 
         <form action="{{ routes.cart_url }}" method="POST" class="w-full space-y-3">
           {%- if section.settings.show_view_cart_button or section.settings.show_checkout_button == false -%}
-            <a href="{{ routes.cart_url }}" class="button button--xl button--secondary w-full text-center block py-3 px-4 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors" data-no-instant>
+            <a href="{{ routes.cart_url }}" class="button button--xl button--secondary w-full text-center block py-4 px-6 border-2 border-gray-300 rounded-xl hover:border-gray-400 hover:bg-gray-50 active:bg-gray-100 transition-all duration-200 font-semibold text-gray-700 hover:text-gray-900 shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]" data-no-instant>
               {{- 'cart.general.view_cart' | t -}}
             </a>
           {%- endif -%}
 
           {%- if section.settings.show_checkout_button -%}
-            <button type="submit" name="checkout" class="button button--xl w-full bg-black text-white py-4 px-6 rounded-lg hover:bg-gray-800 transition-colors font-medium text-lg flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2">
-              {%- render 'icon' with 'picto-lock', class: 'w-5 h-5' -%}
-              <span>Acheter</span>
+            <button type="submit" name="checkout" class="button button--xl w-full bg-black text-white py-4 px-6 rounded-xl hover:bg-gray-800 active:bg-gray-900 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl focus:outline-none focus:ring-3 focus:ring-black/20 focus:ring-offset-2 transform hover:scale-[1.02] active:scale-[0.98]">
+              Acheter
             </button>
           {%- endif -%}
         </form>
