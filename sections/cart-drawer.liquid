@@ -1,71 +1,68 @@
-<cart-drawer {% if request.design_mode %}handle-section-events{% endif %} class="cart-drawer drawer drawer--lg feelcard-enhanced" id="cart-drawer">
+<cart-drawer {% if request.design_mode %}handle-section-events{% endif %} class="cart-drawer drawer drawer--lg" id="cart-drawer">
   {%- if cart.item_count == 0 -%}
-    <button is="close-button" aria-label="{{ 'general.accessibility.close' | t | escape }}" class="feelcard-close-btn">
+    <button is="close-button" aria-label="{{ 'general.accessibility.close' | t | escape }}">
       {%- render 'icon' with 'close' -%}
     </button>
-    <div class="empty-state align-self-center feelcard-empty-state">
-      <div class="empty-state__icon-wrapper feelcard-empty-icon">
+
+    <div class="empty-state align-self-center">
+      <div class="empty-state__icon-wrapper">
         {%- render 'icon' with 'cart', width: 32, height: 32, stroke_width: 1 -%}
-        <span class="count-bubble count-bubble--lg feelcard-count-bubble">0</span>
+        <span class="count-bubble count-bubble--lg">0</span>
       </div>
-      <div class="prose feelcard-empty-content">
-        <p class="h5 feelcard-empty-title">{{ 'cart.general.empty' | t }}</p>
-        <p class="feelcard-empty-subtitle">Découvrez nos produits exceptionnels</p>
+
+      <div class="prose">
+        <p class="h5">{{ 'cart.general.empty' | t }}</p>
+
         {%- assign button_content = 'cart.general.continue_shopping' | t -%}
-        {%- render 'button', href: settings.cart_empty_button_link, size: 'xl', content: button_content, class: 'feelcard-btn-primary' -%}
+        {%- render 'button', href: settings.cart_empty_button_link, size: 'xl', content: button_content -%}
       </div>
     </div>
   {%- else -%}
-    <div class="cart-drawer__inner feelcard-drawer-inner">
-      <!-- Header fixe -->
-      <div class="cart-drawer__top feelcard-header">
-        <div class="feelcard-header-content">
-          <div class="feelcard-header-main">
-            <div class="feelcard-title-section">
-              <p class="h5 feelcard-title">{{- 'cart.general.title' | t -}}</p>
-              <cart-count class="count-bubble count-bubble--md feelcard-count-bubble">{{ cart.item_count }}</cart-count>
-            </div>
-            <button type="button" is="close-button" class="drawer__close-icon feelcard-close-btn">
-              <span class="sr-only">{{ 'general.accessibility.close' | t }}</span>
-              {%- render 'icon' with 'close' -%}
-            </button>
+    <div class="cart-drawer__inner">
+      <div class="cart-drawer__top">
+        <div class="h-stack items-center justify-between">
+          <div class="h-stack grow gap-2 sm:gap-2.5">
+            <p class="h5">{{- 'cart.general.title' | t -}}</p>
+            <cart-count class="count-bubble count-bubble--md">{{ cart.item_count }}</cart-count>
           </div>
-          
-          {%- if settings.cart_show_free_shipping_threshold -%}
-            <div class="feelcard-shipping-wrapper">
-              {%- render 'free-shipping-bar' -%}
-            </div>
-          {%- endif -%}
+
+          <button type="button" is="close-button" class="drawer__close-icon">
+            <span class="sr-only">{{ 'general.accessibility.close' | t }}</span>
+            {%- render 'icon' with 'close' -%}
+          </button>
         </div>
+
+        {%- if settings.cart_show_free_shipping_threshold -%}
+          {%- render 'free-shipping-bar' -%}
+        {%- endif -%}
       </div>
-      
-      <!-- Contenu scrollable -->
-      <div class="feelcard-scroll-content">
-        <div class="feelcard-content">
-          
-          <!-- Articles du panier -->
-          <div class="cart-drawer__line-items feelcard-line-items">
-            {%- for line_item in cart.items -%}
-              <div class="feelcard-line-item-wrapper" data-line-item="{{ forloop.index }}">
-                {%- render 'line-item', line_item: line_item, show_desktop_quantity: true -%}
-              </div>
-            {%- endfor -%}
-          </div>
-          
-          <!-- Recommandations -->
-          {%- if section.settings.products.count > 0 -%}
-            <div class="cart-drawer__recommendations feelcard-recommendations">
+
+      <div class="v-stack gap-6 sm:gap-8">
+        <div class="cart-drawer__line-items">
+          {%- for line_item in cart.items -%}
+            {%- render 'line-item', line_item: line_item, show_desktop_quantity: true -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if section.settings.products.count > 0 -%}
+          <div class="cart-drawer__recommendations">
+            <div class="v-stack gap-2.5 sm:gap-4">
               {%- capture carousel_id -%}cart-drawer-recommendations{%- endcapture -%}
+
               {%- liquid
                 assign horizontal_products_blends = true
                 assign product_card_background = section.settings.product_card_background | default: product.settings.product_card_background
+
                 if product_card_background != 'rgba(0,0,0,0)' and product_card_background != blank and product_card_background != settings.dialog_background
                   assign horizontal_products_blends = false
                 endif
+
                 assign rendered_recommendations = 0
+
                 capture recommendations
                   for recommended_product in section.settings.products
                     assign item_count_in_cart = cart | line_items_for: recommended_product
+
                     if item_count_in_cart.size == 0
                       render 'horizontal-product', product: recommended_product, show_add_to_cart: true, background: section.settings.product_card_background, text_color: section.settings.product_card_text_color
                       assign rendered_recommendations = rendered_recommendations | plus: 1
@@ -73,1208 +70,112 @@
                   endfor
                 endcapture
               -%}
-              
+
               {%- if rendered_recommendations > 0 -%}
-                <div class="feelcard-recommendations-header">
+                <div class="h-stack justify-between gap-4">
                   {%- if section.settings.recommendations_title != blank -%}
-                    <h3 class="feelcard-recommendations-title">{{ section.settings.recommendations_title | escape }}</h3>
+                    <p>{{ section.settings.recommendations_title | escape }}</p>
                   {%- endif -%}
+
                   {%- if rendered_recommendations > 1 -%}
-                    <div class="feelcard-carousel-controls">
-                      <button is="prev-button" class="feelcard-carousel-btn feelcard-carousel-prev" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.previous' | t | escape }}" disabled>
-                        {%- render 'icon' with 'chevron-left-small', direction_aware: true -%}
-                      </button>
-                      <button is="next-button" class="feelcard-carousel-btn feelcard-carousel-next" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.next' | t | escape }}">
-                        {%- render 'icon' with 'chevron-right-small', direction_aware: true -%}
-                      </button>
+                    <div class="h-stack gap-2 hidden sm:flex">
+                      <button is="prev-button" class="circle-chevron hover:colors" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.previous' | t | escape }}" disabled>{%- render 'icon' with 'chevron-left-small', direction_aware: true -%}</button>
+                      <button is="next-button" class="circle-chevron hover:colors" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.next' | t | escape }}">{%- render 'icon' with 'chevron-right-small', direction_aware: true -%}</button>
                     </div>
                   {%- endif -%}
                 </div>
-                
-                <scroll-carousel selector=".horizontal-product" id="{{ carousel_id }}" class="feelcard-carousel-container">
-                  <div class="horizontal-product-list feelcard-product-list">
+              {%- endif -%}
+
+              {%- if recommendations != blank -%}
+                <scroll-carousel selector=".horizontal-product" id="{{ carousel_id }}" class="horizontal-product-list-carousel {% unless horizontal_products_blends %}separate{% endunless %} scroll-area bleed">
+                  <div class="horizontal-product-list {% if horizontal_products_blends %}divide-x{% else %}separate{% endif %}">
                     {{- recommendations -}}
                   </div>
                 </scroll-carousel>
               {%- endif -%}
             </div>
-          {%- endif -%}
-          
-        </div>
+          </div>
+        {%- endif -%}
       </div>
     </div>
-    
-    <!-- Footer sticky avec toutes les informations -->
-    <div class="feelcard-footer-sticky" slot="footer">
-      <div class="feelcard-footer-content">
-        
-        <!-- Section des réductions -->
-        {%- if cart.cart_level_discount_applications.size > 0 -%}
-          <div class="feelcard-discounts-section">
-            {% for discount_application in cart.cart_level_discount_applications %}
-              <div class="feelcard-discount-item">
-                <div class="feelcard-discount-info">
-                  <div class="feelcard-discount-badge">
-                    {%- render 'icon' with 'discount' -%}
-                    <span>{{- discount_application.title -}}</span>
-                  </div>
-                </div>
-                <span class="feelcard-discount-amount">-{{ discount_application.total_allocated_amount | money }}</span>
-              </div>
-            {% endfor %}
-          </div>
-        {%- endif -%}
-        
-        <!-- Note de commande intégrée -->
-        {%- if section.settings.show_cart_note -%}
-          <div class="feelcard-note-section">
-            <cart-note class="feelcard-note-form">
-              <div class="feelcard-note-wrapper">
-                <label for="cart-note" class="feelcard-note-label">
-                  <svg class="feelcard-note-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14,2 14,8 20,8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                    <polyline points="10,9 9,9 8,9"/>
-                  </svg>
-                  {{ 'cart.general.order_note' | t }}
-                </label>
-                <textarea 
-                  id="cart-note"
-                  name="note" 
-                  class="feelcard-note-textarea" 
-                  placeholder="Instructions spéciales pour votre commande..."
-                  rows="2">{{ cart.note }}</textarea>
-                <div class="feelcard-note-actions">
-                  <button type="button" class="feelcard-note-save feelcard-btn-save" data-action="save-note">
-                    <svg class="feelcard-save-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <polyline points="20,6 9,17 4,12"/>
-                    </svg>
-                    Enregistrer
-                  </button>
-                </div>
-              </div>
-            </cart-note>
-          </div>
-        {%- endif -%}
-        
-        <!-- Section du total -->
-        <div class="feelcard-total-section">
-          <div class="feelcard-total-line">
-            <span class="feelcard-total-label">{{ 'cart.general.total' | t }}</span>
-            <span class="feelcard-total-price">{{- cart.total_price | money_with_currency -}}</span>
-          </div>
-          
-          {%- if section.settings.show_shipping_text -%}
-            <div class="feelcard-shipping-info">
-              {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
-                <p>{{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}</p>
-              {%- elsif cart.taxes_included -%}
-                <p>{{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}</p>
-              {%- elsif shop.shipping_policy.body != blank -%}
-                <p>{{ 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}</p>
-              {%- else -%}
-                <p>{{ 'cart.general.taxes_and_shipping_at_checkout' | t }}</p>
-              {%- endif -%}
+
+    <div class="v-stack gap-4 sm:gap-6" slot="footer">
+      <div class="v-stack gap-1">
+        {% for discount_application in cart.cart_level_discount_applications %}
+          <div class="h-stack gap-4 justify-between">
+            <div class="badge">
+              {%- render 'icon' with 'discount' -%} {{- discount_application.title -}}
             </div>
+
+            <span class="text-subdued">-{{ discount_application.total_allocated_amount | money }}</span>
+          </div>
+        {% endfor %}
+
+        <div class="h-stack gap-4 justify-between">
+          <span class="h5">{{ 'cart.general.total' | t }}</span>
+          <span class="h5">{{- cart.total_price | money_with_currency -}}</span>
+        </div>
+
+        {%- if section.settings.show_shipping_text -%}
+          {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+            <p class="text-subdued text-sm">{{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}</p>
+          {%- elsif cart.taxes_included -%}
+            <p class="text-subdued text-sm">{{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}</p>
+          {%- elsif shop.shipping_policy.body != blank -%}
+            <p class="text-subdued text-sm">{{ 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}</p>
+          {%- else -%}
+            <p class="text-subdued text-sm">{{ 'cart.general.taxes_and_shipping_at_checkout' | t }}</p>
           {%- endif -%}
-        </div>
-        
-        <!-- Section des boutons d'action -->
-        <div class="feelcard-actions-section">
-          <form action="{{ routes.cart_url }}" method="POST" class="feelcard-checkout-form">
-            <div class="feelcard-buttons-grid">
-              {%- if section.settings.show_view_cart_button or section.settings.show_checkout_button == false -%}
-                <a href="{{ routes.cart_url }}" class="feelcard-btn feelcard-btn-secondary" data-no-instant>
-                  <svg class="feelcard-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.35 2.65c-.14.15-.25.32-.25.5 0 .83.67 1.5 1.5 1.5H19M7 13v4a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-4m-9 0h9"/>
-                  </svg>
-                  {{- 'cart.general.view_cart' | t -}}
-                </a>
+        {%- endif -%}
+
+        {%- if section.settings.show_cart_note -%}
+          <button type="button" class="justify-self-start" aria-controls="cart-drawer-note">
+            <span class="link text-sm text-subdued">
+              {%- if cart.note == blank -%}
+                {{- 'cart.general.add_order_note' | t -}}
+              {%- else -%}
+                {{- 'cart.general.edit_order_note' | t -}}
               {%- endif -%}
-              
-              {%- if section.settings.show_checkout_button -%}
-                <button type="submit" name="checkout" class="feelcard-btn feelcard-btn-primary feelcard-checkout-btn">
-                  <span class="feelcard-btn-text">
-                    <svg class="feelcard-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M9 12l2 2 4-4"/>
-                      <circle cx="12" cy="12" r="10"/>
-                    </svg>
-                    Acheter
-                  </span>
-                  <div class="feelcard-btn-loading">
-                    <div class="feelcard-spinner"></div>
+            </span>
+          </button>
+
+          <cart-note-dialog id="cart-drawer-note" class="cart-drawer__note">
+            <div class="cart-drawer__note-inner">
+              <div class="v-stack gap-4 sm:gap-6">
+                <p class="h5">{{ 'cart.general.order_note' | t }}</p>
+
+                <cart-note class="v-stack gap-4">
+                  {%- assign order_note = 'cart.general.order_note' | t -%}
+                  {%- assign order_save_label = 'cart.general.save_note' | t -%}
+
+                  {%- render 'input', name: 'note', multiline: 3, label: order_note, value: cart.note -%}
+
+                  <div class="justify-self-start">
+                    {%- render 'button', type: 'button', content: order_save_label, size: 'lg', is: 'close-button', secondary: true -%}
                   </div>
-                </button>
-              {%- endif -%}
+                </cart-note>
+              </div>
             </div>
-          </form>
-        </div>
-        
-        <!-- Badges de confiance -->
-        <div class="feelcard-trust-section">
-          <div class="feelcard-trust-badges">
-            <div class="feelcard-trust-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              </svg>
-              <span>Paiement sécurisé</span>
-            </div>
-            <div class="feelcard-trust-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="8.5" cy="7" r="4"/>
-                <line x1="20" y1="8" x2="20" y2="14"/>
-                <line x1="23" y1="11" x2="17" y2="11"/>
-              </svg>
-              <span>Support 24/7</span>
-            </div>
-            <div class="feelcard-trust-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <polyline points="23,4 23,10 17,10"/>
-                <polyline points="1,20 1,14 7,14"/>
-                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
-              </svg>
-              <span>Retours gratuits</span>
-            </div>
-          </div>
-        </div>
-        
+          </cart-note-dialog>
+        {%- endif -%}
       </div>
+
+      <form action="{{ routes.cart_url }}" method="POST" class="buy-buttons {% if section.settings.show_checkout_button %}buy-buttons--compact{% endif %}">
+        {%- assign checkout_label = 'cart.general.checkout' | t -%}
+
+        {%- if section.settings.show_view_cart_button or section.settings.show_checkout_button == false -%}
+          <a href="{{ routes.cart_url }}" class="button button--xl {% if section.settings.show_checkout_button %}button--secondary{% endif %}" data-no-instant>
+            {{- 'cart.general.view_cart' | t -}}
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.show_checkout_button -%}
+          {%- render 'button', type: 'submit', content: checkout_label, icon: 'picto-lock', name: 'checkout', size: 'xl' -%}
+        {%- endif -%}
+      </form>
     </div>
   {%- endif -%}
 </cart-drawer>
-
-<style>
-/* ===== FEELCARD ENHANCED CART DRAWER ===== */
-
-.feelcard-enhanced {
-  /* Variables de couleurs sophistiquées */
-  --feelcard-black: #000000;
-  --feelcard-black-soft: #0a0a0a;
-  --feelcard-black-light: #1a1a1a;
-  --feelcard-black-lighter: #2a2a2a;
-  --feelcard-gray-dark: #333333;
-  --feelcard-gray-medium: #4a4a4a;
-  --feelcard-gray: #666666;
-  --feelcard-gray-light: #808080;
-  --feelcard-gray-lighter: #999999;
-  --feelcard-gray-very-light: #cccccc;
-  --feelcard-gray-ultra-light: #e8e8e8;
-  --feelcard-gray-subtle: #f5f5f5;
-  --feelcard-white: #ffffff;
-  --feelcard-white-soft: #fafafa;
-
-  /* Couleurs d'accent */
-  --feelcard-success: #10b981;
-  --feelcard-success-light: #d1fae5;
-  --feelcard-warning: #f59e0b;
-  --feelcard-warning-light: #fef3c7;
-
-  /* Dégradés premium */
-  --feelcard-gradient-primary: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #333333 100%);
-  --feelcard-gradient-secondary: linear-gradient(135deg, #f5f5f5 0%, #ffffff 50%, #fafafa 100%);
-  --feelcard-gradient-subtle: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
-  --feelcard-gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #333333 100%);
-  --feelcard-gradient-accent: linear-gradient(135deg, #333333 0%, #4a4a4a 100%);
-  --feelcard-gradient-hover: linear-gradient(135deg, #2a2a2a 0%, #333333 50%, #4a4a4a 100%);
-  --feelcard-gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
-
-  /* Ombres élégantes */
-  --feelcard-shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
-  --feelcard-shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.1);
-  --feelcard-shadow-strong: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
-  --feelcard-shadow-dramatic: 0 20px 25px rgba(0, 0, 0, 0.15), 0 10px 10px rgba(0, 0, 0, 0.04);
-  --feelcard-shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.06);
-
-  /* Transitions fluides */
-  --feelcard-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  --feelcard-transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  --feelcard-transition-slow: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Bordures et rayons */
-  --feelcard-radius: 10px;
-  --feelcard-radius-small: 6px;
-  --feelcard-radius-large: 14px;
-  --feelcard-radius-xl: 18px;
-
-  /* Espacements responsifs */
-  --feelcard-spacing-xs: 0.25rem;
-  --feelcard-spacing-sm: 0.5rem;
-  --feelcard-spacing-md: 1rem;
-  --feelcard-spacing-lg: 1.5rem;
-  --feelcard-spacing-xl: 2rem;
-  --feelcard-spacing-2xl: 3rem;
-
-  /* Typographie */
-  --feelcard-font-size-xs: 0.75rem;
-  --feelcard-font-size-sm: 0.875rem;
-  --feelcard-font-size-base: 1rem;
-  --feelcard-font-size-lg: 1.125rem;
-  --feelcard-font-size-xl: 1.25rem;
-}
-
-/* ===== STRUCTURE PRINCIPALE ===== */
-.feelcard-drawer-inner {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  max-height: 100vh;
-  overflow: hidden;
-}
-
-.feelcard-scroll-content {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: var(--feelcard-gray-lighter) transparent;
-  padding-bottom: var(--feelcard-spacing-md);
-}
-
-.feelcard-scroll-content::-webkit-scrollbar {
-  width: 4px;
-}
-
-.feelcard-scroll-content::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.feelcard-scroll-content::-webkit-scrollbar-thumb {
-  background: var(--feelcard-gray-lighter);
-  border-radius: 2px;
-}
-
-.feelcard-scroll-content::-webkit-scrollbar-thumb:hover {
-  background: var(--feelcard-gray-light);
-}
-
-/* ===== ÉTAT VIDE AMÉLIORÉ ===== */
-.feelcard-empty-state {
-  background: var(--feelcard-gradient-subtle);
-  border-radius: var(--feelcard-radius-large);
-  padding: var(--feelcard-spacing-2xl) var(--feelcard-spacing-xl);
-  margin: var(--feelcard-spacing-xl);
-  box-shadow: var(--feelcard-shadow-medium);
-  position: relative;
-  overflow: hidden;
-  text-align: center;
-  border: 1px solid var(--feelcard-gray-ultra-light);
-}
-
-.feelcard-empty-state::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--feelcard-gradient-primary);
-  opacity: 0.8;
-}
-
-.feelcard-empty-icon {
-  position: relative;
-  margin-bottom: var(--feelcard-spacing-xl);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.feelcard-empty-icon::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100px;
-  height: 100px;
-  background: radial-gradient(circle, rgba(0,0,0,0.02) 0%, transparent 70%);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  z-index: -1;
-}
-
-.feelcard-empty-title {
-  background: var(--feelcard-gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 700;
-  margin-bottom: var(--feelcard-spacing-sm);
-  font-size: var(--feelcard-font-size-xl);
-}
-
-.feelcard-empty-subtitle {
-  color: var(--feelcard-gray);
-  font-size: var(--feelcard-font-size-sm);
-  margin-bottom: var(--feelcard-spacing-xl);
-  line-height: 1.5;
-}
-
-/* ===== HEADER AMÉLIORÉ ===== */
-.feelcard-header {
-  background: var(--feelcard-gradient-subtle);
-  border-bottom: 1px solid var(--feelcard-gray-ultra-light);
-  position: relative;
-  flex-shrink: 0;
-  z-index: 10;
-}
-
-.feelcard-header-content {
-  padding: var(--feelcard-spacing-lg);
-}
-
-.feelcard-header-main {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--feelcard-spacing-md);
-}
-
-.feelcard-title-section {
-  display: flex;
-  align-items: center;
-  gap: var(--feelcard-spacing-sm);
-}
-
-.feelcard-title {
-  background: var(--feelcard-gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 700;
-  font-size: var(--feelcard-font-size-lg);
-  margin: 0;
-}
-
-/* ===== COMPTEUR AMÉLIORÉ ===== */
-.feelcard-count-bubble {
-  background: var(--feelcard-gradient-primary) !important;
-  color: var(--feelcard-white) !important;
-  box-shadow: var(--feelcard-shadow-medium);
-  border: 2px solid var(--feelcard-white);
-  position: relative;
-  overflow: hidden;
-  font-weight: 700;
-  min-width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50px;
-  font-size: var(--feelcard-font-size-xs);
-  animation: feelcard-pulse 2s ease-in-out infinite;
-}
-
-/* ===== BOUTON FERMETURE AMÉLIORÉ ===== */
-.feelcard-close-btn {
-  background: var(--feelcard-gradient-secondary) !important;
-  border: 1px solid var(--feelcard-gray-ultra-light) !important;
-  border-radius: 50% !important;
-  width: 44px !important;
-  height: 44px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  transition: all var(--feelcard-transition) !important;
-  box-shadow: var(--feelcard-shadow-subtle) !important;
-  cursor: pointer;
-}
-
-.feelcard-close-btn:hover {
-  background: var(--feelcard-gradient-accent) !important;
-  transform: scale(1.05) rotate(90deg) !important;
-  box-shadow: var(--feelcard-shadow-medium) !important;
-}
-
-.feelcard-close-btn:hover svg {
-  color: var(--feelcard-white) !important;
-}
-
-/* ===== CONTENU PRINCIPAL ===== */
-.feelcard-content {
-  padding: var(--feelcard-spacing-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--feelcard-spacing-xl);
-}
-
-/* ===== ARTICLES DU PANIER ===== */
-.feelcard-line-items {
-  display: flex;
-  flex-direction: column;
-  gap: var(--feelcard-spacing-md);
-}
-
-.feelcard-line-item-wrapper {
-  background: var(--feelcard-gradient-subtle);
-  border-radius: var(--feelcard-radius);
-  padding: var(--feelcard-spacing-md);
-  box-shadow: var(--feelcard-shadow-subtle);
-  border: 1px solid var(--feelcard-gray-ultra-light);
-  transition: all var(--feelcard-transition);
-  position: relative;
-  overflow: hidden;
-}
-
-.feelcard-line-item-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 100%;
-  background: var(--feelcard-gradient-primary);
-  opacity: 0;
-  transition: opacity var(--feelcard-transition);
-}
-
-.feelcard-line-item-wrapper:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--feelcard-shadow-medium);
-}
-
-.feelcard-line-item-wrapper:hover::before {
-  opacity: 1;
-}
-
-/* ===== RECOMMANDATIONS AMÉLIORÉES ===== */
-.feelcard-recommendations {
-  background: var(--feelcard-gradient-subtle);
-  border-radius: var(--feelcard-radius-large);
-  padding: var(--feelcard-spacing-lg);
-  box-shadow: var(--feelcard-shadow-subtle);
-  border: 1px solid var(--feelcard-gray-ultra-light);
-  position: relative;
-}
-
-.feelcard-recommendations::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--feelcard-gradient-primary);
-  opacity: 0.3;
-  border-radius: var(--feelcard-radius-large) var(--feelcard-radius-large) 0 0;
-}
-
-.feelcard-recommendations-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--feelcard-spacing-lg);
-  padding-bottom: var(--feelcard-spacing-md);
-  border-bottom: 1px solid var(--feelcard-gray-ultra-light);
-}
-
-.feelcard-recommendations-title {
-  background: var(--feelcard-gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 600;
-  font-size: var(--feelcard-font-size-base);
-  margin: 0;
-}
-
-.feelcard-carousel-controls {
-  display: flex;
-  gap: var(--feelcard-spacing-xs);
-}
-
-.feelcard-carousel-btn {
-  background: var(--feelcard-gradient-secondary);
-  border: 1px solid var(--feelcard-gray-ultra-light);
-  transition: all var(--feelcard-transition);
-  box-shadow: var(--feelcard-shadow-subtle);
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.feelcard-carousel-btn:hover:not(:disabled) {
-  background: var(--feelcard-gradient-accent);
-  transform: scale(1.05);
-  box-shadow: var(--feelcard-shadow-medium);
-}
-
-.feelcard-carousel-btn:hover:not(:disabled) svg {
-  color: var(--feelcard-white);
-}
-
-.feelcard-carousel-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.feelcard-carousel-container {
-  overflow: hidden;
-  border-radius: var(--feelcard-radius);
-}
-
-.feelcard-product-list {
-  display: flex;
-  gap: var(--feelcard-spacing-md);
-  padding: var(--feelcard-spacing-sm) 0;
-}
-
-/* ===== FOOTER STICKY AMÉLIORÉ ===== */
-.feelcard-footer-sticky {
-  background: var(--feelcard-gradient-subtle);
-  border-top: 1px solid var(--feelcard-gray-ultra-light);
-  position: sticky;
-  bottom: 0;
-  z-index: 20;
-  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(8px);
-}
-
-.feelcard-footer-content {
-  padding: var(--feelcard-spacing-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--feelcard-spacing-lg);
-  max-height: 60vh;
-  overflow-y: auto;
-}
-
-/* ===== SECTION DES RÉDUCTIONS ===== */
-.feelcard-discounts-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--feelcard-spacing-sm);
-}
-
-.feelcard-discount-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--feelcard-success-light);
-  border-radius: var(--feelcard-radius-small);
-  padding: var(--feelcard-spacing-sm) var(--feelcard-spacing-md);
-  border: 1px solid var(--feelcard-success);
-  animation: feelcard-slide-in 0.3s ease-out;
-}
-
-.feelcard-discount-badge {
-  display: flex;
-  align-items: center;
-  gap: var(--feelcard-spacing-xs);
-  background: var(--feelcard-gradient-success);
-  color: var(--feelcard-white);
-  border-radius: var(--feelcard-radius-small);
-  padding: var(--feelcard-spacing-xs) var(--feelcard-spacing-sm);
-  font-size: var(--feelcard-font-size-xs);
-  font-weight: 600;
-}
-
-.feelcard-discount-badge svg {
-  width: 12px;
-  height: 12px;
-}
-
-.feelcard-discount-amount {
-  color: var(--feelcard-success);
-  font-weight: 700;
-  font-size: var(--feelcard-font-size-sm);
-}
-
-/* ===== NOTE DE COMMANDE INTÉGRÉE ===== */
-.feelcard-note-section {
-  background: var(--feelcard-gradient-subtle);
-  border-radius: var(--feelcard-radius);
-  border: 1px solid var(--feelcard-gray-ultra-light);
-  overflow: hidden;
-  transition: all var(--feelcard-transition);
-}
-
-.feelcard-note-section:focus-within {
-  border-color: var(--feelcard-gray);
-  box-shadow: var(--feelcard-shadow-medium);
-}
-
-.feelcard-note-wrapper {
-  padding: var(--feelcard-spacing-md);
-}
-
-.feelcard-note-label {
-  display: flex;
-  align-items: center;
-  gap: var(--feelcard-spacing-xs);
-  font-size: var(--feelcard-font-size-sm);
-  font-weight: 500;
-  color: var(--feelcard-gray);
-  margin-bottom: var(--feelcard-spacing-sm);
-  cursor: pointer;
-}
-
-.feelcard-note-icon {
-  width: 16px;
-  height: 16px;
-  stroke: currentColor;
-  stroke-width: 1.5;
-}
-
-.feelcard-note-textarea {
-  width: 100%;
-  min-height: 60px;
-  padding: var(--feelcard-spacing-sm);
-  border: 1px solid var(--feelcard-gray-ultra-light);
-  border-radius: var(--feelcard-radius-small);
-  font-size: var(--feelcard-font-size-sm);
-  color: var(--feelcard-black);
-  background: var(--feelcard-white);
-  resize: vertical;
-  transition: all var(--feelcard-transition);
-  font-family: inherit;
-  line-height: 1.4;
-}
-
-.feelcard-note-textarea:focus {
-  outline: none;
-  border-color: var(--feelcard-gray);
-  box-shadow: var(--feelcard-shadow-subtle);
-}
-
-.feelcard-note-textarea::placeholder {
-  color: var(--feelcard-gray-light);
-  font-style: italic;
-}
-
-.feelcard-note-actions {
-  margin-top: var(--feelcard-spacing-sm);
-  display: flex;
-  justify-content: flex-end;
-}
-
-.feelcard-btn-save {
-  display: flex;
-  align-items: center;
-  gap: var(--feelcard-spacing-xs);
-  background: var(--feelcard-gradient-success);
-  color: var(--feelcard-white);
-  border: none;
-  border-radius: var(--feelcard-radius-small);
-  padding: var(--feelcard-spacing-xs) var(--feelcard-spacing-md);
-  font-size: var(--feelcard-font-size-xs);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--feelcard-transition);
-  opacity: 0;
-  transform: translateY(10px);
-  pointer-events: none;
-}
-
-.feelcard-note-textarea:not(:placeholder-shown) + .feelcard-note-actions .feelcard-btn-save,
-.feelcard-note-textarea:focus + .feelcard-note-actions .feelcard-btn-save {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.feelcard-btn-save:hover {
-  background: linear-gradient(135deg, #059669 0%, #047857 100%);
-  transform: translateY(-1px);
-  box-shadow: var(--feelcard-shadow-medium);
-}
-
-.feelcard-save-icon {
-  width: 14px;
-  height: 14px;
-  stroke: currentColor;
-  stroke-width: 2;
-}
-
-/* ===== SECTION DU TOTAL ===== */
-.feelcard-total-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--feelcard-spacing-md);
-}
-
-.feelcard-total-line {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--feelcard-gradient-subtle);
-  border-radius: var(--feelcard-radius);
-  padding: var(--feelcard-spacing-lg);
-  border: 2px solid var(--feelcard-gray-ultra-light);
-  box-shadow: var(--feelcard-shadow-subtle);
-  position: relative;
-  overflow: hidden;
-}
-
-.feelcard-total-line::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--feelcard-gradient-primary);
-  opacity: 0.6;
-}
-
-.feelcard-total-label,
-.feelcard-total-price {
-  background: var(--feelcard-gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 700;
-  font-size: var(--feelcard-font-size-lg);
-  margin: 0;
-}
-
-.feelcard-shipping-info {
-  text-align: center;
-  padding: var(--feelcard-spacing-sm);
-  background: rgba(0, 0, 0, 0.02);
-  border-radius: var(--feelcard-radius-small);
-}
-
-.feelcard-shipping-info p {
-  color: var(--feelcard-gray);
-  font-size: var(--feelcard-font-size-xs);
-  line-height: 1.4;
-  margin: 0;
-}
-
-.feelcard-shipping-info a {
-  color: var(--feelcard-black);
-  text-decoration: underline;
-  font-weight: 500;
-}
-
-/* ===== SECTION DES BOUTONS ===== */
-.feelcard-actions-section {
-  margin-top: auto;
-}
-
-.feelcard-checkout-form {
-  width: 100%;
-}
-
-.feelcard-buttons-grid {
-  display: grid;
-  gap: var(--feelcard-spacing-md);
-  grid-template-columns: 1fr;
-}
-
-.feelcard-buttons-grid:has(.feelcard-btn-secondary) {
-  grid-template-columns: 1fr 2fr;
-}
-
-/* ===== BOUTONS AMÉLIORÉS ===== */
-.feelcard-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--feelcard-spacing-sm);
-  padding: var(--feelcard-spacing-md) var(--feelcard-spacing-lg);
-  border-radius: var(--feelcard-radius);
-  font-size: var(--feelcard-font-size-sm);
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all var(--feelcard-transition);
-  position: relative;
-  overflow: hidden;
-  border: none;
-  min-height: 52px;
-  white-space: nowrap;
-  font-family: inherit;
-}
-
-.feelcard-btn-icon {
-  width: 18px;
-  height: 18px;
-  stroke: currentColor;
-  stroke-width: 2;
-  transition: transform var(--feelcard-transition);
-}
-
-.feelcard-btn:hover .feelcard-btn-icon {
-  transform: scale(1.1);
-}
-
-.feelcard-btn-primary {
-  background: var(--feelcard-gradient-primary);
-  color: var(--feelcard-white);
-  box-shadow: var(--feelcard-shadow-medium);
-}
-
-.feelcard-btn-primary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left var(--feelcard-transition-slow);
-}
-
-.feelcard-btn-primary:hover {
-  background: var(--feelcard-gradient-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--feelcard-shadow-strong);
-}
-
-.feelcard-btn-primary:hover::before {
-  left: 100%;
-}
-
-.feelcard-btn-secondary {
-  background: var(--feelcard-gradient-secondary);
-  color: var(--feelcard-black);
-  border: 1px solid var(--feelcard-gray-ultra-light);
-  box-shadow: var(--feelcard-shadow-subtle);
-}
-
-.feelcard-btn-secondary:hover {
-  background: var(--feelcard-gradient-accent);
-  color: var(--feelcard-white);
-  transform: translateY(-1px);
-  box-shadow: var(--feelcard-shadow-medium);
-}
-
-/* ===== BOUTON CHECKOUT AVEC LOADING ===== */
-.feelcard-checkout-btn {
-  position: relative;
-}
-
-.feelcard-btn-text {
-  display: flex;
-  align-items: center;
-  gap: var(--feelcard-spacing-sm);
-  transition: opacity var(--feelcard-transition);
-}
-
-.feelcard-btn-loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  visibility: hidden;
-  transition: all var(--feelcard-transition);
-}
-
-.feelcard-checkout-btn.loading .feelcard-btn-text {
-  opacity: 0;
-}
-
-.feelcard-checkout-btn.loading .feelcard-btn-loading {
-  opacity: 1;
-  visibility: visible;
-}
-
-.feelcard-spinner {
-  width: 24px;
-  height: 24px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top: 2px solid var(--feelcard-white);
-  border-radius: 50%;
-  animation: feelcard-spin 1s linear infinite;
-}
-
-/* ===== BADGES DE CONFIANCE ===== */
-.feelcard-trust-section {
-  border-top: 1px solid var(--feelcard-gray-ultra-light);
-  padding-top: var(--feelcard-spacing-md);
-}
-
-.feelcard-trust-badges {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--feelcard-spacing-sm);
-}
-
-.feelcard-trust-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--feelcard-spacing-xs);
-  text-align: center;
-  padding: var(--feelcard-spacing-sm);
-  border-radius: var(--feelcard-radius-small);
-  transition: all var(--feelcard-transition);
-  cursor: default;
-}
-
-.feelcard-trust-item:hover {
-  background: rgba(0, 0, 0, 0.02);
-  transform: translateY(-1px);
-}
-
-.feelcard-trust-item svg {
-  width: 20px;
-  height: 20px;
-  stroke: var(--feelcard-gray);
-  stroke-width: 1.5;
-  transition: stroke var(--feelcard-transition);
-}
-
-.feelcard-trust-item:hover svg {
-  stroke: var(--feelcard-black);
-}
-
-.feelcard-trust-item span {
-  font-size: var(--feelcard-font-size-xs);
-  color: var(--feelcard-gray);
-  line-height: 1.3;
-  font-weight: 500;
-  transition: color var(--feelcard-transition);
-}
-
-.feelcard-trust-item:hover span {
-  color: var(--feelcard-black);
-}
-
-/* ===== BARRE DE LIVRAISON ===== */
-.feelcard-shipping-wrapper {
-  padding: var(--feelcard-spacing-md);
-  background: var(--feelcard-gradient-subtle);
-  border-radius: var(--feelcard-radius);
-  border: 1px solid var(--feelcard-gray-ultra-light);
-}
-
-/* ===== ANIMATIONS ===== */
-@keyframes feelcard-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes feelcard-pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-
-@keyframes feelcard-slide-in {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes feelcard-shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-
-/* Tablettes (768px et moins) */
-@media (max-width: 768px) {
-  .feelcard-enhanced {
-    --feelcard-spacing-xs: 0.25rem;
-    --feelcard-spacing-sm: 0.375rem;
-    --feelcard-spacing-md: 0.75rem;
-    --feelcard-spacing-lg: 1rem;
-    --feelcard-spacing-xl: 1.25rem;
-    --feelcard-spacing-2xl: 1.5rem;
-    --feelcard-font-size-xs: 0.6875rem;
-    --feelcard-font-size-sm: 0.8125rem;
-    --feelcard-font-size-base: 0.875rem;
-    --feelcard-font-size-lg: 1rem;
-    --feelcard-font-size-xl: 1.125rem;
-  }
-
-  .feelcard-header-content,
-  .feelcard-content,
-  .feelcard-footer-content {
-    padding: var(--feelcard-spacing-md);
-  }
-  
-  .feelcard-buttons-grid:has(.feelcard-btn-secondary) {
-    grid-template-columns: 1fr 1.5fr;
-    gap: var(--feelcard-spacing-sm);
-  }
-
-  .feelcard-trust-badges {
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--feelcard-spacing-xs);
-  }
-
-  .feelcard-btn {
-    min-height: 48px;
-    padding: var(--feelcard-spacing-sm) var(--feelcard-spacing-md);
-  }
-}
-
-/* Mobiles (480px et moins) */
-@media (max-width: 480px) {
-  .feelcard-enhanced {
-    --feelcard-spacing-xs: 0.25rem;
-    --feelcard-spacing-sm: 0.375rem;
-    --feelcard-spacing-md: 0.5rem;
-    --feelcard-spacing-lg: 0.75rem;
-    --feelcard-spacing-xl: 1rem;
-    --feelcard-spacing-2xl: 1.25rem;
-  }
-
-  .feelcard-empty-state {
-    padding: var(--feelcard-spacing-xl) var(--feelcard-spacing-lg);
-    margin: var(--feelcard-spacing-lg) var(--feelcard-spacing-md);
-  }
-
-  .feelcard-total-line {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--feelcard-spacing-xs);
-    text-align: left;
-  }
-
-  .feelcard-buttons-grid {
-    grid-template-columns: 1fr;
-    gap: var(--feelcard-spacing-sm);
-  }
-
-  .feelcard-btn {
-    min-height: 44px;
-    font-size: var(--feelcard-font-size-xs);
-  }
-
-  .feelcard-discount-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--feelcard-spacing-xs);
-  }
-
-  .feelcard-trust-badges {
-    grid-template-columns: 1fr;
-    gap: var(--feelcard-spacing-sm);
-  }
-
-  .feelcard-trust-item {
-    flex-direction: row;
-    justify-content: flex-start;
-    text-align: left;
-  }
-
-  .feelcard-close-btn {
-    width: 40px !important;
-    height: 40px !important;
-  }
-
-  .feelcard-count-bubble {
-    min-width: 24px;
-    height: 24px;
-  }
-
-  .feelcard-note-textarea {
-    min-height: 50px;
-  }
-}
-
-/* Très petits écrans (360px et moins) */
-@media (max-width: 360px) {
-  .feelcard-enhanced {
-    --feelcard-spacing-xs: 0.25rem;
-    --feelcard-spacing-sm: 0.25rem;
-    --feelcard-spacing-md: 0.5rem;
-    --feelcard-spacing-lg: 0.5rem;
-    --feelcard-spacing-xl: 0.75rem;
-    --feelcard-spacing-2xl: 1rem;
-  }
-
-  .feelcard-btn {
-    min-height: 42px;
-    padding: var(--feelcard-spacing-sm);
-  }
-
-  .feelcard-footer-content {
-    max-height: 50vh;
-  }
-}
-
-/* ===== DARK MODE ===== */
-@media (prefers-color-scheme: dark) {
-  .feelcard-enhanced {
-    --feelcard-white: #1a1a1a;
-    --feelcard-white-soft: #2a2a2a;
-    --feelcard-gray-subtle: #2a2a2a;
-    --feelcard-gray-ultra-light: #333333;
-    --feelcard-gray-very-light: #4a4a4a;
-    --feelcard-black: #ffffff;
-    --feelcard-gradient-subtle: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-    --feelcard-gradient-secondary: linear-gradient(135deg, #2a2a2a 0%, #333333 100%);
-    --feelcard-success-light: rgba(16, 185, 129, 0.1);
-  }
-}
-
-/* ===== ACCESSIBILITÉ ===== */
-@media (prefers-reduced-motion: reduce) {
-  .feelcard-enhanced *,
-  .feelcard-enhanced *::before,
-  .feelcard-enhanced *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Focus visible pour l'accessibilité */
-.feelcard-enhanced button:focus-visible,
-.feelcard-enhanced a:focus-visible,
-.feelcard-enhanced textarea:focus-visible {
-  outline: 2px solid var(--feelcard-black);
-  outline-offset: 2px;
-}
-
-/* ===== OPTIMISATIONS PERFORMANCE ===== */
-.feelcard-enhanced * {
-  will-change: auto;
-}
-
-.feelcard-enhanced .feelcard-btn:hover,
-.feelcard-enhanced .feelcard-line-item-wrapper:hover,
-.feelcard-enhanced .feelcard-trust-item:hover {
-  will-change: transform, box-shadow;
-}
-
-/* ===== AMÉLIORATION DE LA LISIBILITÉ ===== */
-.feelcard-enhanced {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.feelcard-enhanced h1,
-.feelcard-enhanced h2,
-.feelcard-enhanced h3,
-.feelcard-enhanced h4,
-.feelcard-enhanced h5,
-.feelcard-enhanced h6 {
-  line-height: 1.3;
-}
-</style>
 
 {% schema %}
 {
@@ -1342,3 +243,5 @@
   ]
 }
 {% endschema %}
+
+
