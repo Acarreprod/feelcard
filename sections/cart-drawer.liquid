@@ -1,2398 +1,684 @@
-<!-- FEELCARD Cart Drawer - Section Shopify complète et isolée -->
-<cart-drawer class="feelcard-cart-overlay" id="feelcard-cart-drawer" 
-  {% if request.design_mode %}handle-section-events{% endif %}
-  data-state="closed"
-  role="dialog" 
-  aria-modal="true" 
-  aria-labelledby="feelcard-cart-title"
-  aria-hidden="true">
-  
-  <!-- Backdrop isolé -->
-  <div class="feelcard-backdrop" aria-hidden="true"></div>
-  
-  <!-- Container principal isolé -->
-  <div class="feelcard-drawer-container" role="document">
-    
-    {%- if cart.item_count == 0 -%}
-      <!-- État panier vide avec animations -->
-      <div class="feelcard-empty-state">
-        <button class="feelcard-close-btn" type="button" aria-label="{{ 'general.accessibility.close' | t | escape }}">
-          <svg class="feelcard-close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M18 6L6 18M6 6l12 12"/>
-          </svg>
-        </button>
-        
-        <div class="feelcard-empty-content">
-          <div class="feelcard-empty-icon-wrapper">
-            <div class="feelcard-cart-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="9" cy="21" r="1"/>
-                <circle cx="20" cy="21" r="1"/>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-              </svg>
-            </div>
-            <div class="feelcard-particles">
-              <div class="feelcard-particle"></div>
-              <div class="feelcard-particle"></div>
-              <div class="feelcard-particle"></div>
-              <div class="feelcard-particle"></div>
-            </div>
-          </div>
-          
-          <div class="feelcard-empty-text">
-            <h2 class="feelcard-empty-title">{{ 'cart.general.empty' | t }}</h2>
-            <p class="feelcard-empty-subtitle">Découvrez nos plaques d'avis personnalisées</p>
-            <a href="{{ settings.cart_empty_button_link | default: routes.all_products_collection_url }}" 
-               class="feelcard-btn feelcard-btn--primary">
-              {{ 'cart.general.continue_shopping' | t }}
-            </a>
-          </div>
-        </div>
+<cart-drawer {% if request.design_mode %}handle-section-events{% endif %} class="cart-drawer drawer drawer--lg feelcard-enhanced" id="cart-drawer">
+  {%- if cart.item_count == 0 -%}
+    <button is="close-button" aria-label="{{ 'general.accessibility.close' | t | escape }}" class="feelcard-close-btn">
+      {%- render 'icon' with 'close' -%}
+    </button>
+    <div class="empty-state align-self-center feelcard-empty-state">
+      <div class="empty-state__icon-wrapper feelcard-empty-icon">
+        {%- render 'icon' with 'cart', width: 32, height: 32, stroke_width: 1 -%}
+        <span class="count-bubble count-bubble--lg feelcard-count-bubble">0</span>
       </div>
-      
-    {%- else -%}
-      <!-- État avec produits -->
-      <div class="feelcard-drawer-content">
-        
-        <!-- Header -->
-        <div class="feelcard-header">
-          <div class="feelcard-header-main">
-            <h2 id="feelcard-cart-title" class="feelcard-title">
-              {{ 'cart.general.title' | t }}
-            </h2>
-            <div class="feelcard-count-bubble" data-count="{{ cart.item_count }}">
-              {{ cart.item_count }}
-            </div>
+      <div class="prose feelcard-empty-content">
+        <p class="h5 feelcard-empty-title">{{ 'cart.general.empty' | t }}</p>
+        {%- assign button_content = 'cart.general.continue_shopping' | t -%}
+        {%- render 'button', href: settings.cart_empty_button_link, size: 'xl', content: button_content, class: 'feelcard-btn-primary' -%}
+      </div>
+    </div>
+  {%- else -%}
+    <div class="cart-drawer__inner feelcard-drawer-inner">
+      <div class="cart-drawer__top feelcard-header">
+        <div class="h-stack items-center justify-between">
+          <div class="h-stack grow gap-2 sm:gap-2.5">
+            <p class="h5 feelcard-title">{{- 'cart.general.title' | t -}}</p>
+            <cart-count class="count-bubble count-bubble--md feelcard-count-bubble">{{ cart.item_count }}</cart-count>
           </div>
-          
-          <button class="feelcard-close-btn" type="button" aria-label="{{ 'general.accessibility.close' | t | escape }}">
-            <svg class="feelcard-close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M18 6L6 18M6 6l12 12"/>
-            </svg>
+          <button type="button" is="close-button" class="drawer__close-icon feelcard-close-btn">
+            <span class="sr-only">{{ 'general.accessibility.close' | t }}</span>
+            {%- render 'icon' with 'close' -%}
           </button>
-          
-          {%- if settings.cart_show_free_shipping_threshold -%}
-            <div class="feelcard-shipping-bar">
-              {%- assign threshold = settings.cart_free_shipping_threshold | times: 100 -%}
-              {%- assign current_total = cart.total_price -%}
-              {%- assign remaining = threshold | minus: current_total -%}
-              
-              <div class="feelcard-shipping-progress">
-                {%- assign progress = current_total | times: 100 | divided_by: threshold -%}
-                {%- if progress > 100 -%}{%- assign progress = 100 -%}{%- endif -%}
-                <div class="feelcard-progress-bar" style="--progress: {{ progress }}%"></div>
-              </div>
-              
-              <p class="feelcard-shipping-text">
-                {%- if remaining > 0 -%}
-                  Plus que {{ remaining | money }} pour la livraison gratuite
-                {%- else -%}
-                  🎉 Livraison gratuite débloquée !
-                {%- endif -%}
-              </p>
-            </div>
-          {%- endif -%}
         </div>
-        
-        <!-- Zone scrollable -->
-        <div class="feelcard-scroll-area">
-          
-          <!-- Liste des produits -->
-          <div class="feelcard-line-items">
-            {%- for line_item in cart.items -%}
-              <div class="feelcard-line-item" data-line-key="{{ line_item.key }}">
-                <div class="feelcard-product-image">
-                  {%- if line_item.image -%}
-                    <img src="{{ line_item.image | image_url: width: 80 }}" 
-                         alt="{{ line_item.image.alt | escape }}"
-                         loading="lazy">
-                  {%- else -%}
-                    <div class="feelcard-no-image">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                        <circle cx="8.5" cy="8.5" r="1.5"/>
-                        <polyline points="21,15 16,10 5,21"/>
-                      </svg>
+        {%- if settings.cart_show_free_shipping_threshold -%}
+          <div class="feelcard-shipping-wrapper">
+            {%- render 'free-shipping-bar' -%}
+          </div>
+        {%- endif -%}
+      </div>
+      <div class="v-stack gap-6 sm:gap-8 feelcard-content">
+        <div class="cart-drawer__line-items feelcard-line-items">
+          {%- for line_item in cart.items -%}
+            <div class="feelcard-line-item-wrapper">
+              {%- render 'line-item', line_item: line_item, show_desktop_quantity: true -%}
+            </div>
+          {%- endfor -%}
+        </div>
+        {%- if section.settings.products.count > 0 -%}
+          <div class="cart-drawer__recommendations feelcard-recommendations">
+            <div class="v-stack gap-2.5 sm:gap-4">
+              {%- capture carousel_id -%}cart-drawer-recommendations{%- endcapture -%}
+              {%- liquid
+                assign horizontal_products_blends = true
+                assign product_card_background = section.settings.product_card_background | default: product.settings.product_card_background
+                if product_card_background != 'rgba(0,0,0,0)' and product_card_background != blank and product_card_background != settings.dialog_background
+                  assign horizontal_products_blends = false
+                endif
+                assign rendered_recommendations = 0
+                capture recommendations
+                  for recommended_product in section.settings.products
+                    assign item_count_in_cart = cart | line_items_for: recommended_product
+                    if item_count_in_cart.size == 0
+                      render 'horizontal-product', product: recommended_product, show_add_to_cart: true, background: section.settings.product_card_background, text_color: section.settings.product_card_text_color
+                      assign rendered_recommendations = rendered_recommendations | plus: 1
+                    endif
+                  endfor
+                endcapture
+              -%}
+              {%- if rendered_recommendations > 0 -%}
+                <div class="h-stack justify-between gap-4 feelcard-recommendations-header">
+                  {%- if section.settings.recommendations_title != blank -%}
+                    <p class="feelcard-recommendations-title">{{ section.settings.recommendations_title | escape }}</p>
+                  {%- endif -%}
+                  {%- if rendered_recommendations > 1 -%}
+                    <div class="h-stack gap-2 hidden sm:flex">
+                      <button is="prev-button" class="circle-chevron hover:colors feelcard-carousel-btn" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.previous' | t | escape }}" disabled>{%- render 'icon' with 'chevron-left-small', direction_aware: true -%}</button>
+                      <button is="next-button" class="circle-chevron hover:colors feelcard-carousel-btn" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.next' | t | escape }}">{%- render 'icon' with 'chevron-right-small', direction_aware: true -%}</button>
                     </div>
                   {%- endif -%}
                 </div>
-                
-                <div class="feelcard-product-details">
-                  <h3 class="feelcard-product-title">{{ line_item.product.title }}</h3>
-                  {%- unless line_item.variant.title contains 'Default' -%}
-                    <p class="feelcard-product-variant">{{ line_item.variant.title }}</p>
-                  {%- endunless -%}
-                  
-                  <div class="feelcard-product-meta">
-                    <div class="feelcard-quantity-controls">
-                      <button class="feelcard-qty-btn" type="button" data-action="decrease" data-line="{{ forloop.index }}">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M5 12h14"/>
-                        </svg>
-                      </button>
-                      <input class="feelcard-qty-input" 
-                             type="number" 
-                             value="{{ line_item.quantity }}" 
-                             min="0"
-                             data-line="{{ forloop.index }}"
-                             aria-label="Quantité pour {{ line_item.product.title }}">
-                      <button class="feelcard-qty-btn" type="button" data-action="increase" data-line="{{ forloop.index }}">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path d="M12 5v14M5 12h14"/>
-                        </svg>
-                      </button>
-                    </div>
-                    
-                    <div class="feelcard-product-price">
-                      {%- if line_item.original_price != line_item.final_price -%}
-                        <span class="feelcard-price-original">{{ line_item.original_price | money }}</span>
-                        <span class="feelcard-price-final">{{ line_item.final_price | money }}</span>
-                      {%- else -%}
-                        <span class="feelcard-price">{{ line_item.final_price | money }}</span>
-                      {%- endif -%}
-                    </div>
-                  </div>
-                </div>
-                
-                <button class="feelcard-remove-btn" type="button" data-line="{{ forloop.index }}" aria-label="Supprimer {{ line_item.product.title }}">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <polyline points="3,6 5,6 21,6"/>
-                    <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2v2"/>
-                  </svg>
-                </button>
-              </div>
-            {%- endfor -%}
-          </div>
-          
-          <!-- Recommandations -->
-          {%- if section.settings.products.count > 0 -%}
-            <div class="feelcard-recommendations">
-              <div class="feelcard-recommendations-header">
-                <h3 class="feelcard-recommendations-title">
-                  {{ section.settings.recommendations_title | default: "Recommandations" }}
-                </h3>
-                <div class="feelcard-carousel-controls">
-                  <button class="feelcard-carousel-btn feelcard-carousel-prev" type="button" aria-label="Précédent">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <polyline points="15,18 9,12 15,6"/>
-                    </svg>
-                  </button>
-                  <button class="feelcard-carousel-btn feelcard-carousel-next" type="button" aria-label="Suivant">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <polyline points="9,18 15,12 9,6"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              
-              <div class="feelcard-carousel">
-                <div class="feelcard-carousel-track">
-                  {%- for recommended_product in section.settings.products limit: 6 -%}
-                    {%- assign item_in_cart = false -%}
-                    {%- for cart_item in cart.items -%}
-                      {%- if cart_item.product.id == recommended_product.id -%}
-                        {%- assign item_in_cart = true -%}
-                        {%- break -%}
-                      {%- endif -%}
-                    {%- endfor -%}
-                    
-                    {%- unless item_in_cart -%}
-                      <div class="feelcard-recommendation-card">
-                        <div class="feelcard-rec-image">
-                          {%- if recommended_product.featured_image -%}
-                            <img src="{{ recommended_product.featured_image | image_url: width: 120 }}" 
-                                 alt="{{ recommended_product.featured_image.alt | escape }}"
-                                 loading="lazy">
-                          {%- endif -%}
-                        </div>
-                        <div class="feelcard-rec-details">
-                          <h4 class="feelcard-rec-title">{{ recommended_product.title | truncate: 40 }}</h4>
-                          <p class="feelcard-rec-price">{{ recommended_product.price | money }}</p>
-                          <button class="feelcard-btn feelcard-btn--small" 
-                                  type="button" 
-                                  data-product-id="{{ recommended_product.id }}"
-                                  data-variant-id="{{ recommended_product.selected_or_first_available_variant.id }}">
-                            Ajouter
-                          </button>
-                        </div>
-                      </div>
-                    {%- endunless -%}
-                  {%- endfor -%}
-                </div>
-              </div>
-            </div>
-          {%- endif -%}
-          
-        </div>
-        
-        <!-- Footer fixe -->
-        <div class="feelcard-footer">
-          
-          <!-- Réductions -->
-          {%- if cart.cart_level_discount_applications.size > 0 -%}
-            <div class="feelcard-discounts">
-              {%- for discount in cart.cart_level_discount_applications -%}
-                <div class="feelcard-discount-item">
-                  <div class="feelcard-discount-badge">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                    </svg>
-                    {{ discount.title }}
-                  </div>
-                  <span class="feelcard-discount-amount">-{{ discount.total_allocated_amount | money }}</span>
-                </div>
-              {%- endfor -%}
-            </div>
-          {%- endif -%}
-          
-          <!-- Total -->
-          <div class="feelcard-total">
-            <div class="feelcard-total-line">
-              <span class="feelcard-total-label">Total</span>
-              <span class="feelcard-total-price">{{ cart.total_price | money_with_currency }}</span>
-            </div>
-            
-            {%- if section.settings.show_shipping_text -%}
-              <p class="feelcard-shipping-info">
-                {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
-                  {{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
-                {%- elsif cart.taxes_included -%}
-                  {{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}
-                {%- else -%}
-                  {{ 'cart.general.taxes_and_shipping_at_checkout' | t }}
-                {%- endif -%}
-              </p>
-            {%- endif -%}
-          </div>
-          
-          <!-- Note de commande -->
-          {%- if section.settings.show_cart_note -%}
-            <button class="feelcard-note-toggle" type="button">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14,2 14,8 20,8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/>
-                <line x1="16" y1="17" x2="8" y2="17"/>
-                <polyline points="10,9 9,9 8,9"/>
-              </svg>
-              {%- if cart.note == blank -%}
-                {{ 'cart.general.add_order_note' | t }}
-              {%- else -%}
-                {{ 'cart.general.edit_order_note' | t }}
               {%- endif -%}
-            </button>
-            
-            <div class="feelcard-note-modal" data-state="closed">
-              <div class="feelcard-note-content">
-                <h3>{{ 'cart.general.order_note' | t }}</h3>
-                <textarea class="feelcard-note-textarea" 
-                          placeholder="Instructions spéciales pour votre commande..."
-                          rows="3">{{ cart.note }}</textarea>
-                <div class="feelcard-note-actions">
-                  <button class="feelcard-btn feelcard-btn--secondary feelcard-note-cancel" type="button">
-                    Annuler
-                  </button>
-                  <button class="feelcard-btn feelcard-btn--primary feelcard-note-save" type="button">
-                    Sauvegarder
-                  </button>
-                </div>
+              {%- if recommendations != blank -%}
+                <scroll-carousel selector=".horizontal-product" id="{{ carousel_id }}" class="horizontal-product-list-carousel {% unless horizontal_products_blends %}separate{% endunless %} scroll-area bleed feelcard-carousel">
+                  <div class="horizontal-product-list {% if horizontal_products_blends %}divide-x{% else %}separate{% endif %} feelcard-product-list">
+                    {{- recommendations -}}
+                  </div>
+                </scroll-carousel>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+    <div class="v-stack gap-4 sm:gap-6 feelcard-footer" slot="footer">
+      <div class="v-stack gap-1 feelcard-totals">
+        {% for discount_application in cart.cart_level_discount_applications %}
+          <div class="h-stack gap-4 justify-between feelcard-discount">
+            <div class="badge feelcard-discount-badge">
+              {%- render 'icon' with 'discount' -%} {{- discount_application.title -}}
+            </div>
+            <span class="text-subdued feelcard-discount-amount">-{{ discount_application.total_allocated_amount | money }}</span>
+          </div>
+        {% endfor %}
+        <div class="h-stack gap-4 justify-between feelcard-total-line">
+          <span class="h5 feelcard-total-label">{{ 'cart.general.total' | t }}</span>
+          <span class="h5 feelcard-total-price">{{- cart.total_price | money_with_currency -}}</span>
+        </div>
+        {%- if section.settings.show_shipping_text -%}
+          <div class="feelcard-shipping-info">
+            {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+              <p class="text-subdued text-sm">{{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}</p>
+            {%- elsif cart.taxes_included -%}
+              <p class="text-subdued text-sm">{{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}</p>
+            {%- elsif shop.shipping_policy.body != blank -%}
+              <p class="text-subdued text-sm">{{ 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}</p>
+            {%- else -%}
+              <p class="text-subdued text-sm">{{ 'cart.general.taxes_and_shipping_at_checkout' | t }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.show_cart_note -%}
+          <button type="button" class="justify-self-start feelcard-note-toggle" aria-controls="cart-drawer-note">
+            <span class="link text-sm text-subdued">
+              {%- if cart.note == blank -%}
+                {{- 'cart.general.add_order_note' | t -}}
+              {%- else -%}
+                {{- 'cart.general.edit_order_note' | t -}}
+              {%- endif -%}
+            </span>
+          </button>
+          <cart-note-dialog id="cart-drawer-note" class="cart-drawer__note feelcard-note-dialog">
+            <div class="cart-drawer__note-inner feelcard-note-inner">
+              <div class="v-stack gap-4 sm:gap-6">
+                <p class="h5 feelcard-note-title">{{ 'cart.general.order_note' | t }}</p>
+                <cart-note class="v-stack gap-4">
+                  {%- assign order_note = 'cart.general.order_note' | t -%}
+                  {%- assign order_save_label = 'cart.general.save_note' | t -%}
+                  {%- render 'input', name: 'note', multiline: 3, label: order_note, value: cart.note -%}
+                  <div class="justify-self-start">
+                    {%- render 'button', type: 'button', content: order_save_label, size: 'lg', is: 'close-button', secondary: true, class: 'feelcard-btn-secondary' -%}
+                  </div>
+                </cart-note>
               </div>
             </div>
-          {%- endif -%}
-          
-          <!-- Boutons d'action -->
-          <div class="feelcard-actions">
-            {%- if section.settings.show_view_cart_button -%}
-              <a href="{{ routes.cart_url }}" class="feelcard-btn feelcard-btn--secondary feelcard-btn--full">
-                {{ 'cart.general.view_cart' | t }}
-              </a>
-            {%- endif -%}
-            
-            {%- if section.settings.show_checkout_button -%}
-              <form action="{{ routes.cart_url }}" method="POST" class="feelcard-checkout-form">
-                <button type="submit" name="checkout" class="feelcard-btn feelcard-btn--primary feelcard-btn--full">
-                  <svg class="feelcard-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                    <circle cx="12" cy="16" r="1"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                  </svg>
-                  {{ 'cart.general.checkout' | t }}
-                  <div class="feelcard-btn-loading">
-                    <div class="feelcard-spinner"></div>
-                  </div>
-                </button>
-              </form>
-            {%- endif -%}
-          </div>
-          
-          <!-- Badges de confiance -->
-          <div class="feelcard-trust-badges">
-            <div class="feelcard-trust-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              </svg>
-              <span>Paiement sécurisé</span>
-            </div>
-            <div class="feelcard-trust-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <rect x="1" y="3" width="15" height="13"/>
-                <polygon points="16,8 20,8 23,11 23,16 16,16 16,8"/>
-                <circle cx="5.5" cy="18.5" r="2.5"/>
-                <circle cx="18.5" cy="18.5" r="2.5"/>
-              </svg>
-              <span>Livraison rapide</span>
-            </div>
-            <div class="feelcard-trust-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <polyline points="23,4 23,10 17,10"/>
-                <polyline points="1,20 1,14 7,14"/>
-                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
-              </svg>
-              <span>Retours gratuits</span>
-            </div>
-          </div>
-          
-        </div>
+          </cart-note-dialog>
+        {%- endif -%}
       </div>
-    {%- endif -%}
-    
-  </div>
+      <form action="{{ routes.cart_url }}" method="POST" class="buy-buttons {% if section.settings.show_checkout_button %}buy-buttons--compact{% endif %} feelcard-actions">
+        {%- assign checkout_label = 'cart.general.checkout' | t -%}
+        {%- if section.settings.show_view_cart_button or section.settings.show_checkout_button == false -%}
+          <a href="{{ routes.cart_url }}" class="button button--xl {% if section.settings.show_checkout_button %}button--secondary{% endif %} feelcard-btn-secondary" data-no-instant>
+            {{- 'cart.general.view_cart' | t -}}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.show_checkout_button -%}
+          {%- render 'button', type: 'submit', content: checkout_label, icon: 'picto-lock', name: 'checkout', size: 'xl', class: 'feelcard-btn-primary' -%}
+        {%- endif -%}
+      </form>
+    </div>
+  {%- endif -%}
 </cart-drawer>
 
-<!-- Loading overlay -->
-<div class="feelcard-loading-overlay" data-state="hidden">
-  <div class="feelcard-loading-content">
-    <div class="feelcard-spinner-large"></div>
-    <p>Mise à jour du panier...</p>
-  </div>
-</div>
-
 <style>
-/* ===== FEELCARD CART DRAWER - CSS ISOLÉ ===== */
+/* ===== FEELCARD ENHANCED CART DRAWER ===== */
 
-/* Variables CSS préfixées pour la palette monochrome */
-.feelcard-cart-overlay {
-  /* Couleurs principales */
+.feelcard-enhanced {
+  /* Variables de couleurs sophistiquées */
   --feelcard-black: #000000;
+  --feelcard-black-soft: #0a0a0a;
   --feelcard-black-light: #1a1a1a;
   --feelcard-black-lighter: #2a2a2a;
-  --feelcard-gray-dark: #404040;
-  --feelcard-gray-medium-dark: #525252;
-  --feelcard-gray-medium: #666666;
-  --feelcard-gray: #808080;
-  --feelcard-gray-light: #999999;
-  --feelcard-gray-lighter: #b3b3b3;
+  --feelcard-gray-dark: #333333;
+  --feelcard-gray-medium: #4a4a4a;
+  --feelcard-gray: #666666;
+  --feelcard-gray-light: #808080;
+  --feelcard-gray-lighter: #999999;
   --feelcard-gray-very-light: #cccccc;
-  --feelcard-gray-ultra-light: #e5e5e5;
+  --feelcard-gray-ultra-light: #e8e8e8;
   --feelcard-gray-subtle: #f5f5f5;
   --feelcard-white: #ffffff;
   --feelcard-white-soft: #fafafa;
 
-  /* Dégradés sophistiqués */
-  --feelcard-gradient-primary: linear-gradient(135deg, #000000 0%, #404040 100%);
-  --feelcard-gradient-subtle: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
-  --feelcard-gradient-medium: linear-gradient(135deg, #666666 0%, #999999 100%);
-  --feelcard-gradient-accent: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-  --feelcard-gradient-hover: linear-gradient(135deg, #2a2a2a 0%, #404040 100%);
+  /* Dégradés premium */
+  --feelcard-gradient-primary: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #333333 100%);
+  --feelcard-gradient-secondary: linear-gradient(135deg, #f5f5f5 0%, #ffffff 50%, #fafafa 100%);
+  --feelcard-gradient-subtle: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+  --feelcard-gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #333333 100%);
+  --feelcard-gradient-accent: linear-gradient(135deg, #333333 0%, #4a4a4a 100%);
+  --feelcard-gradient-hover: linear-gradient(135deg, #2a2a2a 0%, #333333 50%, #4a4a4a 100%);
 
   /* Ombres élégantes */
-  --feelcard-shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --feelcard-shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
-  --feelcard-shadow-strong: 0 8px 32px rgba(0, 0, 0, 0.16);
-  --feelcard-shadow-overlay: 0 16px 64px rgba(0, 0, 0, 0.24);
+  --feelcard-shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --feelcard-shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --feelcard-shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --feelcard-shadow-dramatic: 0 16px 48px rgba(0, 0, 0, 0.2);
+  --feelcard-shadow-inset: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 
-  /* Border radius harmonieux */
-  --feelcard-radius-small: 8px;
-  --feelcard-radius-medium: 12px;
-  --feelcard-radius-large: 16px;
-  --feelcard-radius-xl: 20px;
-
-  /* Transitions premium */
+  /* Transitions fluides */
+  --feelcard-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --feelcard-transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  --feelcard-transition-medium: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --feelcard-transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Dimensions responsives */
-  --feelcard-drawer-width-desktop: 420px;
-  --feelcard-drawer-width-tablet: 380px;
-  --feelcard-drawer-width-mobile: 100vw;
+  /* Bordures et rayons */
+  --feelcard-radius: 12px;
+  --feelcard-radius-small: 8px;
+  --feelcard-radius-large: 16px;
+  --feelcard-radius-xl: 20px;
 }
 
-/* ===== STRUCTURE PRINCIPALE ISOLÉE ===== */
-.feelcard-cart-overlay {
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 999999 !important;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--feelcard-transition-medium), visibility var(--feelcard-transition-medium);
-  contain: layout style paint;
-  isolation: isolate;
-}
-
-.feelcard-cart-overlay[data-state="open"] {
-  pointer-events: auto;
-  opacity: 1;
-  visibility: visible;
-}
-
-.feelcard-cart-overlay * {
-  box-sizing: border-box;
-}
-
-/* ===== BACKDROP ISOLÉ ===== */
-.feelcard-backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0);
-  backdrop-filter: blur(0px);
-  transition: background var(--feelcard-transition-medium), backdrop-filter var(--feelcard-transition-medium);
-  cursor: pointer;
-}
-
-.feelcard-cart-overlay[data-state="open"] .feelcard-backdrop {
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-}
-
-/* ===== CONTAINER PRINCIPAL ===== */
-.feelcard-drawer-container {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: var(--feelcard-drawer-width-desktop);
+/* ===== ÉTAT VIDE AMÉLIORÉ ===== */
+.feelcard-empty-state {
   background: var(--feelcard-gradient-subtle);
-  box-shadow: var(--feelcard-shadow-overlay);
-  transform: translateX(100%);
-  transition: transform var(--feelcard-transition-medium);
-  display: flex;
-  flex-direction: column;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  color: var(--feelcard-black);
+  border-radius: var(--feelcard-radius-large);
+  padding: 3rem 2rem;
+  margin: 2rem;
+  box-shadow: var(--feelcard-shadow-subtle);
+  position: relative;
   overflow: hidden;
 }
 
-.feelcard-cart-overlay[data-state="open"] .feelcard-drawer-container {
-  transform: translateX(0);
+.feelcard-empty-state::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--feelcard-gradient-primary);
+  opacity: 0.1;
 }
 
-/* ===== ÉTAT PANIER VIDE ===== */
-.feelcard-empty-state {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 2rem;
-  position: relative;
-}
-
-.feelcard-empty-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  text-align: center;
-}
-
-.feelcard-empty-icon-wrapper {
+.feelcard-empty-icon {
   position: relative;
   margin-bottom: 2rem;
 }
 
-.feelcard-cart-icon {
-  width: 80px;
-  height: 80px;
-  background: var(--feelcard-gradient-medium);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: feelcard-float 3s ease-in-out infinite;
-}
-
-.feelcard-cart-icon svg {
-  width: 40px;
-  height: 40px;
-  stroke: var(--feelcard-white);
-  stroke-width: 1.5;
-}
-
-/* Animation de particules */
-.feelcard-particles {
+.feelcard-empty-icon::after {
+  content: '';
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
-.feelcard-particle {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: var(--feelcard-gradient-medium);
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(0,0,0,0.03) 0%, transparent 70%);
   border-radius: 50%;
-  opacity: 0;
-  animation: feelcard-particle 4s ease-in-out infinite;
-}
-
-.feelcard-particle:nth-child(1) {
-  top: -60px;
-  left: -20px;
-  animation-delay: 0s;
-}
-
-.feelcard-particle:nth-child(2) {
-  top: -40px;
-  right: -30px;
-  animation-delay: 1s;
-}
-
-.feelcard-particle:nth-child(3) {
-  bottom: -50px;
-  left: -25px;
-  animation-delay: 2s;
-}
-
-.feelcard-particle:nth-child(4) {
-  bottom: -35px;
-  right: -20px;
-  animation-delay: 3s;
+  transform: translate(-50%, -50%);
+  z-index: -1;
 }
 
 .feelcard-empty-title {
-  font-size: 1.5rem;
+  background: var(--feelcard-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  color: var(--feelcard-black);
+  margin-bottom: 1.5rem;
 }
 
-.feelcard-empty-subtitle {
-  font-size: 1rem;
-  color: var(--feelcard-gray);
-  margin: 0 0 2rem 0;
-  line-height: 1.5;
+/* ===== HEADER AMÉLIORÉ ===== */
+.feelcard-header {
+  background: var(--feelcard-gradient-subtle);
+  border-bottom: 1px solid var(--feelcard-gray-ultra-light);
+  padding: 1.5rem;
+  position: relative;
 }
 
-/* ===== BOUTONS ISOLÉS ===== */
-.feelcard-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: var(--feelcard-radius-medium);
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all var(--feelcard-transition-fast);
+.feelcard-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 1.5rem;
+  right: 1.5rem;
+  height: 1px;
+  background: var(--feelcard-gradient-primary);
+  opacity: 0.1;
+}
+
+.feelcard-title {
+  background: var(--feelcard-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* ===== COMPTEUR AMÉLIORÉ ===== */
+.feelcard-count-bubble {
+  background: var(--feelcard-gradient-primary) !important;
+  color: var(--feelcard-white) !important;
+  box-shadow: var(--feelcard-shadow-medium);
+  border: 2px solid var(--feelcard-white);
   position: relative;
   overflow: hidden;
 }
 
-.feelcard-btn--primary {
-  background: var(--feelcard-gradient-primary);
-  color: var(--feelcard-white);
-  box-shadow: var(--feelcard-shadow-subtle);
-}
-
-.feelcard-btn--primary:hover {
-  background: var(--feelcard-gradient-hover);
-  box-shadow: var(--feelcard-shadow-medium);
-  transform: translateY(-1px);
-}
-
-.feelcard-btn--secondary {
-  background: var(--feelcard-white);
-  color: var(--feelcard-black);
-  border: 1px solid var(--feelcard-gray-very-light);
-  box-shadow: var(--feelcard-shadow-subtle);
-}
-
-.feelcard-btn--secondary:hover {
-  background: var(--feelcard-gray-subtle);
-  border-color: var(--feelcard-gray-lighter);
-  transform: translateY(-1px);
-}
-
-.feelcard-btn--small {
-  padding: 0.5rem 1rem;
-  font-size: 0.75rem;
-}
-
-.feelcard-btn--full {
-  width: 100%;
-}
-
-/* ===== BOUTON FERMETURE ===== */
-.feelcard-close-btn {
+.feelcard-count-bubble::before {
+  content: '';
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: transparent;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--feelcard-transition-fast);
-  z-index: 10;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left var(--feelcard-transition);
+}
+
+.feelcard-count-bubble:hover::before {
+  left: 100%;
+}
+
+/* ===== BOUTON FERMETURE AMÉLIORÉ ===== */
+.feelcard-close-btn {
+  background: var(--feelcard-gradient-secondary) !important;
+  border: 1px solid var(--feelcard-gray-ultra-light) !important;
+  border-radius: 50% !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all var(--feelcard-transition) !important;
+  box-shadow: var(--feelcard-shadow-subtle) !important;
 }
 
 .feelcard-close-btn:hover {
-  background: var(--feelcard-gradient-subtle);
-  transform: scale(1.1);
+  background: var(--feelcard-gradient-accent) !important;
+  transform: scale(1.05) !important;
+  box-shadow: var(--feelcard-shadow-medium) !important;
 }
 
-.feelcard-close-icon {
-  width: 20px;
-  height: 20px;
-  stroke: var(--feelcard-gray);
-  stroke-width: 2;
-  transition: stroke var(--feelcard-transition-fast);
+.feelcard-close-btn:hover svg {
+  color: var(--feelcard-white) !important;
 }
 
-.feelcard-close-btn:hover .feelcard-close-icon {
-  stroke: var(--feelcard-black);
-}
-
-/* ===== CONTENU AVEC PRODUITS ===== */
-.feelcard-drawer-content {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-/* ===== HEADER ===== */
-.feelcard-header {
-  padding: 1.5rem;
-  border-bottom: 1px solid var(--feelcard-gray-ultra-light);
-  background: var(--feelcard-white);
-}
-
-.feelcard-header-main {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.feelcard-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0;
-  color: var(--feelcard-black);
-}
-
-.feelcard-count-bubble {
-  background: var(--feelcard-gradient-primary);
-  color: var(--feelcard-white);
-  padding: 0.25rem 0.75rem;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  min-width: 24px;
-  text-align: center;
-  animation: feelcard-bounce 0.5s ease-out;
-}
-
-/* ===== BARRE DE LIVRAISON GRATUITE ===== */
-.feelcard-shipping-bar {
-  margin-top: 1rem;
-}
-
-.feelcard-shipping-progress {
-  width: 100%;
-  height: 6px;
-  background: var(--feelcard-gray-ultra-light);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-
-.feelcard-progress-bar {
-  height: 100%;
-  background: var(--feelcard-gradient-primary);
-  width: var(--progress, 0%);
-  transition: width var(--feelcard-transition-medium);
-  border-radius: 3px;
-}
-
-.feelcard-shipping-text {
-  font-size: 0.75rem;
-  color: var(--feelcard-gray);
-  margin: 0;
-  text-align: center;
-}
-
-/* ===== ZONE SCROLLABLE ===== */
-.feelcard-scroll-area {
-  flex: 1;
-  overflow-y: auto;
+/* ===== CONTENU PRINCIPAL ===== */
+.feelcard-content {
   padding: 0 1.5rem;
-  scrollbar-width: thin;
-  scrollbar-color: var(--feelcard-gray-lighter) transparent;
 }
 
-.feelcard-scroll-area::-webkit-scrollbar {
-  width: 6px;
-}
-
-.feelcard-scroll-area::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.feelcard-scroll-area::-webkit-scrollbar-thumb {
-  background: var(--feelcard-gray-lighter);
-  border-radius: 3px;
-}
-
-.feelcard-scroll-area::-webkit-scrollbar-thumb:hover {
-  background: var(--feelcard-gray-light);
-}
-
-/* ===== LISTE DES PRODUITS ===== */
-.feelcard-line-items {
-  margin: 1.5rem 0;
-}
-
-.feelcard-line-item {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem;
-  background: var(--feelcard-white);
-  border-radius: var(--feelcard-radius-medium);
-  box-shadow: var(--feelcard-shadow-subtle);
-  margin-bottom: 1rem;
-  transition: all var(--feelcard-transition-fast);
-  animation: feelcard-slide-in 0.5s ease-out;
-  animation-fill-mode: both;
-}
-
-.feelcard-line-item:hover {
-  box-shadow: var(--feelcard-shadow-medium);
-  transform: translateY(-2px);
-}
-
-.feelcard-line-item:nth-child(1) {
-  animation-delay: 0.1s;
-}
-.feelcard-line-item:nth-child(2) {
-  animation-delay: 0.2s;
-}
-.feelcard-line-item:nth-child(3) {
-  animation-delay: 0.3s;
-}
-.feelcard-line-item:nth-child(4) {
-  animation-delay: 0.4s;
-}
-
-.feelcard-product-image {
-  width: 80px;
-  height: 80px;
-  border-radius: var(--feelcard-radius-small);
-  overflow: hidden;
-  background: var(--feelcard-gray-subtle);
-  flex-shrink: 0;
-}
-
-.feelcard-product-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.feelcard-no-image {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* ===== ARTICLES DU PANIER ===== */
+.feelcard-line-item-wrapper {
   background: var(--feelcard-gradient-subtle);
+  border-radius: var(--feelcard-radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--feelcard-shadow-subtle);
+  border: 1px solid var(--feelcard-gray-ultra-light);
+  transition: all var(--feelcard-transition);
+  position: relative;
+  overflow: hidden;
 }
 
-.feelcard-no-image svg {
-  width: 32px;
-  height: 32px;
-  stroke: var(--feelcard-gray-light);
-  stroke-width: 1.5;
-}
-
-.feelcard-product-details {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.feelcard-product-title {
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin: 0;
-  color: var(--feelcard-black);
-  line-height: 1.4;
-}
-
-.feelcard-product-variant {
-  font-size: 0.75rem;
-  color: var(--feelcard-gray);
-  margin: 0;
-}
-
-.feelcard-product-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: auto;
-}
-
-/* ===== CONTRÔLES QUANTITÉ ===== */
-.feelcard-quantity-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--feelcard-gray-subtle);
-  border-radius: var(--feelcard-radius-small);
-  padding: 0.25rem;
-}
-
-.feelcard-qty-btn {
-  width: 28px;
-  height: 28px;
-  border: none;
-  background: var(--feelcard-white);
-  border-radius: var(--feelcard-radius-small);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--feelcard-transition-fast);
-}
-
-.feelcard-qty-btn:hover {
+.feelcard-line-item-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
   background: var(--feelcard-gradient-primary);
+  opacity: 0;
+  transition: opacity var(--feelcard-transition);
 }
 
-.feelcard-qty-btn:hover svg {
-  stroke: var(--feelcard-white);
+.feelcard-line-item-wrapper:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--feelcard-shadow-medium);
 }
 
-.feelcard-qty-btn svg {
-  width: 14px;
-  height: 14px;
-  stroke: var(--feelcard-gray);
-  stroke-width: 2;
-  transition: stroke var(--feelcard-transition-fast);
-}
-
-.feelcard-qty-input {
-  width: 40px;
-  height: 28px;
-  border: none;
-  background: transparent;
-  text-align: center;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--feelcard-black);
-}
-
-.feelcard-qty-input:focus {
-  outline: none;
-}
-
-/* ===== PRIX PRODUIT ===== */
-.feelcard-product-price {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.25rem;
-}
-
-.feelcard-price {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--feelcard-black);
-}
-
-.feelcard-price-original {
-  font-size: 0.75rem;
-  color: var(--feelcard-gray);
-  text-decoration: line-through;
-}
-
-.feelcard-price-final {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--feelcard-black);
-}
-
-/* ===== BOUTON SUPPRESSION ===== */
-.feelcard-remove-btn {
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: transparent;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--feelcard-transition-fast);
-  flex-shrink: 0;
-  align-self: flex-start;
-}
-
-.feelcard-remove-btn:hover {
-  background: rgba(239, 68, 68, 0.1);
-}
-
-.feelcard-remove-btn svg {
-  width: 16px;
-  height: 16px;
-  stroke: var(--feelcard-gray);
-  stroke-width: 1.5;
-  transition: stroke var(--feelcard-transition-fast);
-}
-
-.feelcard-remove-btn:hover svg {
-  stroke: #ef4444;
+.feelcard-line-item-wrapper:hover::before {
+  opacity: 1;
 }
 
 /* ===== RECOMMANDATIONS ===== */
 .feelcard-recommendations {
-  margin: 2rem 0;
-  padding: 1.5rem;
-  background: var(--feelcard-white);
+  background: var(--feelcard-gradient-subtle);
   border-radius: var(--feelcard-radius-large);
+  padding: 1.5rem;
   box-shadow: var(--feelcard-shadow-subtle);
+  border: 1px solid var(--feelcard-gray-ultra-light);
 }
 
 .feelcard-recommendations-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  border-bottom: 1px solid var(--feelcard-gray-ultra-light);
+  padding-bottom: 1rem;
   margin-bottom: 1rem;
 }
 
 .feelcard-recommendations-title {
-  font-size: 1rem;
+  background: var(--feelcard-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-weight: 600;
-  margin: 0;
-  color: var(--feelcard-black);
-}
-
-.feelcard-carousel-controls {
-  display: flex;
-  gap: 0.5rem;
 }
 
 .feelcard-carousel-btn {
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: var(--feelcard-gray-subtle);
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--feelcard-transition-fast);
+  background: var(--feelcard-gradient-secondary) !important;
+  border: 1px solid var(--feelcard-gray-ultra-light) !important;
+  transition: all var(--feelcard-transition) !important;
+  box-shadow: var(--feelcard-shadow-subtle) !important;
 }
 
 .feelcard-carousel-btn:hover {
-  background: var(--feelcard-gradient-primary);
-  transform: scale(1.1);
+  background: var(--feelcard-gradient-accent) !important;
+  transform: scale(1.1) !important;
+  box-shadow: var(--feelcard-shadow-medium) !important;
 }
 
 .feelcard-carousel-btn:hover svg {
-  stroke: var(--feelcard-white);
+  color: var(--feelcard-white) !important;
 }
 
-.feelcard-carousel-btn svg {
-  width: 16px;
-  height: 16px;
-  stroke: var(--feelcard-gray);
-  stroke-width: 2;
-  transition: stroke var(--feelcard-transition-fast);
-}
-
-.feelcard-carousel-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.feelcard-carousel {
-  overflow: hidden;
-  border-radius: var(--feelcard-radius-medium);
-}
-
-.feelcard-carousel-track {
-  display: flex;
-  gap: 1rem;
-  transition: transform var(--feelcard-transition-medium);
-}
-
-.feelcard-recommendation-card {
-  flex: 0 0 200px;
-  background: var(--feelcard-gradient-subtle);
-  border-radius: var(--feelcard-radius-medium);
-  padding: 1rem;
-  transition: all var(--feelcard-transition-fast);
-}
-
-.feelcard-recommendation-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--feelcard-shadow-medium);
-}
-
-.feelcard-rec-image {
-  width: 100%;
-  height: 120px;
-  border-radius: var(--feelcard-radius-small);
-  overflow: hidden;
-  margin-bottom: 0.75rem;
-  background: var(--feelcard-gray-subtle);
-}
-
-.feelcard-rec-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.feelcard-rec-title {
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin: 0 0 0.5rem 0;
-  color: var(--feelcard-black);
-  line-height: 1.3;
-}
-
-.feelcard-rec-price {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--feelcard-black);
-  margin: 0 0 0.75rem 0;
-}
-
-/* ===== FOOTER FIXE ===== */
+/* ===== FOOTER ===== */
 .feelcard-footer {
-  background: var(--feelcard-white);
+  background: var(--feelcard-gradient-subtle);
   border-top: 1px solid var(--feelcard-gray-ultra-light);
   padding: 1.5rem;
+  position: relative;
+}
+
+.feelcard-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 1.5rem;
+  right: 1.5rem;
+  height: 1px;
+  background: var(--feelcard-gradient-primary);
+  opacity: 0.1;
 }
 
 /* ===== RÉDUCTIONS ===== */
-.feelcard-discounts {
-  margin-bottom: 1rem;
-}
-
-.feelcard-discount-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem;
+.feelcard-discount {
   background: var(--feelcard-gradient-subtle);
-  border-radius: var(--feelcard-radius-medium);
+  border-radius: var(--feelcard-radius-small);
+  padding: 0.75rem;
   margin-bottom: 0.5rem;
+  border: 1px solid var(--feelcard-gray-ultra-light);
 }
 
 .feelcard-discount-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--feelcard-black);
-}
-
-.feelcard-discount-badge svg {
-  width: 16px;
-  height: 16px;
-  stroke: var(--feelcard-black);
-  stroke-width: 1.5;
+  background: var(--feelcard-gradient-primary) !important;
+  color: var(--feelcard-white) !important;
+  border-radius: var(--feelcard-radius-small) !important;
+  padding: 0.25rem 0.75rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
 }
 
 .feelcard-discount-amount {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #059669;
+  color: #059669 !important;
+  font-weight: 600 !important;
 }
 
 /* ===== TOTAL ===== */
-.feelcard-total {
-  margin-bottom: 1.5rem;
-}
-
 .feelcard-total-line {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
+  background: var(--feelcard-gradient-subtle);
+  border-radius: var(--feelcard-radius-small);
+  padding: 1rem;
+  border: 2px solid var(--feelcard-gray-ultra-light);
+  margin: 1rem 0;
 }
 
-.feelcard-total-label {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--feelcard-black);
-}
-
+.feelcard-total-label,
 .feelcard-total-price {
-  font-size: 1.125rem;
+  background: var(--feelcard-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-weight: 700;
-  color: var(--feelcard-black);
 }
 
-.feelcard-shipping-info {
-  font-size: 0.75rem;
-  color: var(--feelcard-gray);
-  margin: 0;
-  line-height: 1.4;
+/* ===== BOUTONS PRINCIPAUX ===== */
+.feelcard-btn-primary {
+  background: var(--feelcard-gradient-primary) !important;
+  color: var(--feelcard-white) !important;
+  border: none !important;
+  border-radius: var(--feelcard-radius) !important;
+  box-shadow: var(--feelcard-shadow-medium) !important;
+  transition: all var(--feelcard-transition) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.feelcard-btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left var(--feelcard-transition);
+}
+
+.feelcard-btn-primary:hover {
+  background: var(--feelcard-gradient-hover) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: var(--feelcard-shadow-strong) !important;
+}
+
+.feelcard-btn-primary:hover::before {
+  left: 100%;
+}
+
+.feelcard-btn-secondary {
+  background: var(--feelcard-gradient-secondary) !important;
+  color: var(--feelcard-black) !important;
+  border: 1px solid var(--feelcard-gray-ultra-light) !important;
+  border-radius: var(--feelcard-radius) !important;
+  box-shadow: var(--feelcard-shadow-subtle) !important;
+  transition: all var(--feelcard-transition) !important;
+}
+
+.feelcard-btn-secondary:hover {
+  background: var(--feelcard-gradient-accent) !important;
+  color: var(--feelcard-white) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--feelcard-shadow-medium) !important;
 }
 
 /* ===== NOTE DE COMMANDE ===== */
 .feelcard-note-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: transparent;
-  border: none;
-  color: var(--feelcard-gray);
-  font-size: 0.875rem;
-  cursor: pointer;
-  padding: 0.5rem 0;
-  margin-bottom: 1rem;
-  transition: color var(--feelcard-transition-fast);
+  color: var(--feelcard-gray) !important;
+  transition: color var(--feelcard-transition) !important;
 }
 
 .feelcard-note-toggle:hover {
-  color: var(--feelcard-black);
+  color: var(--feelcard-black) !important;
 }
 
-.feelcard-note-toggle svg {
-  width: 16px;
-  height: 16px;
-  stroke: currentColor;
-  stroke-width: 1.5;
+.feelcard-note-dialog {
+  background: var(--feelcard-gradient-subtle) !important;
+  border-radius: var(--feelcard-radius-large) !important;
+  box-shadow: var(--feelcard-shadow-dramatic) !important;
+  border: 1px solid var(--feelcard-gray-ultra-light) !important;
 }
 
-.feelcard-note-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000000;
-  opacity: 0;
-  visibility: hidden;
-  transition: all var(--feelcard-transition-medium);
-}
-
-.feelcard-note-modal[data-state="open"] {
-  opacity: 1;
-  visibility: visible;
-}
-
-.feelcard-note-content {
-  background: var(--feelcard-white);
-  border-radius: var(--feelcard-radius-large);
-  padding: 2rem;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: var(--feelcard-shadow-overlay);
-  transform: scale(0.9);
-  transition: transform var(--feelcard-transition-medium);
-}
-
-.feelcard-note-modal[data-state="open"] .feelcard-note-content {
-  transform: scale(1);
-}
-
-.feelcard-note-content h3 {
-  font-size: 1.125rem;
+.feelcard-note-title {
+  background: var(--feelcard-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-weight: 600;
-  margin: 0 0 1rem 0;
-  color: var(--feelcard-black);
 }
 
-.feelcard-note-textarea {
-  width: 100%;
-  min-height: 80px;
-  padding: 0.75rem;
-  border: 1px solid var(--feelcard-gray-very-light);
-  border-radius: var(--feelcard-radius-medium);
-  font-size: 0.875rem;
-  color: var(--feelcard-black);
-  resize: vertical;
-  margin-bottom: 1rem;
-  transition: border-color var(--feelcard-transition-fast);
-}
-
-.feelcard-note-textarea:focus {
-  outline: none;
-  border-color: var(--feelcard-gray);
-}
-
-.feelcard-note-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-}
-
-/* ===== ACTIONS PRINCIPALES ===== */
-.feelcard-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.feelcard-checkout-form {
-  width: 100%;
-}
-
-.feelcard-checkout-form .feelcard-btn {
-  position: relative;
-}
-
-.feelcard-lock-icon {
-  width: 16px;
-  height: 16px;
-  stroke: currentColor;
-  stroke-width: 2;
-}
-
-.feelcard-btn-loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  visibility: hidden;
-  transition: all var(--feelcard-transition-fast);
-}
-
-.feelcard-btn.loading .feelcard-btn-loading {
-  opacity: 1;
-  visibility: visible;
-}
-
-.feelcard-btn.loading .feelcard-lock-icon {
-  opacity: 0;
-}
-
-/* ===== BADGES DE CONFIANCE ===== */
-.feelcard-trust-badges {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--feelcard-gray-ultra-light);
-}
-
-.feelcard-trust-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  flex: 1;
-  text-align: center;
-  transition: transform var(--feelcard-transition-fast);
-}
-
-.feelcard-trust-item:hover {
-  transform: translateY(-2px);
-}
-
-.feelcard-trust-item svg {
-  width: 20px;
-  height: 20px;
-  stroke: var(--feelcard-gray);
-  stroke-width: 1.5;
-}
-
-.feelcard-trust-item span {
-  font-size: 0.75rem;
-  color: var(--feelcard-gray);
-  line-height: 1.3;
-}
-
-/* ===== LOADING OVERLAY ===== */
-.feelcard-loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000001;
-  opacity: 0;
-  visibility: hidden;
-  transition: all var(--feelcard-transition-medium);
-}
-
-.feelcard-loading-overlay[data-state="visible"] {
-  opacity: 1;
-  visibility: visible;
-}
-
-.feelcard-loading-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-.feelcard-loading-content p {
-  font-size: 0.875rem;
-  color: var(--feelcard-gray);
-  margin: 0;
-}
-
-/* ===== SPINNERS ===== */
-.feelcard-spinner,
-.feelcard-spinner-large {
-  border: 2px solid var(--feelcard-gray-ultra-light);
-  border-top: 2px solid var(--feelcard-white);
-  border-radius: 50%;
-  animation: feelcard-spin 1s linear infinite;
-}
-
-.feelcard-spinner {
-  width: 16px;
-  height: 16px;
-}
-
-.feelcard-spinner-large {
-  width: 32px;
-  height: 32px;
-  border-top-color: var(--feelcard-black);
+/* ===== BARRE DE LIVRAISON ===== */
+.feelcard-shipping-wrapper {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--feelcard-gradient-subtle);
+  border-radius: var(--feelcard-radius);
+  border: 1px solid var(--feelcard-gray-ultra-light);
 }
 
 /* ===== ANIMATIONS ===== */
-@keyframes feelcard-spin {
+@keyframes feelcard-shimmer {
   0% {
-    transform: rotate(0deg);
+    transform: translateX(-100%);
   }
   100% {
-    transform: rotate(360deg);
+    transform: translateX(100%);
   }
 }
 
-@keyframes feelcard-float {
-  0%,
-  100% {
-    transform: translateY(0px);
+@keyframes feelcard-pulse {
+  0%, 100% {
+    opacity: 1;
   }
   50% {
-    transform: translateY(-10px);
+    opacity: 0.8;
   }
 }
 
-@keyframes feelcard-bounce {
-  0%,
-  20%,
-  53%,
-  80%,
-  100% {
-    transform: scale(1);
-  }
-  40%,
-  43% {
-    transform: scale(1.1);
-  }
-  70% {
-    transform: scale(1.05);
-  }
-}
-
-@keyframes feelcard-particle {
-  0% {
-    opacity: 0;
-    transform: translateY(0px) scale(0);
-  }
-  50% {
-    opacity: 1;
-    transform: translateY(-20px) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-40px) scale(0);
-  }
-}
-
-@keyframes feelcard-slide-in {
-  0% {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* ===== RESPONSIVE ISOLÉ ===== */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  .feelcard-drawer-container {
-    width: var(--feelcard-drawer-width-tablet);
-  }
-
   .feelcard-header,
-  .feelcard-scroll-area,
+  .feelcard-content,
   .feelcard-footer {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-
-  .feelcard-trust-badges {
-    flex-direction: column;
-    gap: 0.75rem;
+  
+  .feelcard-line-item-wrapper {
+    margin-bottom: 0.75rem;
   }
-
-  .feelcard-trust-item {
-    flex-direction: row;
-    justify-content: flex-start;
-    text-align: left;
-  }
-
-  .feelcard-actions {
-    gap: 0.5rem;
+  
+  .feelcard-recommendations {
+    padding: 1rem;
   }
 }
 
-@media (max-width: 480px) {
-  .feelcard-drawer-container {
-    width: var(--feelcard-drawer-width-mobile);
-  }
-
-  .feelcard-line-item {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .feelcard-product-image {
-    width: 100%;
-    height: 200px;
-  }
-
-  .feelcard-product-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-
-  .feelcard-carousel-track {
-    gap: 0.75rem;
-  }
-
-  .feelcard-recommendation-card {
-    flex: 0 0 160px;
+/* ===== DARK MODE ===== */
+@media (prefers-color-scheme: dark) {
+  .feelcard-enhanced {
+    --feelcard-white: #1a1a1a;
+    --feelcard-white-soft: #2a2a2a;
+    --feelcard-gray-subtle: #2a2a2a;
+    --feelcard-gray-ultra-light: #333333;
+    --feelcard-black: #ffffff;
+    --feelcard-gradient-subtle: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    --feelcard-gradient-secondary: linear-gradient(135deg, #2a2a2a 0%, #333333 100%);
   }
 }
 
 /* ===== ACCESSIBILITÉ ===== */
 @media (prefers-reduced-motion: reduce) {
-  .feelcard-cart-overlay,
-  .feelcard-cart-overlay *,
-  .feelcard-cart-overlay *::before,
-  .feelcard-cart-overlay *::after {
+  .feelcard-enhanced * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
 
-.feelcard-cart-overlay:focus-within {
-  outline: none;
-}
-
-.feelcard-cart-overlay [tabindex="-1"]:focus {
-  outline: none;
-}
-
 /* Focus visible pour l'accessibilité */
-.feelcard-btn:focus-visible,
-.feelcard-close-btn:focus-visible,
-.feelcard-qty-btn:focus-visible,
-.feelcard-remove-btn:focus-visible,
-.feelcard-carousel-btn:focus-visible {
+.feelcard-enhanced button:focus-visible,
+.feelcard-enhanced a:focus-visible {
   outline: 2px solid var(--feelcard-black);
   outline-offset: 2px;
 }
-
-/* ===== DARK MODE AUTOMATIQUE ===== */
-@media (prefers-color-scheme: dark) {
-  .feelcard-cart-overlay {
-    --feelcard-white: #1a1a1a;
-    --feelcard-white-soft: #2a2a2a;
-    --feelcard-gray-subtle: #2a2a2a;
-    --feelcard-gray-ultra-light: #404040;
-    --feelcard-gray-very-light: #525252;
-    --feelcard-black: #ffffff;
-    --feelcard-gradient-subtle: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-  }
-}
-
-/* ===== STYLES TOAST ISOLÉS ===== */
-.feelcard-toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000002;
-  background: var(--feelcard-white);
-  border-radius: var(--feelcard-radius-medium);
-  box-shadow: var(--feelcard-shadow-overlay);
-  padding: 1rem;
-  opacity: 0;
-  transform: translateY(-100%);
-  transition: all var(--feelcard-transition-medium);
-  max-width: 300px;
-}
-
-.feelcard-toast--error {
-  border-left: 4px solid #ef4444;
-}
-
-.feelcard-toast-content {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 0.875rem;
-  color: var(--feelcard-black);
-}
-
-.feelcard-toast-content svg {
-  width: 20px;
-  height: 20px;
-  stroke: #ef4444;
-  stroke-width: 2;
-  flex-shrink: 0;
-}
 </style>
-
-<script>
-/**
- * FEELCARD Cart Drawer - JavaScript isolé
- * Namespace complet pour éviter les conflits
- */
-
-// Namespace principal isolé
-window.FEELCARD = window.FEELCARD || {}
-
-window.FEELCARD.CartDrawer = (() => {
-  // Variables privées isolées
-  let isOpen = false
-  let isLoading = false
-  let currentCart = null
-  let focusTrap = null
-  let touchStartX = 0
-  let touchStartY = 0
-
-  // Sélecteurs préfixés
-  const SELECTORS = {
-    overlay: ".feelcard-cart-overlay",
-    backdrop: ".feelcard-backdrop",
-    container: ".feelcard-drawer-container",
-    closeBtn: ".feelcard-close-btn",
-    qtyBtn: ".feelcard-qty-btn",
-    qtyInput: ".feelcard-qty-input",
-    removeBtn: ".feelcard-remove-btn",
-    noteToggle: ".feelcard-note-toggle",
-    noteModal: ".feelcard-note-modal",
-    noteTextarea: ".feelcard-note-textarea",
-    noteSave: ".feelcard-note-save",
-    noteCancel: ".feelcard-note-cancel",
-    checkoutForm: ".feelcard-checkout-form",
-    loadingOverlay: ".feelcard-loading-overlay",
-    carouselPrev: ".feelcard-carousel-prev",
-    carouselNext: ".feelcard-carousel-next",
-    carouselTrack: ".feelcard-carousel-track",
-    recAddBtn: ".feelcard-recommendation-card .feelcard-btn",
-  }
-
-  // Éléments DOM cachés
-  let elements = {}
-
-  /**
-   * Initialisation isolée
-   */
-  function init() {
-    cacheElements()
-    bindEvents()
-    setupAccessibility()
-    setupTouchGestures()
-
-    // Écouter les événements Shopify isolés
-    document.addEventListener("cart:updated", handleCartUpdate)
-    document.addEventListener("product:added-to-cart", handleProductAdded)
-
-    console.log("FEELCARD Cart Drawer initialized")
-  }
-
-  /**
-   * Cache des éléments DOM avec préfixes
-   */
-  function cacheElements() {
-    elements = {
-      overlay: document.querySelector(SELECTORS.overlay),
-      backdrop: document.querySelector(SELECTORS.backdrop),
-      container: document.querySelector(SELECTORS.container),
-      loadingOverlay: document.querySelector(SELECTORS.loadingOverlay),
-    }
-
-    if (!elements.overlay) {
-      console.error("FEELCARD Cart Drawer: Overlay element not found")
-      return
-    }
-  }
-
-  /**
-   * Liaison des événements isolés
-   */
-  function bindEvents() {
-    if (!elements.overlay) return
-
-    // Fermeture
-    elements.overlay.addEventListener("click", handleBackdropClick)
-    document.addEventListener("keydown", handleKeydown)
-
-    // Boutons de fermeture
-    elements.overlay.addEventListener("click", (e) => {
-      if (e.target.closest(SELECTORS.closeBtn)) {
-        close()
-      }
-    })
-
-    // Contrôles de quantité
-    elements.overlay.addEventListener("click", handleQuantityClick)
-    elements.overlay.addEventListener("change", handleQuantityChange)
-
-    // Suppression de produits
-    elements.overlay.addEventListener("click", handleRemoveClick)
-
-    // Note de commande
-    elements.overlay.addEventListener("click", handleNoteToggle)
-
-    // Formulaire de checkout
-    elements.overlay.addEventListener("submit", handleCheckoutSubmit)
-
-    // Carousel recommandations
-    elements.overlay.addEventListener("click", handleCarouselClick)
-
-    // Ajout recommandations
-    elements.overlay.addEventListener("click", handleRecommendationAdd)
-
-    // Triggers externes (boutons panier du site)
-    document.addEventListener("click", (e) => {
-      const trigger = e.target.closest("[data-feelcard-cart-trigger]")
-      if (trigger) {
-        e.preventDefault()
-        open()
-      }
-    })
-  }
-
-  /**
-   * Configuration de l'accessibilité isolée
-   */
-  function setupAccessibility() {
-    if (!elements.overlay) return
-
-    // Focus trap
-    const focusableElements = elements.overlay.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    )
-
-    focusTrap = {
-      firstElement: focusableElements[0],
-      lastElement: focusableElements[focusableElements.length - 1],
-    }
-  }
-
-  /**
-   * Configuration des gestes tactiles isolés
-   */
-  function setupTouchGestures() {
-    if (!elements.container) return
-
-    elements.container.addEventListener(
-      "touchstart",
-      (e) => {
-        touchStartX = e.touches[0].clientX
-        touchStartY = e.touches[0].clientY
-      },
-      { passive: true },
-    )
-
-    elements.container.addEventListener(
-      "touchend",
-      (e) => {
-        if (!touchStartX || !touchStartY) return
-
-        const touchEndX = e.changedTouches[0].clientX
-        const touchEndY = e.chan
-
-        const touchEndX = e.changedTouches[0].clientX
-        const touchEndY = e.changedTouches[0].clientY
-
-        const diffX = touchStartX - touchEndX
-        const diffY = touchStartY - touchEndY
-
-        // Swipe vers la droite pour fermer (> 100px)
-        if (Math.abs(diffX) > Math.abs(diffY) && diffX < -100) {
-          close()
-        }
-
-        touchStartX = 0
-        touchStartY = 0
-      },
-      { passive: true },
-    )
-  }
-
-  /**
-   * Ouverture de la drawer isolée
-   */
-  function open() {
-    if (isOpen || !elements.overlay) return
-
-    isOpen = true
-    elements.overlay.setAttribute("data-state", "open")
-    elements.overlay.setAttribute("aria-hidden", "false")
-
-    // Focus management isolé
-    setTimeout(() => {
-      const firstFocusable = elements.overlay.querySelector("button, [href], input")
-      if (firstFocusable) {
-        firstFocusable.focus()
-      }
-    }, 300)
-
-    // Prévenir le scroll du body (isolé)
-    document.body.style.overflow = "hidden"
-
-    // Animation d'entrée
-    requestAnimationFrame(() => {
-      elements.overlay.style.opacity = "1"
-      elements.overlay.style.visibility = "visible"
-    })
-
-    // Événement personnalisé isolé
-    dispatchEvent("feelcard:cart:opened")
-  }
-
-  /**
-   * Fermeture de la drawer isolée
-   */
-  function close() {
-    if (!isOpen || !elements.overlay) return
-
-    isOpen = false
-    elements.overlay.setAttribute("data-state", "closed")
-    elements.overlay.setAttribute("aria-hidden", "true")
-
-    // Restaurer le scroll du body
-    document.body.style.overflow = ""
-
-    // Animation de sortie
-    elements.overlay.style.opacity = "0"
-    setTimeout(() => {
-      elements.overlay.style.visibility = "hidden"
-    }, 300)
-
-    // Fermer la modal de note si ouverte
-    const noteModal = elements.overlay.querySelector(SELECTORS.noteModal)
-    if (noteModal) {
-      noteModal.setAttribute("data-state", "closed")
-    }
-
-    // Événement personnalisé isolé
-    dispatchEvent("feelcard:cart:closed")
-  }
-
-  /**
-   * Gestion du clic sur le backdrop
-   */
-  function handleBackdropClick(e) {
-    if (e.target === elements.backdrop) {
-      close()
-    }
-  }
-
-  /**
-   * Gestion des touches clavier isolée
-   */
-  function handleKeydown(e) {
-    if (!isOpen) return
-
-    switch (e.key) {
-      case "Escape":
-        close()
-        break
-      case "Tab":
-        handleTabNavigation(e)
-        break
-    }
-  }
-
-  /**
-   * Navigation Tab isolée (focus trap)
-   */
-  function handleTabNavigation(e) {
-    if (!focusTrap) return
-
-    if (e.shiftKey) {
-      if (document.activeElement === focusTrap.firstElement) {
-        e.preventDefault()
-        focusTrap.lastElement.focus()
-      }
-    } else {
-      if (document.activeElement === focusTrap.lastElement) {
-        e.preventDefault()
-        focusTrap.firstElement.focus()
-      }
-    }
-  }
-
-  /**
-   * Gestion des clics sur les contrôles de quantité
-   */
-  function handleQuantityClick(e) {
-    const qtyBtn = e.target.closest(SELECTORS.qtyBtn)
-    if (!qtyBtn) return
-
-    e.preventDefault()
-
-    const action = qtyBtn.getAttribute("data-action")
-    const lineIndex = qtyBtn.getAttribute("data-line")
-    const input = elements.overlay.querySelector(`${SELECTORS.qtyInput}[data-line="${lineIndex}"]`)
-
-    if (!input) return
-
-    const currentQty = parseInt(input.value) || 0
-    let newQty = currentQty
-
-    if (action === "increase") {
-      newQty = currentQty + 1
-    } else if (action === "decrease") {
-      newQty = Math.max(0, currentQty - 1)
-    }
-
-    if (newQty !== currentQty) {
-      input.value = newQty
-      updateLineItem(lineIndex, newQty)
-    }
-  }
-
-  /**
-   * Gestion du changement de quantité direct
-   */
-  function handleQuantityChange(e) {
-    const input = e.target.closest(SELECTORS.qtyInput)
-    if (!input) return
-
-    const lineIndex = input.getAttribute("data-line")
-    const newQty = Math.max(0, parseInt(input.value) || 0)
-
-    input.value = newQty
-    updateLineItem(lineIndex, newQty)
-  }
-
-  /**
-   * Gestion de la suppression de produits
-   */
-  function handleRemoveClick(e) {
-    const removeBtn = e.target.closest(SELECTORS.removeBtn)
-    if (!removeBtn) return
-
-    e.preventDefault()
-
-    const lineIndex = removeBtn.getAttribute("data-line")
-
-    // Animation de suppression
-    const lineItem = removeBtn.closest(".feelcard-line-item")
-    if (lineItem) {
-      lineItem.style.transform = "translateX(100%)"
-      lineItem.style.opacity = "0"
-
-      setTimeout(() => {
-        updateLineItem(lineIndex, 0)
-      }, 300)
-    }
-  }
-
-  /**
-   * Mise à jour d'un line item via API Shopify
-   */
-  function updateLineItem(lineIndex, quantity) {
-    if (isLoading) return
-
-    showLoading()
-
-    const formData = new FormData()
-    formData.append("line", lineIndex)
-    formData.append("quantity", quantity)
-
-    fetch("/cart/change.js", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((cart) => {
-        currentCart = cart
-        refreshCartContent()
-        updateCartCount(cart.item_count)
-        dispatchEvent("feelcard:cart:updated", { cart })
-      })
-      .catch((error) => {
-        console.error("FEELCARD Cart Update Error:", error)
-        showError("Erreur lors de la mise à jour du panier")
-      })
-      .finally(() => {
-        hideLoading()
-      })
-  }
-
-  /**
-   * Gestion de la note de commande
-   */
-  function handleNoteToggle(e) {
-    const noteToggle = e.target.closest(SELECTORS.noteToggle)
-    if (!noteToggle) return
-
-    e.preventDefault()
-
-    const noteModal = elements.overlay.querySelector(SELECTORS.noteModal)
-    if (!noteModal) return
-
-    noteModal.setAttribute("data-state", "open")
-
-    // Focus sur le textarea
-    const textarea = noteModal.querySelector(SELECTORS.noteTextarea)
-    if (textarea) {
-      setTimeout(() => textarea.focus(), 100)
-    }
-
-    // Gestion des boutons de la modal
-    const saveBtn = noteModal.querySelector(SELECTORS.noteSave)
-    const cancelBtn = noteModal.querySelector(SELECTORS.noteCancel)
-
-    if (saveBtn) {
-      saveBtn.onclick = () => saveNote(noteModal, textarea)
-    }
-
-    if (cancelBtn) {
-      cancelBtn.onclick = () => noteModal.setAttribute("data-state", "closed")
-    }
-  }
-
-  /**
-   * Sauvegarde de la note de commande
-   */
-  function saveNote(modal, textarea) {
-    if (!textarea) return
-
-    showLoading()
-
-    const formData = new FormData()
-    formData.append("note", textarea.value)
-
-    fetch("/cart/update.js", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((cart) => {
-        currentCart = cart
-        modal.setAttribute("data-state", "closed")
-        dispatchEvent("feelcard:cart:note-updated", { note: cart.note })
-      })
-      .catch((error) => {
-        console.error("FEELCARD Note Update Error:", error)
-        showError("Erreur lors de la sauvegarde de la note")
-      })
-      .finally(() => {
-        hideLoading()
-      })
-  }
-
-  /**
-   * Gestion du formulaire de checkout
-   */
-  function handleCheckoutSubmit(e) {
-    const form = e.target.closest(SELECTORS.checkoutForm)
-    if (!form) return
-
-    const submitBtn = form.querySelector('button[type="submit"]')
-    if (submitBtn) {
-      submitBtn.classList.add("loading")
-    }
-
-    // Laisser le formulaire se soumettre normalement
-    dispatchEvent("feelcard:cart:checkout-started")
-  }
-
-  /**
-   * Gestion du carousel de recommandations
-   */
-  function handleCarouselClick(e) {
-    const prevBtn = e.target.closest(SELECTORS.carouselPrev)
-    const nextBtn = e.target.closest(SELECTORS.carouselNext)
-
-    if (!prevBtn && !nextBtn) return
-
-    e.preventDefault()
-
-    const track = elements.overlay.querySelector(SELECTORS.carouselTrack)
-    if (!track) return
-
-    const cardWidth = 220 // 200px + 20px gap
-    const currentTransform = getTransformX(track)
-
-    if (prevBtn) {
-      const newTransform = Math.min(0, currentTransform + cardWidth)
-      track.style.transform = `translateX(${newTransform}px)`
-    } else if (nextBtn) {
-      const maxScroll = -(track.scrollWidth - track.parentElement.offsetWidth)
-      const newTransform = Math.max(maxScroll, currentTransform - cardWidth)
-      track.style.transform = `translateX(${newTransform}px)`
-    }
-  }
-
-  /**
-   * Ajout de produits recommandés
-   */
-  function handleRecommendationAdd(e) {
-    const addBtn = e.target.closest(SELECTORS.recAddBtn)
-    if (!addBtn) return
-
-    e.preventDefault()
-
-    const productId = addBtn.getAttribute("data-product-id")
-    const variantId = addBtn.getAttribute("data-variant-id")
-
-    if (!variantId) return
-
-    addBtn.classList.add("loading")
-    addBtn.disabled = true
-
-    const formData = new FormData()
-    formData.append("id", variantId)
-    formData.append("quantity", 1)
-
-    fetch("/cart/add.js", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((item) => {
-        // Masquer la carte de recommandation
-        const card = addBtn.closest(".feelcard-recommendation-card")
-        if (card) {
-          card.style.opacity = "0"
-          card.style.transform = "scale(0.8)"
-          setTimeout(() => card.remove(), 300)
-        }
-
-        // Rafraîchir le panier
-        return fetch("/cart.js")
-      })
-      .then((response) => response.json())
-      .then((cart) => {
-        currentCart = cart
-        refreshCartContent()
-        updateCartCount(cart.item_count)
-        dispatchEvent("feelcard:cart:item-added", { cart })
-      })
-      .catch((error) => {
-        console.error("FEELCARD Add Recommendation Error:", error)
-        showError("Erreur lors de l'ajout du produit")
-        addBtn.classList.remove("loading")
-        addBtn.disabled = false
-      })
-  }
-
-  /**
-   * Gestion des événements Shopify
-   */
-  function handleCartUpdate(e) {
-    if (e.detail && e.detail.cart) {
-      currentCart = e.detail.cart
-      refreshCartContent()
-      updateCartCount(e.detail.cart.item_count)
-    }
-  }
-
-  function handleProductAdded(e) {
-    // Auto-ouverture après ajout produit
-    setTimeout(() => {
-      open()
-    }, 100)
-  }
-
-  /**
-   * Rafraîchissement du contenu du panier
-   */
-  function refreshCartContent() {
-    if (!elements.overlay) return
-
-    // Recharger la section via Shopify Section Rendering API
-    fetch(`${window.location.pathname}?section_id=cart-drawer`)
-      .then((response) => response.text())
-      .then((html) => {
-        const parser = new DOMParser()
-        const doc = parser.parseFromString(html, "text/html")
-        const newContent = doc.querySelector(".feelcard-cart-overlay")
-
-        if (newContent && elements.overlay) {
-          elements.overlay.innerHTML = newContent.innerHTML
-          setupAccessibility()
-        }
-      })
-      .catch((error) => {
-        console.error("FEELCARD Refresh Error:", error)
-      })
-  }
-
-  /**
-   * Mise à jour du compteur de panier externe
-   */
-  function updateCartCount(count) {
-    const counters = document.querySelectorAll("[data-feelcard-cart-count]")
-    counters.forEach((counter) => {
-      counter.textContent = count
-      counter.setAttribute("data-count", count)
-
-      // Animation bounce
-      counter.style.animation = "none"
-      requestAnimationFrame(() => {
-        counter.style.animation = "feelcard-bounce 0.5s ease-out"
-      })
-    })
-  }
-
-  /**
-   * Affichage du loading
-   */
-  function showLoading() {
-    isLoading = true
-    if (elements.loadingOverlay) {
-      elements.loadingOverlay.setAttribute("data-state", "visible")
-    }
-  }
-
-  /**
-   * Masquage du loading
-   */
-  function hideLoading() {
-    isLoading = false
-    if (elements.loadingOverlay) {
-      elements.loadingOverlay.setAttribute("data-state", "hidden")
-    }
-  }
-
-  /**
-   * Affichage d'erreur
-   */
-  function showError(message) {
-    // Créer une notification toast isolée
-    const toast = document.createElement("div")
-    toast.className = "feelcard-toast feelcard-toast--error"
-    toast.innerHTML = `
-      <div class="feelcard-toast-content">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="15" y1="9" x2="9" y2="15"/>
-          <line x1="9" y1="9" x2="15" y2="15"/>
-        </svg>
-        <span>${message}</span>
-      </div>
-    `
-
-    document.body.appendChild(toast)
-
-    // Animation d'entrée
-    requestAnimationFrame(() => {
-      toast.style.opacity = "1"
-      toast.style.transform = "translateY(0)"
-    })
-
-    // Auto-suppression
-    setTimeout(() => {
-      toast.style.opacity = "0"
-      toast.style.transform = "translateY(-100%)"
-      setTimeout(() => toast.remove(), 300)
-    }, 3000)
-  }
-
-  /**
-   * Utilitaire pour obtenir la valeur translateX
-   */
-  function getTransformX(element) {
-    const style = window.getComputedStyle(element)
-    const matrix = style.transform
-
-    if (matrix === "none") return 0
-
-    const values = matrix.split("(")[1].split(")")[0].split(",")
-    return parseInt(values[4]) || 0
-  }
-
-  /**
-   * Dispatch d'événements personnalisés isolés
-   */
-  function dispatchEvent(eventName, detail = {}) {
-    const event = new CustomEvent(eventName, {
-      detail: detail,
-      bubbles: true,
-      cancelable: true,
-    })
-
-    document.dispatchEvent(event)
-  }
-
-  /**
-   * API publique isolée
-   */
-  return {
-    init: init,
-    open: open,
-    close: close,
-    isOpen: () => isOpen,
-    getCurrentCart: () => currentCart,
-    refresh: refreshCartContent,
-  }
-})()
-
-// Auto-initialisation isolée
-document.addEventListener("DOMContentLoaded", () => {
-  window.FEELCARD.CartDrawer.init()
-})
-
-// Intégration avec les formulaires d'ajout au panier existants
-document.addEventListener("submit", (e) => {
-  const form = e.target
-
-  // Vérifier si c'est un formulaire d'ajout au panier
-  if (form.action && form.action.includes("/cart/add")) {
-    e.preventDefault()
-
-    const formData = new FormData(form)
-    const variantId = formData.get("id")
-    const quantity = parseInt(formData.get("quantity")) || 1
-
-    // Récupérer les propriétés personnalisées
-    const properties = {}
-    for (const [key, value] of formData.entries()) {
-      if (key.startsWith("properties[")) {
-        const propName = key.replace("properties[", "").replace("]", "")
-        properties[propName] = value
-      }
-    }
-
-    // Ajouter via l'API Shopify
-    const addFormData = new FormData()
-    addFormData.append("id", variantId)
-    addFormData.append("quantity", quantity)
-
-    fetch("/cart/add.js", {
-      method: "POST",
-      body: addFormData,
-    })
-      .then((response) => response.json())
-      .then((item) => {
-        // Ouvrir la drawer
-        window.FEELCARD.CartDrawer.open()
-      })
-      .catch((error) => {
-        console.error("FEELCARD Add Product Error:", error)
-      })
-  }
-})
-</script>
 
 {% schema %}
 {
-  "name": "FEELCARD Cart Drawer",
+  "name": "Cart drawer",
   "settings": [
     {
       "type": "paragraph",
-      "content": "Cart drawer moderne et isolée pour FEELCARD avec design monochrome sophistiqué."
+      "content": "Cart drawer won't appear to your customers if you have set the cart type to Page in the global theme settings."
+    },
+    {
+      "type": "paragraph",
+      "content": "Free shipping bar can be configured in global cart settings."
     },
     {
       "type": "checkbox",
       "id": "show_cart_note",
-      "label": "Afficher la note de commande",
+      "label": "Show cart note",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_shipping_text",
-      "label": "Afficher les informations de livraison",
+      "label": "Show shipping text",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_view_cart_button",
-      "label": "Afficher le bouton 'Voir le panier'",
+      "label": "Show view cart button",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_checkout_button",
-      "label": "Afficher le bouton de commande",
+      "label": "Show checkout button",
       "default": true
     },
     {
       "type": "header",
-      "content": "Recommandations produits"
+      "content": "Product recommendations"
     },
     {
       "type": "text",
       "id": "recommendations_title",
-      "label": "Titre des recommandations",
-      "default": "Vous pourriez aussi aimer"
+      "label": "Heading",
+      "default": "Trending this month"
     },
     {
       "type": "product_list",
       "id": "products",
-      "label": "Produits recommandés",
-      "info": "Sélectionnez jusqu'à 6 produits à recommander. Les produits déjà dans le panier sont automatiquement masqués.",
-      "limit": 6
+      "label": "Recommendations",
+      "info": "Suggest additional products to your customers. Recommendations already in the cart are automatically hidden.",
+      "limit": 10
     },
     {
       "type": "color",
       "id": "product_card_background",
-      "label": "Arrière-plan des cartes produit",
-      "default": "#ffffff"
+      "label": "Product card background"
     },
     {
       "type": "color",
       "id": "product_card_text_color",
-      "label": "Couleur du texte des cartes produit",
-      "default": "#000000"
+      "label": "Product card text"
     }
   ]
 }
