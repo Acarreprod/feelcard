@@ -392,9 +392,7 @@
     }
 
     .offer-content {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 16px;
+      display: block;
     }
 
     /* Repositionnement du badge sur mobile */
@@ -406,11 +404,11 @@
     }
 
     /* Header de l'offre avec radio et titre */
-    .offer-header {
+    .offer-main-content {
       display: flex;
+      justify-content: space-between;
       align-items: flex-start;
-      gap: 12px;
-      width: 100%;
+      margin-bottom: 12px;
     }
 
     .offer-radio {
@@ -420,6 +418,7 @@
     .offer-details {
       flex: 1;
       min-width: 0;
+      margin-right: 16px;
     }
 
     .offer-title {
@@ -440,24 +439,14 @@
       color: #059669;
     }
 
-    /* Prix en bas sur mobile */
+    /* Prix à droite sur la même ligne */
     .offer-pricing {
-      text-align: left;
-      width: 100%;
-      padding-top: 12px;
-      border-top: 1px solid #f3f4f6;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .offer-pricing-left {
+      text-align: right;
+      flex-shrink: 0;
+      margin-left: 0;
       display: flex;
       flex-direction: column;
-    }
-
-    .offer-pricing-right {
-      text-align: right;
+      align-items: flex-end;
     }
 
     .offer-price {
@@ -476,7 +465,80 @@
       background: #d1fae5;
       padding: 2px 8px;
       border-radius: 12px;
-      align-self: flex-start;
+      margin-top: 4px;
+    }
+  }
+
+  /* RESPONSIVE TRÈS PETIT ÉCRAN (iPhone SE, etc.) */
+  @media (max-width: 480px) {
+    .product-offers-section {
+      padding: 16px 12px;
+      margin: 16px 0;
+    }
+
+    .offer-option {
+      padding: 16px 12px;
+    }
+
+    .offer-title {
+      font-size: 18px;
+    }
+
+    .offer-price {
+      font-size: 22px;
+    }
+
+    .offer-badge {
+      right: 12px;
+      padding: 5px 10px;
+      font-size: 10px;
+    }
+
+    .trust-badge {
+      padding: 10px;
+    }
+
+    .add-to-cart-btn {
+      padding: 16px 20px;
+      font-size: 15px;
+    }
+  }
+
+  /* AMÉLIORATION DES INTERACTIONS TACTILES */
+  @media (max-width: 768px) {
+    .offer-option {
+      min-height: 44px; /* Minimum touch target */
+      -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
+    }
+
+    .add-to-cart-btn {
+      min-height: 52px; /* Bouton plus grand pour le tactile */
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    /* Animation d'appui sur mobile */
+    .offer-option:active {
+      transform: scale(0.98);
+      transition: transform 0.1s ease;
+    }
+
+    .add-to-cart-btn:active {
+      transform: scale(0.98);
+    }
+  }
+
+    /* Structure layout pour mobile */
+    .offer-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .offer-main-content {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
     }
 
     /* Bouton d'ajout au panier amélioré */
@@ -581,86 +643,6 @@
       margin-top: 6px;
     }
   }
-
-  /* RESPONSIVE TRÈS PETIT ÉCRAN (iPhone SE, etc.) */
-  @media (max-width: 480px) {
-    .product-offers-section {
-      padding: 16px 12px;
-      margin: 16px 0;
-    }
-
-    .offer-option {
-      padding: 16px 12px;
-    }
-
-    .offer-title {
-      font-size: 18px;
-    }
-
-    .offer-price {
-      font-size: 22px;
-    }
-
-    .offer-badge {
-      right: 12px;
-      padding: 5px 10px;
-      font-size: 10px;
-    }
-
-    .trust-badge {
-      padding: 10px;
-    }
-
-    .add-to-cart-btn {
-      padding: 16px 20px;
-      font-size: 15px;
-    }
-  }
-
-  /* AMÉLIORATION DES INTERACTIONS TACTILES */
-  @media (max-width: 768px) {
-    .offer-option {
-      min-height: 44px; /* Minimum touch target */
-      -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
-    }
-
-    .add-to-cart-btn {
-      min-height: 52px; /* Bouton plus grand pour le tactile */
-      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    }
-
-    /* Animation d'appui sur mobile */
-    .offer-option:active {
-      transform: scale(0.98);
-      transition: transform 0.1s ease;
-    }
-
-    .add-to-cart-btn:active {
-      transform: scale(0.98);
-    }
-  }
-
-  /* Structure layout pour mobile */
-  @media (max-width: 768px) {
-    .offer-content {
-      display: block;
-    }
-
-    .offer-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .offer-pricing {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 12px;
-      border-top: 1px solid #f3f4f6;
-    }
-  }
 </style>
 
 <div {% render 'section-properties', tight: true %}>
@@ -763,8 +745,8 @@
                         <div class="offer-badge {{ badge_style }}">{{ badge_text }}</div>
                       {%- endif -%}
                       <div class="offer-content">
-                        <div class="offer-header">
-                          <div class="offer-radio"></div>
+                        <div class="offer-radio"></div>
+                        <div class="offer-main-content">
                           <div class="offer-details">
                             <div class="offer-title">{{ variant.title }}</div>
                             {%- if bonus_text != blank -%}
@@ -774,19 +756,13 @@
                               <div class="offer-savings">Économisez {{ savings_percent }}%</div>
                             {%- endif -%}
                           </div>
-                        </div>
-                        <div class="offer-pricing">
-                          <div class="offer-pricing-left">
+                          <div class="offer-pricing">
                             <div class="offer-price">{{ variant.price | money_without_currency }} € HT</div>
                             {%- if savings_percent > 0 -%}
                               <div class="offer-original-price">{{ expected_price | money_without_currency }} € HT</div>
+                              <span class="offer-savings-mobile">-{{ savings_percent }}%</span>
                             {%- endif -%}
                           </div>
-                          {%- if savings_percent > 0 -%}
-                            <div class="offer-pricing-right">
-                              <span class="offer-savings-mobile">-{{ savings_percent }}%</span>
-                            </div>
-                          {%- endif -%}
                         </div>
                       </div>
                     </div>
@@ -887,14 +863,12 @@
             <div class="offer-options">
               <div class="offer-option">
                 <div class="offer-content">
-                  <div class="offer-header">
-                    <div class="offer-radio"></div>
+                  <div class="offer-radio"></div>
+                  <div class="offer-main-content">
                     <div class="offer-details">
                       <div class="offer-title">1 Plaque</div>
                     </div>
-                  </div>
-                  <div class="offer-pricing">
-                    <div class="offer-pricing-left">
+                    <div class="offer-pricing">
                       <div class="offer-price">49,90 € HT</div>
                     </div>
                   </div>
@@ -904,20 +878,16 @@
               <div class="offer-option">
                 <div class="offer-badge popular">Le plus choisi</div>
                 <div class="offer-content">
-                  <div class="offer-header">
-                    <div class="offer-radio"></div>
+                  <div class="offer-radio"></div>
+                  <div class="offer-main-content">
                     <div class="offer-details">
                       <div class="offer-title">2 Plaques</div>
                       <div class="offer-bonus">+ Ebook Gratuit</div>
                       <div class="offer-savings">Économisez 40%</div>
                     </div>
-                  </div>
-                  <div class="offer-pricing">
-                    <div class="offer-pricing-left">
+                    <div class="offer-pricing">
                       <div class="offer-price">69,90 € HT</div>
                       <div class="offer-original-price">99,80 € HT</div>
-                    </div>
-                    <div class="offer-pricing-right">
                       <span class="offer-savings-mobile">-40%</span>
                     </div>
                   </div>
@@ -926,20 +896,16 @@
 
               <div class="offer-option selected">
                 <div class="offer-content">
-                  <div class="offer-header">
-                    <div class="offer-radio"></div>
+                  <div class="offer-radio"></div>
+                  <div class="offer-main-content">
                     <div class="offer-details">
                       <div class="offer-title">5 Plaques</div>
                       <div class="offer-bonus">+ Ebook Gratuit & Cadeau 🎁</div>
                       <div class="offer-savings">Économisez 60%</div>
                     </div>
-                  </div>
-                  <div class="offer-pricing">
-                    <div class="offer-pricing-left">
+                    <div class="offer-pricing">
                       <div class="offer-price">99,80 € HT</div>
                       <div class="offer-original-price">249,50 € HT</div>
-                    </div>
-                    <div class="offer-pricing-right">
                       <span class="offer-savings-mobile">-60%</span>
                     </div>
                   </div>
@@ -949,20 +915,16 @@
               <div class="offer-option">
                 <div class="offer-badge best">Meilleure offre</div>
                 <div class="offer-content">
-                  <div class="offer-header">
-                    <div class="offer-radio"></div>
+                  <div class="offer-radio"></div>
+                  <div class="offer-main-content">
                     <div class="offer-details">
                       <div class="offer-title">10 Plaques</div>
                       <div class="offer-bonus">+ Ebook Gratuit & Cadeau 🎁</div>
                       <div class="offer-savings">Économisez 65%</div>
                     </div>
-                  </div>
-                  <div class="offer-pricing">
-                    <div class="offer-pricing-left">
+                    <div class="offer-pricing">
                       <div class="offer-price">189,90 € HT</div>
                       <div class="offer-original-price">499,00 € HT</div>
-                    </div>
-                    <div class="offer-pricing-right">
                       <span class="offer-savings-mobile">-65%</span>
                     </div>
                   </div>
