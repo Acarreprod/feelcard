@@ -12,64 +12,31 @@
     "slideshow": {
       "type": "slideshow",
       "blocks": {
-        "image_r7X3rF": {
-          "type": "image",
+        "item_XNLY7X": {
+          "type": "item",
           "settings": {
-            "image": "shopify://shop_images/portrait-of-illuminated-laptop.jpg",
-            "content_max_width": 740,
-            "mobile_text_position": "place-self-center text-center",
-            "desktop_text_position": "sm:place-self-center sm:text-center",
-            "subheading": "Tell your story",
-            "title": "Slide title",
-            "heading_tag": "h0",
-            "button_text": "",
-            "button_link": "",
-            "text_color": "#ffffff",
-            "button_background": "#ffffff",
-            "button_text_color": "#000000",
-            "overlay_color": "#000000",
-            "overlay_opacity": 30,
-            "background": "",
-            "background_gradient": "linear-gradient(127deg, rgba(255, 255, 255, 1) 11%, rgba(255, 255, 255, 1) 80%)"
-          }
-        },
-        "image_WxVzwJ": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/iphone-6-7-phone-cases.jpg",
-            "content_max_width": 780,
-            "mobile_text_position": "place-self-center text-center",
-            "desktop_text_position": "sm:place-self-center sm:text-center",
-            "subheading": "Tell your story",
-            "title": "Slide title",
-            "heading_tag": "h0",
-            "button_text": "",
-            "button_link": "",
-            "text_color": "#ffffff",
-            "button_background": "#ffffff",
-            "button_text_color": "#000000",
-            "overlay_color": "#000000",
-            "overlay_opacity": 30,
-            "background": "",
-            "background_gradient": "linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 1) 32.33%, rgba(255, 255, 255, 1) 64.67%, rgba(255, 255, 255, 1) 97%)"
+            "image": "shopify://shop_images/7017c8b5-98be-4015-a685-9107352b839e.png",
+            "icon": "none",
+            "icon_width": 48,
+            "title": "Obtenez plus d’avis Google en 3 secondes",
+            "content": "<h5>Un client satisfait ? Il scanne, il note, c’est fait.<br/>Zéro appli. Zéro friction. Juste plus de visibilité, tout de suite.</h5>"
           }
         }
       },
       "block_order": [
-        "image_r7X3rF",
-        "image_WxVzwJ"
+        "item_XNLY7X"
       ],
       "settings": {
         "full_width": false,
-        "allow_transparent_header": false,
-        "show_initial_transition": false,
-        "image_size": "lg",
-        "controls_type": "numbers",
-        "transition_type": "fade_with_text",
-        "autoplay": true,
-        "cycle_speed": 6,
+        "stack_on_mobile": false,
+        "show_counter": true,
+        "desktop_image_effect": "reveal",
+        "image_position": "end",
         "background": "#f2f2f2",
-        "background_gradient": "linear-gradient(60deg, rgba(60, 65, 68, 1), rgba(23, 29, 33, 1) 98%)"
+        "background_gradient": "linear-gradient(60deg, rgba(60, 65, 68, 1), rgba(23, 29, 33, 1) 98%)",
+        "text_color": "#ffffff",
+        "heading_color": "",
+        "heading_gradient": ""
       }
     },
     "scrolling_text_inFLU7": {
