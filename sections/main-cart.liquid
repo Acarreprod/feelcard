@@ -888,7 +888,6 @@
                               class="checkout-btn" 
                               name="checkout" 
                               {{ block.shopify_attributes }}>
-                        {%- render 'icon' with 'picto-lock', width: 20, height: 20 -%}
                         {{ section.settings.checkout_button_text | default: 'Finaliser ma commande' }}
                       </button>
                   {%- endcase -%}
