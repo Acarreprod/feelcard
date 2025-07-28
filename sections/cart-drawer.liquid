@@ -266,16 +266,66 @@
   --feelcard-transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Cart Drawer Overlay System */
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: var(--feelcard-transition);
+}
+
+.drawer.drawer--open {
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Backdrop */
+.drawer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: var(--feelcard-transition);
+}
+
+.drawer.drawer--open::before {
+  opacity: 1;
+}
+
 /* Cart Drawer Base */
 .cart-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 420px;
+  height: 100vh;
   background: var(--feelcard-light);
   border-radius: var(--feelcard-radius-lg) 0 0 var(--feelcard-radius-lg);
   box-shadow: var(--feelcard-shadow-xl);
-  position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: var(--feelcard-transition);
 }
 
-.cart-drawer::before {
+.drawer.drawer--open .cart-drawer {
+  transform: translateX(0);
+}
+
+.cart-drawer::after {
   content: '';
   position: absolute;
   top: 0;
@@ -579,12 +629,43 @@
   overflow: hidden;
 }
 
-/* Cart Footer */
+/* Cart Content Scrollable */
+.cart-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 1.5rem 1rem;
+  scroll-behavior: smooth;
+}
+
+.cart-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cart-content::-webkit-scrollbar-track {
+  background: var(--feelcard-gray-100);
+  border-radius: 3px;
+}
+
+.cart-content::-webkit-scrollbar-thumb {
+  background: var(--feelcard-gray-600);
+  border-radius: 3px;
+  transition: var(--feelcard-transition-fast);
+}
+
+.cart-content::-webkit-scrollbar-thumb:hover {
+  background: var(--feelcard-primary);
+}
+
+/* Cart Footer Fixed */
 .cart-footer {
   background: var(--feelcard-gradient-light);
   border-top: 1px solid var(--feelcard-gray-200);
   padding: 1.5rem;
   border-radius: var(--feelcard-radius-lg) var(--feelcard-radius-lg) 0 0;
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
 }
 
 .cart-summary {
@@ -865,8 +946,55 @@
   to { transform: rotate(360deg); }
 }
 
+/* Animation pour les line items */
+.line-item-enhanced.animate-in {
+  animation: slideInItem 0.4s ease-out forwards;
+}
+
+@keyframes slideInItem {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Animation d'entrée pour la drawer */
+.drawer.drawer--open .cart-drawer {
+  animation: slideInDrawer 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideInDrawer {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 /* Responsive */
+@media (max-width: 1024px) {
+  .cart-drawer {
+    width: 380px;
+  }
+}
+
 @media (max-width: 768px) {
+  .cart-drawer {
+    width: 100vw;
+    border-radius: 0;
+  }
+  
+  .cart-drawer::after {
+    border-radius: 0;
+  }
+  
   .trust-badges {
     grid-template-columns: 1fr;
     gap: 0.75rem;
@@ -889,6 +1017,30 @@
   .empty-state__icon-container {
     width: 80px;
     height: 80px;
+  }
+  
+  .cart-content {
+    padding: 0 1rem 1rem;
+  }
+  
+  .cart-footer {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cart-drawer {
+    width: 100vw;
+  }
+  
+  .cart-actions {
+    gap: 0.75rem;
+  }
+  
+  .btn-view-cart,
+  .btn-checkout {
+    padding: 1rem;
+    font-size: 0.875rem;
   }
 }
 
@@ -921,7 +1073,116 @@
     --feelcard-gradient-light: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   }
 }
+
+/* Prevent body scroll when drawer is open */
+.drawer-open {
+  overflow: hidden !important;
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const cartDrawer = document.getElementById('cart-drawer');
+  const body = document.body;
+  
+  // Fonction pour ouvrir la cart drawer
+  function openCartDrawer() {
+    if (cartDrawer) {
+      cartDrawer.classList.add('drawer--open');
+      body.classList.add('drawer-open');
+      
+      // Focus sur le premier élément focusable
+      const firstFocusable = cartDrawer.querySelector('button, a, input, textarea, select');
+      if (firstFocusable) {
+        setTimeout(() => firstFocusable.focus(), 100);
+      }
+    }
+  }
+  
+  // Fonction pour fermer la cart drawer
+  function closeCartDrawer() {
+    if (cartDrawer) {
+      cartDrawer.classList.remove('drawer--open');
+      body.classList.remove('drawer-open');
+    }
+  }
+  
+  // Event listeners pour les boutons de fermeture
+  const closeButtons = cartDrawer?.querySelectorAll('[is="close-button"]');
+  closeButtons?.forEach(button => {
+    button.addEventListener('click', closeCartDrawer);
+  });
+  
+  // Fermer en cliquant sur le backdrop
+  cartDrawer?.addEventListener('click', function(e) {
+    if (e.target === cartDrawer) {
+      closeCartDrawer();
+    }
+  });
+  
+  // Fermer avec la touche Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && cartDrawer?.classList.contains('drawer--open')) {
+      closeCartDrawer();
+    }
+  });
+  
+  // Event listeners pour ouvrir la cart drawer
+  // Vous devez ajouter data-cart-drawer-open à vos boutons d'ajout au panier
+  const cartTriggers = document.querySelectorAll('[data-cart-drawer-open]');
+  cartTriggers.forEach(trigger => {
+    trigger.addEventListener('click', function(e) {
+      e.preventDefault();
+      openCartDrawer();
+    });
+  });
+  
+  // Gestion des boutons checkout avec loading
+  const checkoutBtn = cartDrawer?.querySelector('.btn-checkout');
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', function() {
+      this.classList.add('loading');
+      
+      // Simuler le temps de traitement (à adapter selon votre logique)
+      setTimeout(() => {
+        this.classList.remove('loading');
+      }, 2000);
+    });
+  }
+  
+  // Animation des line items au scroll
+  function observeLineItems() {
+    const lineItems = cartDrawer?.querySelectorAll('.line-item-enhanced');
+    if (!lineItems) return;
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationDelay = `${Array.from(lineItems).indexOf(entry.target) * 0.1}s`;
+          entry.target.classList.add('animate-in');
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    lineItems.forEach(item => observer.observe(item));
+  }
+  
+  // Observer les changements du panier pour réanimer les items
+  const cartObserver = new MutationObserver(() => {
+    observeLineItems();
+  });
+  
+  if (cartDrawer) {
+    cartObserver.observe(cartDrawer, { childList: true, subtree: true });
+    observeLineItems();
+  }
+  
+  // Exposer les fonctions globalement pour l'intégration Shopify
+  window.FEELCARD = window.FEELCARD || {};
+  window.FEELCARD.openCartDrawer = openCartDrawer;
+  window.FEELCARD.closeCartDrawer = closeCartDrawer;
+});
+</script>
 
 {% schema %}
 {
