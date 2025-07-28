@@ -1,51 +1,70 @@
-<cart-drawer {% if request.design_mode %}handle-section-events{% endif %} class="cart-drawer drawer drawer--lg" id="cart-drawer">
+<cart-drawer {% if request.design_mode %}handle-section-events{% endif %} class="cart-drawer-overlay" id="cart-drawer">
+  <div class="cart-drawer-backdrop"></div>
+  <div class="cart-drawer-container">
   {%- if cart.item_count == 0 -%}
-    <button is="close-button" aria-label="{{ 'general.accessibility.close' | t | escape }}">
+    <button is="close-button" aria-label="{{ 'general.accessibility.close' | t | escape }}" class="cart-close-btn">
       {%- render 'icon' with 'close' -%}
     </button>
 
     <div class="empty-state align-self-center">
       <div class="empty-state__icon-wrapper">
-        {%- render 'icon' with 'cart', width: 32, height: 32, stroke_width: 1 -%}
-        <span class="count-bubble count-bubble--lg">0</span>
+        <div class="empty-state__icon-container">
+          {%- render 'icon' with 'cart', width: 32, height: 32, stroke_width: 1 -%}
+          <span class="count-bubble count-bubble--lg">0</span>
+        </div>
+        <div class="empty-state__particles">
+          <span class="particle particle--1"></span>
+          <span class="particle particle--2"></span>
+          <span class="particle particle--3"></span>
+          <span class="particle particle--4"></span>
+        </div>
       </div>
 
       <div class="prose">
-        <p class="h5">{{ 'cart.general.empty' | t }}</p>
+        <p class="h5 empty-state__title">{{ 'cart.general.empty' | t }}</p>
+        <p class="empty-state__subtitle">Découvrez nos plaques d'avis personnalisées</p>
 
         {%- assign button_content = 'cart.general.continue_shopping' | t -%}
-        {%- render 'button', href: settings.cart_empty_button_link, size: 'xl', content: button_content -%}
+        {%- render 'button', href: settings.cart_empty_button_link, size: 'xl', content: button_content, class: 'btn-gradient-primary' -%}
       </div>
     </div>
   {%- else -%}
     <div class="cart-drawer__inner">
       <div class="cart-drawer__top">
-        <div class="h-stack items-center justify-between">
-          <div class="h-stack grow gap-2 sm:gap-2.5">
-            <p class="h5">{{- 'cart.general.title' | t -}}</p>
-            <cart-count class="count-bubble count-bubble--md">{{ cart.item_count }}</cart-count>
+        <div class="h-stack items-center justify-between cart-header">
+          <div class="h-stack grow gap-2 sm:gap-2.5 cart-title-section">
+            <div class="cart-title-wrapper">
+              <span class="cart-emoji">🛒</span>
+              <p class="h5 cart-title">{{- 'cart.general.title' | t -}}</p>
+            </div>
+            <cart-count class="count-bubble count-bubble--md count-bubble--animated">{{ cart.item_count }}</cart-count>
           </div>
 
-          <button type="button" is="close-button" class="drawer__close-icon">
+          <button type="button" is="close-button" class="drawer__close-icon close-btn-enhanced">
             <span class="sr-only">{{ 'general.accessibility.close' | t }}</span>
             {%- render 'icon' with 'close' -%}
+            <span class="close-btn-bg"></span>
           </button>
         </div>
 
         {%- if settings.cart_show_free_shipping_threshold -%}
-          {%- render 'free-shipping-bar' -%}
+          <div class="shipping-bar-wrapper">
+            {%- render 'free-shipping-bar' -%}
+          </div>
         {%- endif -%}
       </div>
 
-      <div class="v-stack gap-6 sm:gap-8">
+      <div class="v-stack gap-6 sm:gap-8 cart-content">
         <div class="cart-drawer__line-items">
           {%- for line_item in cart.items -%}
-            {%- render 'line-item', line_item: line_item, show_desktop_quantity: true -%}
+            <div class="line-item-enhanced" data-item-index="{{ forloop.index }}">
+              {%- render 'line-item', line_item: line_item, show_desktop_quantity: true -%}
+            </div>
           {%- endfor -%}
         </div>
 
         {%- if section.settings.products.count > 0 -%}
-          <div class="cart-drawer__recommendations">
+          <div class="cart-drawer__recommendations recommendations-enhanced">
             <div class="v-stack gap-2.5 sm:gap-4">
               {%- capture carousel_id -%}cart-drawer-recommendations{%- endcapture -%}
 
@@ -72,22 +91,29 @@
               -%}
 
               {%- if rendered_recommendations > 0 -%}
-                <div class="h-stack justify-between gap-4">
+                <div class="h-stack justify-between gap-4 recommendations-header">
                   {%- if section.settings.recommendations_title != blank -%}
-                    <p>{{ section.settings.recommendations_title | escape }}</p>
+                    <p class="recommendations-title">
+                      <span class="recommendations-icon">✨</span>
+                      {{ section.settings.recommendations_title | escape }}
+                    </p>
                   {%- endif -%}
 
                   {%- if rendered_recommendations > 1 -%}
-                    <div class="h-stack gap-2 hidden sm:flex">
-                      <button is="prev-button" class="circle-chevron hover:colors" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.previous' | t | escape }}" disabled>{%- render 'icon' with 'chevron-left-small', direction_aware: true -%}</button>
-                      <button is="next-button" class="circle-chevron hover:colors" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.next' | t | escape }}">{%- render 'icon' with 'chevron-right-small', direction_aware: true -%}</button>
+                    <div class="h-stack gap-2 hidden sm:flex recommendations-nav">
+                      <button is="prev-button" class="nav-btn nav-btn--prev" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.previous' | t | escape }}" disabled>
+                        {%- render 'icon' with 'chevron-left-small', direction_aware: true -%}
+                      </button>
+                      <button is="next-button" class="nav-btn nav-btn--next" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.next' | t | escape }}">
+                        {%- render 'icon' with 'chevron-right-small', direction_aware: true -%}
+                      </button>
                     </div>
                   {%- endif -%}
                 </div>
               {%- endif -%}
 
               {%- if recommendations != blank -%}
-                <scroll-carousel selector=".horizontal-product" id="{{ carousel_id }}" class="horizontal-product-list-carousel {% unless horizontal_products_blends %}separate{% endunless %} scroll-area bleed">
+                <scroll-carousel selector=".horizontal-product" id="{{ carousel_id }}" class="horizontal-product-list-carousel {% unless horizontal_products_blends %}separate{% endunless %} scroll-area bleed recommendations-carousel">
                   <div class="horizontal-product-list {% if horizontal_products_blends %}divide-x{% else %}separate{% endif %}">
                     {{- recommendations -}}
                   </div>
@@ -99,37 +125,40 @@
       </div>
     </div>
 
-    <div class="v-stack gap-4 sm:gap-6" slot="footer">
-      <div class="v-stack gap-1">
+    <div class="v-stack gap-4 sm:gap-6 cart-footer" slot="footer">
+      <div class="v-stack gap-1 cart-summary">
         {% for discount_application in cart.cart_level_discount_applications %}
-          <div class="h-stack gap-4 justify-between">
-            <div class="badge">
-              {%- render 'icon' with 'discount' -%} {{- discount_application.title -}}
+          <div class="h-stack gap-4 justify-between discount-row">
+            <div class="badge discount-badge">
+              {%- render 'icon' with 'discount' -%} 
+              <span>{{- discount_application.title -}}</span>
             </div>
-
-            <span class="text-subdued">-{{ discount_application.total_allocated_amount | money }}</span>
+            <span class="text-subdued discount-amount">-{{ discount_application.total_allocated_amount | money }}</span>
           </div>
         {% endfor %}
 
-        <div class="h-stack gap-4 justify-between">
-          <span class="h5">{{ 'cart.general.total' | t }}</span>
-          <span class="h5">{{- cart.total_price | money_with_currency -}}</span>
+        <div class="h-stack gap-4 justify-between cart-total-row">
+          <span class="h5 total-label">{{ 'cart.general.total' | t }}</span>
+          <span class="h5 total-amount">{{- cart.total_price | money_with_currency -}}</span>
         </div>
 
         {%- if section.settings.show_shipping_text -%}
-          {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
-            <p class="text-subdued text-sm">{{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}</p>
-          {%- elsif cart.taxes_included -%}
-            <p class="text-subdued text-sm">{{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}</p>
-          {%- elsif shop.shipping_policy.body != blank -%}
-            <p class="text-subdued text-sm">{{ 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}</p>
-          {%- else -%}
-            <p class="text-subdued text-sm">{{ 'cart.general.taxes_and_shipping_at_checkout' | t }}</p>
-          {%- endif -%}
+          <div class="shipping-info">
+            {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+              <p class="text-subdued text-sm">{{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}</p>
+            {%- elsif cart.taxes_included -%}
+              <p class="text-subdued text-sm">{{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}</p>
+            {%- elsif shop.shipping_policy.body != blank -%}
+              <p class="text-subdued text-sm">{{ 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}</p>
+            {%- else -%}
+              <p class="text-subdued text-sm">{{ 'cart.general.taxes_and_shipping_at_checkout' | t }}</p>
+            {%- endif -%}
+          </div>
         {%- endif -%}
 
         {%- if section.settings.show_cart_note -%}
-          <button type="button" class="justify-self-start" aria-controls="cart-drawer-note">
+          <button type="button" class="justify-self-start cart-note-btn" aria-controls="cart-drawer-note">
+            <span class="note-icon">📝</span>
             <span class="link text-sm text-subdued">
               {%- if cart.note == blank -%}
                 {{- 'cart.general.add_order_note' | t -}}
@@ -139,7 +168,7 @@
             </span>
           </button>
 
-          <cart-note-dialog id="cart-drawer-note" class="cart-drawer__note">
+          <cart-note-dialog id="cart-drawer-note" class="cart-drawer__note note-dialog">
             <div class="cart-drawer__note-inner">
               <div class="v-stack gap-4 sm:gap-6">
                 <p class="h5">{{ 'cart.general.order_note' | t }}</p>
@@ -160,85 +189,1104 @@
         {%- endif -%}
       </div>
 
-      <form action="{{ routes.cart_url }}" method="POST" class="buy-buttons {% if section.settings.show_checkout_button %}buy-buttons--compact{% endif %}">
+      <form action="{{ routes.cart_url }}" method="POST" class="buy-buttons {% if section.settings.show_checkout_button %}buy-buttons--compact{% endif %} cart-actions">
         {%- assign checkout_label = 'cart.general.checkout' | t -%}
 
         {%- if section.settings.show_view_cart_button or section.settings.show_checkout_button == false -%}
-          <a href="{{ routes.cart_url }}" class="button button--xl {% if section.settings.show_checkout_button %}button--secondary{% endif %}" data-no-instant>
-            {{- 'cart.general.view_cart' | t -}}
+          <a href="{{ routes.cart_url }}" class="button button--xl {% if section.settings.show_checkout_button %}button--secondary{% endif %} btn-view-cart" data-no-instant>
+            <span class="btn-icon">👁️</span>
+            <span>{{- 'cart.general.view_cart' | t -}}</span>
           </a>
         {%- endif -%}
 
         {%- if section.settings.show_checkout_button -%}
-          {%- render 'button', type: 'submit', content: checkout_label, icon: 'picto-lock', name: 'checkout', size: 'xl' -%}
+          <button type="submit" name="checkout" class="button button--xl btn-checkout">
+            <span class="btn-icon">{%- render 'icon' with 'picto-lock' -%}</span>
+            <span class="btn-text">{{ checkout_label }}</span>
+            <span class="btn-loading">
+              <span class="loading-spinner"></span>
+            </span>
+          </button>
         {%- endif -%}
       </form>
+
+      <!-- Badges de confiance -->
+      <div class="trust-badges">
+        <div class="trust-badge">
+          <span class="trust-icon">🔒</span>
+          <span class="trust-text">Paiement sécurisé</span>
+        </div>
+        <div class="trust-badge">
+          <span class="trust-icon">🚚</span>
+          <span class="trust-text">Livraison rapide</span>
+        </div>
+        <div class="trust-badge">
+          <span class="trust-icon">↩️</span>
+          <span class="trust-text">Retour gratuit</span>
+        </div>
+      </div>
     </div>
   {%- endif -%}
 </cart-drawer>
 
+<style>
+/* Variables CSS FEELCARD */
+:root {
+  --feelcard-primary: #4285f4;
+  --feelcard-secondary: #34a853;
+  --feelcard-accent: #fbbc04;
+  --feelcard-danger: #ea4335;
+  --feelcard-dark: #1a1a1a;
+  --feelcard-light: #ffffff;
+  --feelcard-gray-50: #fafafa;
+  --feelcard-gray-100: #f5f5f5;
+  --feelcard-gray-200: #e5e5e5;
+  --feelcard-gray-300: #d4d4d4;
+  --feelcard-gray-600: #525252;
+  --feelcard-gray-800: #262626;
+  
+  /* Gradients */
+  --feelcard-gradient-primary: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+  --feelcard-gradient-secondary: linear-gradient(135deg, #fbbc04 0%, #ea4335 100%);
+  --feelcard-gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #404040 100%);
+  --feelcard-gradient-light: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+  
+  /* Shadows */
+  --feelcard-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --feelcard-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --feelcard-shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
+  --feelcard-shadow-xl: 0 12px 35px rgba(0, 0, 0, 0.2);
+  
+  /* Borders */
+  --feelcard-radius: 12px;
+  --feelcard-radius-lg: 20px;
+  --feelcard-radius-xl: 24px;
+  
+  /* Transitions */
+  --feelcard-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --feelcard-transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --feelcard-transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Cart Drawer Overlay System - FEELCARD */
+.cart-drawer-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99999 !important;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: var(--feelcard-transition);
+}
+
+.cart-drawer-overlay.is-open {
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Backdrop */
+.cart-drawer-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  transition: var(--feelcard-transition);
+  cursor: pointer;
+}
+
+/* Cart Drawer Container */
+.cart-drawer-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 420px;
+  height: 100vh;
+  background: var(--feelcard-light);
+  border-radius: var(--feelcard-radius-lg) 0 0 var(--feelcard-radius-lg);
+  box-shadow: var(--feelcard-shadow-xl);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: var(--feelcard-transition);
+}
+
+.cart-drawer-overlay.is-open .cart-drawer-container {
+  transform: translateX(0);
+}
+
+.cart-drawer-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--feelcard-gradient-primary);
+  z-index: 1;
+}
+
+/* Empty State */
+.empty-state {
+  position: relative;
+  padding: 3rem 2rem;
+  background: var(--feelcard-gradient-light);
+  border-radius: var(--feelcard-radius-lg);
+  text-align: center;
+  overflow: hidden;
+}
+
+.empty-state__icon-wrapper {
+  position: relative;
+  margin-bottom: 2rem;
+  display: inline-block;
+}
+
+.empty-state__icon-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  background: var(--feelcard-gradient-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: float 3s ease-in-out infinite;
+  box-shadow: var(--feelcard-shadow-lg);
+}
+
+.empty-state__icon-container svg {
+  width: 40px;
+  height: 40px;
+  color: var(--feelcard-light);
+}
+
+.count-bubble--lg {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--feelcard-danger);
+  color: var(--feelcard-light);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  animation: pulse 2s ease-in-out infinite;
+  box-shadow: var(--feelcard-shadow);
+}
+
+.empty-state__particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: float-particle 4s ease-in-out infinite;
+}
+
+.particle--1 {
+  background: var(--feelcard-primary);
+  top: 20%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.particle--2 {
+  background: var(--feelcard-secondary);
+  top: 30%;
+  right: 25%;
+  animation-delay: 1.5s;
+}
+
+.particle--3 {
+  background: var(--feelcard-accent);
+  bottom: 30%;
+  left: 30%;
+  animation-delay: 3s;
+}
+
+.particle--4 {
+  background: var(--feelcard-danger);
+  top: 60%;
+  right: 40%;
+  animation-delay: 2s;
+}
+
+.empty-state__title {
+  color: var(--feelcard-dark);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.empty-state__subtitle {
+  color: var(--feelcard-gray-600);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+/* Close Button */
+.cart-close-btn,
+.close-btn-enhanced {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--feelcard-gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--feelcard-transition);
+  overflow: hidden;
+}
+
+.close-btn-enhanced {
+  margin-left: auto;
+}
+
+.close-btn-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--feelcard-gradient-primary);
+  border-radius: 50%;
+  transform: scale(0);
+  transition: var(--feelcard-transition);
+}
+
+.cart-close-btn:hover,
+.close-btn-enhanced:hover {
+  transform: scale(1.05);
+  box-shadow: var(--feelcard-shadow);
+}
+
+.close-btn-enhanced:hover .close-btn-bg {
+  transform: scale(1);
+}
+
+.close-btn-enhanced:hover svg {
+  color: var(--feelcard-light);
+  position: relative;
+  z-index: 1;
+}
+
+/* Cart Header */
+.cart-header {
+  background: var(--feelcard-gradient-light);
+  border-radius: var(--feelcard-radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  animation: slideDown 0.5s ease-out;
+}
+
+.cart-title-section {
+  position: relative;
+}
+
+.cart-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cart-emoji {
+  font-size: 1.5rem;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.cart-title {
+  margin: 0;
+  color: var(--feelcard-dark);
+  font-weight: 700;
+}
+
+.count-bubble--md {
+  background: var(--feelcard-gradient-primary);
+  color: var(--feelcard-light);
+  border-radius: var(--feelcard-radius);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: var(--feelcard-shadow);
+}
+
+.count-bubble--animated {
+  animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Shipping Bar */
+.shipping-bar-wrapper {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--feelcard-gradient-secondary);
+  border-radius: var(--feelcard-radius);
+  animation: slideIn 0.5s ease-out 0.2s both;
+}
+
+/* Line Items */
+.line-item-enhanced {
+  padding: 1rem;
+  background: var(--feelcard-light);
+  border-radius: var(--feelcard-radius);
+  margin-bottom: 1rem;
+  box-shadow: var(--feelcard-shadow-sm);
+  transition: var(--feelcard-transition);
+  animation: slideIn 0.3s ease-out;
+}
+
+.line-item-enhanced:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--feelcard-shadow);
+}
+
+.line-item-enhanced:nth-child(even) {
+  animation-delay: 0.1s;
+}
+
+.line-item-enhanced:nth-child(odd) {
+  animation-delay: 0.05s;
+}
+
+/* Recommendations */
+.recommendations-enhanced {
+  background: var(--feelcard-gradient-light);
+  border-radius: var(--feelcard-radius-lg);
+  padding: 1.5rem;
+  border: 1px solid var(--feelcard-gray-200);
+  animation: fadeInUp 0.5s ease-out 0.3s both;
+}
+
+.recommendations-header {
+  margin-bottom: 1rem;
+}
+
+.recommendations-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--feelcard-dark);
+  margin: 0;
+}
+
+.recommendations-icon {
+  font-size: 1.25rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.recommendations-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--feelcard-gray-200);
+  background: var(--feelcard-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--feelcard-transition);
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: var(--feelcard-primary);
+  border-color: var(--feelcard-primary);
+  color: var(--feelcard-light);
+  transform: scale(1.1);
+}
+
+.nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.recommendations-carousel {
+  border-radius: var(--feelcard-radius);
+  overflow: hidden;
+}
+
+/* Cart Content Scrollable */
+.cart-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 1.5rem 1rem;
+  scroll-behavior: smooth;
+}
+
+.cart-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cart-content::-webkit-scrollbar-track {
+  background: var(--feelcard-gray-100);
+  border-radius: 3px;
+}
+
+.cart-content::-webkit-scrollbar-thumb {
+  background: var(--feelcard-gray-600);
+  border-radius: 3px;
+  transition: var(--feelcard-transition-fast);
+}
+
+.cart-content::-webkit-scrollbar-thumb:hover {
+  background: var(--feelcard-primary);
+}
+
+/* Cart Footer Fixed */
+.cart-footer {
+  background: var(--feelcard-gradient-light);
+  border-top: 1px solid var(--feelcard-gray-200);
+  padding: 1.5rem;
+  border-radius: var(--feelcard-radius-lg) var(--feelcard-radius-lg) 0 0;
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+}
+
+.cart-summary {
+  margin-bottom: 1.5rem;
+}
+
+.discount-row {
+  background: var(--feelcard-secondary);
+  color: var(--feelcard-light);
+  padding: 0.75rem 1rem;
+  border-radius: var(--feelcard-radius);
+  margin-bottom: 0.5rem;
+  animation: slideIn 0.3s ease-out;
+}
+
+.discount-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: inherit;
+  background: transparent;
+  border: none;
+}
+
+.discount-amount {
+  color: inherit;
+  font-weight: 600;
+}
+
+.cart-total-row {
+  background: var(--feelcard-gradient-primary);
+  color: var(--feelcard-light);
+  padding: 1.25rem 1rem;
+  border-radius: var(--feelcard-radius-lg);
+  margin: 1rem 0;
+  box-shadow: var(--feelcard-shadow);
+  animation: slideIn 0.3s ease-out 0.1s both;
+}
+
+.total-label,
+.total-amount {
+  color: inherit;
+  font-weight: 700;
+}
+
+.shipping-info {
+  text-align: center;
+  margin: 1rem 0;
+  animation: fadeIn 0.5s ease-out 0.2s both;
+}
+
+.cart-note-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--feelcard-primary);
+  padding: 0.75rem;
+  border-radius: var(--feelcard-radius);
+  transition: var(--feelcard-transition);
+  cursor: pointer;
+}
+
+.cart-note-btn:hover {
+  background: var(--feelcard-gray-100);
+  transform: translateX(4px);
+}
+
+.note-icon {
+  font-size: 1.25rem;
+}
+
+/* Cart Actions */
+.cart-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-view-cart {
+  background: var(--feelcard-light);
+  border: 2px solid var(--feelcard-gray-200);
+  color: var(--feelcard-dark);
+  border-radius: var(--feelcard-radius-lg);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: var(--feelcard-transition);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.btn-view-cart:hover {
+  border-color: var(--feelcard-primary);
+  color: var(--feelcard-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--feelcard-shadow);
+}
+
+.btn-checkout {
+  background: var(--feelcard-gradient-primary);
+  border: none;
+  color: var(--feelcard-light);
+  border-radius: var(--feelcard-radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: var(--feelcard-transition);
+  font-weight: 700;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.btn-checkout::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--feelcard-gradient-secondary);
+  transform: translateX(-100%);
+  transition: var(--feelcard-transition);
+}
+
+.btn-checkout:hover::before {
+  transform: translateX(0);
+}
+
+.btn-checkout:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--feelcard-shadow-lg);
+}
+
+.btn-icon,
+.btn-text,
+.btn-loading {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-loading {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-checkout.loading .btn-text,
+.btn-checkout.loading .btn-icon {
+  opacity: 0;
+}
+
+.btn-checkout.loading .btn-loading {
+  display: flex;
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid var(--feelcard-light);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Trust Badges */
+.trust-badges {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--feelcard-gray-50);
+  border-radius: var(--feelcard-radius-lg);
+  animation: fadeInUp 0.5s ease-out 0.4s both;
+}
+
+.trust-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+  padding: 0.75rem;
+  background: var(--feelcard-light);
+  border-radius: var(--feelcard-radius);
+  transition: var(--feelcard-transition);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.trust-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--feelcard-shadow);
+  border-color: var(--feelcard-primary);
+}
+
+.trust-icon {
+  font-size: 1.5rem;
+  filter: grayscale(0.2);
+  transition: var(--feelcard-transition);
+}
+
+.trust-badge:hover .trust-icon {
+  filter: none;
+  transform: scale(1.1);
+}
+
+.trust-text {
+  font-size: 0.75rem;
+  color: var(--feelcard-gray-600);
+  font-weight: 500;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+@keyframes float-particle {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
+  50% { transform: translateY(-30px) scale(1.2); opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-8px); }
+  60% { transform: translateY(-4px); }
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.1) rotate(5deg); }
+  50% { transform: scale(1.2) rotate(0deg); }
+  75% { transform: scale(1.1) rotate(-5deg); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Animation pour les line items */
+.line-item-enhanced.animate-in {
+  animation: slideInItem 0.4s ease-out forwards;
+}
+
+@keyframes slideInItem {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Animation d'entrée pour la drawer */
+.cart-drawer-overlay.is-open .cart-drawer-container {
+  animation: slideInDrawer 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideInDrawer {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .cart-drawer-container {
+    width: 380px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-drawer-container {
+    width: 100vw;
+    border-radius: 0;
+  }
+  
+  .cart-drawer-container::after {
+    border-radius: 0;
+  }
+  
+  .trust-badges {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .trust-badge {
+    flex-direction: row;
+    justify-content: center;
+    text-align: left;
+  }
+  
+  .cart-header {
+    padding: 1rem;
+  }
+  
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+  
+  .empty-state__icon-container {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .cart-content {
+    padding: 0 1rem 1rem;
+  }
+  
+  .cart-footer {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cart-drawer-container {
+    width: 100vw;
+  }
+  
+  .cart-actions {
+    gap: 0.75rem;
+  }
+  
+  .btn-view-cart,
+  .btn-checkout {
+    padding: 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Amélioration de l'accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus states pour la nouvelle structure */
+.cart-drawer-container button:focus,
+.cart-drawer-container a:focus {
+  outline: 3px solid var(--feelcard-primary);
+  outline-offset: 2px;
+  border-radius: var(--feelcard-radius);
+}
+
+/* Mode sombre */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --feelcard-light: #1a1a1a;
+    --feelcard-dark: #ffffff;
+    --feelcard-gray-50: #2a2a2a;
+    --feelcard-gray-100: #3a3a3a;
+    --feelcard-gray-200: #4a4a4a;
+    --feelcard-gray-600: #a0a0a0;
+    --feelcard-gradient-light: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const cartDrawer = document.getElementById('cart-drawer');
+  const cartBackdrop = cartDrawer?.querySelector('.cart-drawer-backdrop');
+  const body = document.body;
+  
+  // Fonction pour ouvrir la cart drawer
+  function openCartDrawer() {
+    if (cartDrawer) {
+      cartDrawer.classList.add('is-open');
+      body.style.overflow = 'hidden';
+      
+      // Focus sur le premier élément focusable
+      const firstFocusable = cartDrawer.querySelector('button, a, input, textarea, select');
+      if (firstFocusable) {
+        setTimeout(() => firstFocusable.focus(), 150);
+      }
+    }
+  }
+  
+  // Fonction pour fermer la cart drawer
+  function closeCartDrawer() {
+    if (cartDrawer) {
+      cartDrawer.classList.remove('is-open');
+      body.style.overflow = '';
+    }
+  }
+  
+  // Event listeners pour les boutons de fermeture
+  const closeButtons = cartDrawer?.querySelectorAll('[is="close-button"]');
+  closeButtons?.forEach(button => {
+    button.addEventListener('click', closeCartDrawer);
+  });
+  
+  // Fermer en cliquant sur le backdrop
+  cartBackdrop?.addEventListener('click', closeCartDrawer);
+  
+  // Fermer avec la touche Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && cartDrawer?.classList.contains('is-open')) {
+      closeCartDrawer();
+    }
+  });
+  
+  // Event listeners pour ouvrir la cart drawer
+  // Pour les boutons avec data-cart-drawer-open
+  const cartTriggers = document.querySelectorAll('[data-cart-drawer-open]');
+  cartTriggers.forEach(trigger => {
+    trigger.addEventListener('click', function(e) {
+      e.preventDefault();
+      openCartDrawer();
+    });
+  });
+  
+  // Pour les boutons d'ajout au panier classiques
+  const addToCartButtons = document.querySelectorAll('[name="add"], .btn-add-to-cart, [data-add-to-cart]');
+  addToCartButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      // Délai pour laisser le temps à l'ajout au panier de se faire
+      setTimeout(() => {
+        openCartDrawer();
+      }, 500);
+    });
+  });
+  
+  // Gestion des boutons checkout avec loading
+  const checkoutBtn = cartDrawer?.querySelector('.btn-checkout');
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', function() {
+      this.classList.add('loading');
+      
+      // Simuler le temps de traitement
+      setTimeout(() => {
+        this.classList.remove('loading');
+      }, 2000);
+    });
+  }
+  
+  // Animation des line items au scroll
+  function observeLineItems() {
+    const lineItems = cartDrawer?.querySelectorAll('.line-item-enhanced');
+    if (!lineItems) return;
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationDelay = `${Array.from(lineItems).indexOf(entry.target) * 0.1}s`;
+          entry.target.classList.add('animate-in');
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    lineItems.forEach(item => observer.observe(item));
+  }
+  
+  // Observer les changements du panier pour réanimer les items
+  const cartObserver = new MutationObserver(() => {
+    observeLineItems();
+  });
+  
+  if (cartDrawer) {
+    cartObserver.observe(cartDrawer, { childList: true, subtree: true });
+    observeLineItems();
+  }
+  
+  // Exposer les fonctions globalement pour l'intégration Shopify
+  window.FEELCARD = window.FEELCARD || {};
+  window.FEELCARD.openCartDrawer = openCartDrawer;
+  window.FEELCARD.closeCartDrawer = closeCartDrawer;
+  
+  // Écouter les événements cart:update de Shopify
+  document.addEventListener('cart:updated', function() {
+    setTimeout(() => {
+      openCartDrawer();
+    }, 300);
+  });
+  
+  // Test d'ouverture (à supprimer en production)
+  console.log('FEELCARD Cart Drawer initialized. Use FEELCARD.openCartDrawer() to test.');
+});
+</script>
+
 {% schema %}
 {
-  "name": "Cart drawer",
+  "name": "Cart drawer - FEELCARD",
   "settings": [
     {
       "type": "paragraph",
-      "content": "Cart drawer won't appear to your customers if you have set the cart type to Page in the global theme settings."
+      "content": "Version améliorée avec design moderne, animations fluides et dégradés personnalisés FEELCARD."
     },
     {
       "type": "paragraph",
-      "content": "Free shipping bar can be configured in global cart settings."
+      "content": "La barre de livraison gratuite peut être configurée dans les paramètres globaux du panier."
     },
     {
       "type": "checkbox",
       "id": "show_cart_note",
-      "label": "Show cart note",
+      "label": "Afficher la note de commande",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_shipping_text",
-      "label": "Show shipping text",
+      "label": "Afficher le texte de livraison",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_view_cart_button",
-      "label": "Show view cart button",
+      "label": "Afficher le bouton voir le panier",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_checkout_button",
-      "label": "Show checkout button",
+      "label": "Afficher le bouton de commande",
       "default": true
     },
     {
       "type": "header",
-      "content": "Product recommendations"
+      "content": "Recommandations de produits"
     },
     {
       "type": "text",
       "id": "recommendations_title",
-      "label": "Heading",
-      "default": "Trending this month"
+      "label": "Titre des recommandations",
+      "default": "Complétez votre commande"
     },
     {
       "type": "product_list",
       "id": "products",
-      "label": "Recommendations",
-      "info": "Suggest additional products to your customers. Recommendations already in the cart are automatically hidden.",
+      "label": "Produits recommandés",
+      "info": "Suggérez des produits supplémentaires à vos clients. Les recommandations déjà dans le panier sont automatiquement masquées.",
       "limit": 10
     },
     {
       "type": "color",
       "id": "product_card_background",
-      "label": "Product card background"
+      "label": "Arrière-plan de la carte produit",
+      "default": "#f8f9fa"
     },
     {
       "type": "color",
       "id": "product_card_text_color",
-      "label": "Product card text"
+      "label": "Couleur du texte de la carte produit",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Paramètres de design"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "Activer les animations",
+      "default": true,
+      "info": "Animations fluides et micro-interactions modernes"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_badges",
+      "label": "Afficher les badges de confiance",
+      "default": true,
+      "info": "Badges : Paiement sécurisé, Livraison rapide, Retour gratuit"
+    },
+    {
+      "type": "range",
+      "id": "animation_speed",
+      "label": "Vitesse des animations",
+      "min": 0.5,
+      "max": 2,
+      "step": 0.1,
+      "default": 1,
+      "unit": "x",
+      "info": "Contrôle la rapidité des animations"
     }
   ]
 }
