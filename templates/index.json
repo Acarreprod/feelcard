@@ -24,6 +24,7 @@
         },
         "item_nqGcYU": {
           "type": "item",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/7017c8b5-98be-4015-a685-9107352b839e.png",
             "icon": "none",
@@ -34,6 +35,7 @@
         },
         "item_Hdq6kF": {
           "type": "item",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/7017c8b5-98be-4015-a685-9107352b839e.png",
             "icon": "none",
@@ -49,8 +51,8 @@
         "item_Hdq6kF"
       ],
       "settings": {
-        "full_width": true,
-        "stack_on_mobile": false,
+        "full_width": false,
+        "stack_on_mobile": true,
         "show_counter": true,
         "desktop_image_effect": "reveal",
         "image_position": "end",
@@ -423,7 +425,7 @@
         "title_fNaCkn": {
           "type": "title",
           "settings": {
-            "heading_tag": "h2"
+            "heading_tag": "h1"
           }
         }
       },
