@@ -1,243 +1,466 @@
-<!-- Modern Cart Section - 2025 Design -->
+<!-- Modern Responsive Cart Section - 2025 Design -->
 <style>
-  /* === MODERN CART STYLES === */
+  /* === CSS VARIABLES === */
   :root {
     --cart-primary: {{ section.settings.primary_color | default: '#000000' }};
     --cart-secondary: {{ section.settings.secondary_color | default: '#666666' }};
     --cart-accent: {{ section.settings.accent_color | default: '#ffffff' }};
-    --cart-glass-bg: {{ section.settings.glass_background | default: 'rgba(255, 255, 255, 0.1)' }};
-    --cart-border-radius: {{ section.settings.border_radius | default: '12' }}px;
-    --cart-spacing: {{ section.settings.spacing | default: '24' }}px;
+    --cart-success: {{ section.settings.success_color | default: '#10b981' }};
+    --cart-glass-bg: {{ section.settings.glass_background | default: 'rgba(255, 255, 255, 0.95)' }};
+    --cart-border-radius: {{ section.settings.border_radius | default: '16' }}px;
+    --cart-spacing-xs: 8px;
+    --cart-spacing-sm: 12px;
+    --cart-spacing-md: 16px;
+    --cart-spacing-lg: 24px;
+    --cart-spacing-xl: 32px;
+    --cart-spacing-xxl: 48px;
     --cart-animation-speed: {{ section.settings.animation_speed | default: '0.3' }}s;
+    --cart-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --cart-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
 
+  /* === RESET & BASE === */
+  .modern-cart-wrapper * {
+    box-sizing: border-box;
+  }
+
+  .modern-cart-wrapper {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--cart-primary);
+    line-height: 1.6;
+  }
+
+  /* === MAIN CONTAINER === */
   .modern-cart-container {
-    position: relative;
-    min-height: 60vh;
-    padding: var(--cart-spacing);
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--cart-spacing-md);
+    min-height: 50vh;
     background: linear-gradient(135deg, 
-      {{ section.settings.bg_gradient_start | default: '#f8f9fa' }} 0%, 
+      {{ section.settings.bg_gradient_start | default: '#f8fafc' }} 0%, 
       {{ section.settings.bg_gradient_end | default: '#ffffff' }} 100%);
   }
 
-  /* === GLASSMORPHISM EFFECTS === */
-  .glass-panel {
-    background: var(--cart-glass-bg);
-    backdrop-filter: blur({{ section.settings.glass_blur | default: 10 }}px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--cart-border-radius);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transition: all var(--cart-animation-speed) cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-
-  .glass-panel:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-  }
-
-  /* === EMPTY STATE ANIMATION === */
-  .empty-state {
-    text-align: center;
-    padding: 80px 20px;
-    animation: fade-in-up var(--cart-animation-speed) ease-out;
-  }
-
-  .empty-state__icon-wrapper {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 32px;
-    animation: float 3s ease-in-out infinite;
-  }
-
-  .empty-state__icon-wrapper::after {
-    content: '';
-    position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 8px;
-    background: radial-gradient(ellipse, rgba(0,0,0,0.1) 0%, transparent 70%);
-    border-radius: 50%;
-    animation: shadow-pulse 3s ease-in-out infinite;
-  }
-
-  .count-bubble {
-    background: linear-gradient(135deg, var(--cart-primary), var(--cart-secondary));
-    color: var(--cart-accent);
-    border-radius: 50%;
-    animation: pulse-badge 0.6s ease-out;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .count-bubble::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-    transform: rotate(45deg);
-    transition: all 0.6s;
-  }
-
-  .count-bubble--lg::before {
-    animation: shimmer 2s infinite;
-  }
-
-  /* === CART ITEMS ANIMATION === */
-  .modern-cart {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--cart-spacing);
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-
   @media (min-width: 768px) {
-    .modern-cart {
-      grid-template-columns: 2fr 1fr;
-      gap: calc(var(--cart-spacing) * 2);
+    .modern-cart-container {
+      padding: var(--cart-spacing-xl);
     }
   }
 
-  .cart-items-section {
-    animation: slide-in-left var(--cart-animation-speed) ease-out;
-  }
-
-  .cart-summary-section {
-    animation: slide-in-right var(--cart-animation-speed) ease-out;
-    position: sticky;
-    top: 20px;
-    height: fit-content;
-  }
-
-  /* === MODERN ORDER SUMMARY === */
-  .modern-order-summary {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: transparent;
-  }
-
-  .modern-order-summary thead th {
+  /* === GLASSMORPHISM COMPONENTS === */
+  .glass-card {
     background: var(--cart-glass-bg);
-    backdrop-filter: blur(5px);
-    padding: 20px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.875rem;
-    border: none;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    backdrop-filter: blur({{ section.settings.glass_blur | default: 12 }}px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--cart-border-radius);
+    box-shadow: var(--cart-shadow-lg);
+    transition: all var(--cart-animation-speed) cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .modern-order-summary thead th:first-child {
-    border-top-left-radius: var(--cart-border-radius);
+  .glass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   }
 
-  .modern-order-summary thead th:last-child {
-    border-top-right-radius: var(--cart-border-radius);
+  /* === EMPTY STATE === */
+  .empty-state {
+    text-align: center;
+    padding: var(--cart-spacing-xxl) var(--cart-spacing-lg);
+    animation: fadeInUp 0.6s ease-out;
   }
 
-  .cart-item-row {
-    transition: all var(--cart-animation-speed) ease;
-    animation: fade-in-up var(--cart-animation-speed) ease-out;
-    animation-fill-mode: both;
-  }
-
-  .cart-item-row:nth-child(1) { animation-delay: 0.1s; }
-  .cart-item-row:nth-child(2) { animation-delay: 0.2s; }
-  .cart-item-row:nth-child(3) { animation-delay: 0.3s; }
-
-  .cart-item-row:hover {
-    transform: scale(1.01);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  }
-
-  .cart-item-row td {
-    padding: 24px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    background: var(--cart-glass-bg);
-    backdrop-filter: blur(5px);
-  }
-
-  /* === QUANTITY INPUT MODERN === */
-  .modern-quantity-wrapper {
+  .empty-state__icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--cart-spacing-lg);
+    background: linear-gradient(135deg, var(--cart-primary), var(--cart-secondary));
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    background: var(--cart-glass-bg);
-    border-radius: calc(var(--cart-border-radius) / 2);
-    padding: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    justify-content: center;
+    position: relative;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .empty-state__icon svg {
+    width: 40px;
+    height: 40px;
+    color: var(--cart-accent);
+  }
+
+  .empty-state__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: var(--cart-spacing-sm);
+    color: var(--cart-primary);
+  }
+
+  .empty-state__message {
+    font-size: 1rem;
+    color: var(--cart-secondary);
+    margin-bottom: var(--cart-spacing-xl);
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* === CART LAYOUT === */
+  .cart-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--cart-spacing-lg);
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  @media (min-width: 1024px) {
+    .cart-layout {
+      grid-template-columns: 2fr 1fr;
+      gap: var(--cart-spacing-xxl);
+    }
+  }
+
+  /* === CART HEADER === */
+  .cart-header {
+    padding: var(--cart-spacing-lg);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, var(--cart-primary), var(--cart-secondary));
+    color: var(--cart-accent);
+    border-radius: var(--cart-border-radius) var(--cart-border-radius) 0 0;
+  }
+
+  .cart-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--cart-spacing-sm);
+  }
+
+  @media (min-width: 768px) {
+    .cart-title {
+      font-size: 1.75rem;
+    }
+  }
+
+  .cart-count {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+  }
+
+  /* === CART ITEMS === */
+  .cart-items {
+    animation: slideInLeft 0.6s ease-out;
+  }
+
+  .cart-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: var(--cart-spacing-md);
+    padding: var(--cart-spacing-lg);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all var(--cart-animation-speed) ease;
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .cart-item {
+      grid-template-columns: 100px 1fr auto auto;
+      gap: var(--cart-spacing-lg);
+    }
+  }
+
+  .cart-item:hover {
+    background: rgba(0, 0, 0, 0.02);
+    transform: translateX(4px);
+  }
+
+  .cart-item:last-child {
+    border-bottom: none;
+  }
+
+  /* === PRODUCT IMAGE === */
+  .product-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    background: #f8fafc;
+  }
+
+  @media (min-width: 768px) {
+    .product-image {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--cart-animation-speed) ease;
+  }
+
+  .product-image:hover img {
+    transform: scale(1.05);
+  }
+
+  /* === PRODUCT INFO === */
+  .product-info {
+    min-width: 0;
+  }
+
+  .product-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 4px;
+    color: var(--cart-primary);
+  }
+
+  @media (min-width: 768px) {
+    .product-title {
+      font-size: 1.1rem;
+    }
+  }
+
+  .product-variant {
+    font-size: 0.875rem;
+    color: var(--cart-secondary);
+    margin-bottom: var(--cart-spacing-xs);
+  }
+
+  .product-price {
+    font-weight: 600;
+    color: var(--cart-primary);
+  }
+
+  .product-price--original {
+    text-decoration: line-through;
+    color: var(--cart-secondary);
+    font-size: 0.875rem;
+    margin-right: var(--cart-spacing-xs);
+  }
+
+  /* === QUANTITY CONTROLS === */
+  .quantity-controls {
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 4px;
+    border: 1px solid #e2e8f0;
     transition: all var(--cart-animation-speed) ease;
   }
 
-  .modern-quantity-wrapper:hover {
+  .quantity-controls:hover {
     border-color: var(--cart-primary);
     box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
   }
 
-  .quantity-input {
-    background: transparent;
-    border: none;
-    text-align: center;
-    font-weight: 600;
-    min-width: 50px;
-    padding: 8px;
-  }
-
   .quantity-btn {
-    background: var(--cart-primary);
-    color: var(--cart-accent);
-    border: none;
     width: 32px;
     height: 32px;
-    border-radius: 50%;
+    border: none;
+    background: var(--cart-primary);
+    color: var(--cart-accent);
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    font-weight: 600;
     transition: all var(--cart-animation-speed) ease;
-    font-weight: bold;
   }
 
   .quantity-btn:hover {
     transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background: var(--cart-secondary);
   }
 
-  .quantity-btn:active {
-    transform: scale(0.95);
+  .quantity-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
   }
 
-  /* === MODERN CHECKOUT BUTTON === */
-  .modern-checkout-btn {
+  .quantity-input {
+    width: 50px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .remove-item {
+    margin-top: var(--cart-spacing-xs);
+    background: none;
+    border: none;
+    color: var(--cart-secondary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color var(--cart-animation-speed) ease;
+  }
+
+  .remove-item:hover {
+    color: #dc2626;
+  }
+
+  /* === ITEM TOTAL === */
+  .item-total {
+    text-align: right;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--cart-primary);
+  }
+
+  @media (max-width: 767px) {
+    .quantity-controls {
+      grid-column: 1 / -1;
+      justify-self: start;
+      margin-top: var(--cart-spacing-sm);
+    }
+    
+    .item-total {
+      grid-column: 1 / -1;
+      text-align: left;
+      margin-top: var(--cart-spacing-sm);
+    }
+    
+    .cart-item {
+      grid-template-columns: 80px 1fr;
+      grid-template-rows: auto auto auto;
+    }
+  }
+
+  /* === CART SUMMARY === */
+  .cart-summary {
+    animation: slideInRight 0.6s ease-out;
+    position: sticky;
+    top: var(--cart-spacing-lg);
+    height: fit-content;
+  }
+
+  .summary-header {
+    padding: var(--cart-spacing-lg);
+    background: var(--cart-primary);
+    color: var(--cart-accent);
+    border-radius: var(--cart-border-radius) var(--cart-border-radius) 0 0;
+  }
+
+  .summary-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .summary-content {
+    padding: var(--cart-spacing-lg);
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--cart-spacing-sm) 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .summary-row:last-child {
+    border-bottom: none;
+    padding-top: var(--cart-spacing-md);
+    margin-top: var(--cart-spacing-md);
+    border-top: 2px solid rgba(0, 0, 0, 0.1);
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+
+  .summary-label {
+    color: var(--cart-secondary);
+  }
+
+  .summary-value {
+    font-weight: 600;
+    color: var(--cart-primary);
+  }
+
+  .discount-badge {
+    background: var(--cart-success);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* === SHIPPING ESTIMATOR === */
+  .shipping-estimator {
+    margin-top: var(--cart-spacing-lg);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: var(--cart-border-radius);
+    overflow: hidden;
+  }
+
+  .estimator-header {
+    padding: var(--cart-spacing-md);
+    background: #f8fafc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background var(--cart-animation-speed) ease;
+  }
+
+  .estimator-header:hover {
+    background: #f1f5f9;
+  }
+
+  .estimator-content {
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all var(--cart-animation-speed) ease;
+  }
+
+  .estimator-content.active {
+    padding: var(--cart-spacing-md);
+    max-height: 300px;
+  }
+
+  /* === CHECKOUT BUTTON === */
+  .checkout-btn {
+    width: 100%;
     background: linear-gradient(135deg, var(--cart-primary), var(--cart-secondary));
     color: var(--cart-accent);
     border: none;
-    padding: 20px 40px;
+    padding: var(--cart-spacing-md) var(--cart-spacing-lg);
     border-radius: var(--cart-border-radius);
-    font-weight: 700;
     font-size: 1.1rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     cursor: pointer;
     transition: all var(--cart-animation-speed) ease;
     position: relative;
     overflow: hidden;
-    width: 100%;
+    margin-top: var(--cart-spacing-lg);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: var(--cart-spacing-sm);
   }
 
-  .modern-checkout-btn::before {
+  .checkout-btn::before {
     content: '';
     position: absolute;
     top: 0;
@@ -248,117 +471,43 @@
     transition: left 0.6s;
   }
 
-  .modern-checkout-btn:hover::before {
+  .checkout-btn:hover::before {
     left: 100%;
   }
 
-  .modern-checkout-btn:hover {
+  .checkout-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }
 
-  .modern-checkout-btn:active {
+  .checkout-btn:active {
     transform: translateY(0);
   }
 
-  /* === SHIPPING ESTIMATOR MODERN === */
-  .modern-accordion {
-    background: var(--cart-glass-bg);
-    backdrop-filter: blur(10px);
-    border-radius: var(--cart-border-radius);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    overflow: hidden;
-    margin-top: var(--cart-spacing);
-  }
-
-  .accordion-header {
-    padding: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: all var(--cart-animation-speed) ease;
-    font-weight: 600;
-  }
-
-  .accordion-header:hover {
-    background: rgba(255, 255, 255, 0.05);
-  }
-
-  .accordion-icon {
-    transition: transform var(--cart-animation-speed) ease;
-  }
-
-  .accordion-header.active .accordion-icon {
-    transform: rotate(180deg);
-  }
-
-  .accordion-content {
-    padding: 0 20px;
-    max-height: 0;
-    overflow: hidden;
-    transition: all var(--cart-animation-speed) ease;
-  }
-
-  .accordion-header.active + .accordion-content {
-    max-height: 200px;
-    padding: 20px;
-  }
-
-  /* === TOTALS SECTION === */
-  .modern-totals {
-    background: var(--cart-glass-bg);
-    backdrop-filter: blur(15px);
-    border-radius: var(--cart-border-radius);
-    padding: var(--cart-spacing);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    animation: slide-in-up var(--cart-animation-speed) ease-out;
-  }
-
-  .total-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all var(--cart-animation-speed) ease;
-  }
-
-  .total-row:last-child {
-    border-bottom: none;
-    font-weight: 700;
-    font-size: 1.2rem;
-    padding-top: 20px;
-    margin-top: 12px;
-    border-top: 2px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .total-row:hover {
-    background: rgba(255, 255, 255, 0.05);
-    margin: 0 -12px;
-    padding-left: 12px;
-    padding-right: 12px;
-    border-radius: 8px;
-  }
-
   /* === PAYMENT ICONS === */
+  .payment-methods {
+    margin-top: var(--cart-spacing-lg);
+    text-align: center;
+  }
+
+  .payment-label {
+    font-size: 0.75rem;
+    color: var(--cart-secondary);
+    margin-bottom: var(--cart-spacing-sm);
+  }
+
   .payment-icons {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: var(--cart-spacing-sm);
     flex-wrap: wrap;
-    margin-top: var(--cart-spacing);
-    padding: 20px;
-    background: var(--cart-glass-bg);
-    backdrop-filter: blur(10px);
-    border-radius: var(--cart-border-radius);
-    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   .payment-icons svg {
+    height: 24px;
+    filter: grayscale(100%) opacity(0.6);
     transition: all var(--cart-animation-speed) ease;
-    filter: grayscale(100%) opacity(0.7);
   }
 
   .payment-icons svg:hover {
@@ -366,8 +515,31 @@
     transform: scale(1.1);
   }
 
+  /* === CART NOTE === */
+  .cart-note {
+    margin-top: var(--cart-spacing-lg);
+  }
+
+  .cart-note textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: var(--cart-spacing-md);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: var(--cart-border-radius);
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    transition: border-color var(--cart-animation-speed) ease;
+  }
+
+  .cart-note textarea:focus {
+    border-color: var(--cart-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  }
+
   /* === ANIMATIONS === */
-  @keyframes fade-in-up {
+  @keyframes fadeInUp {
     from {
       opacity: 0;
       transform: translateY(30px);
@@ -378,7 +550,7 @@
     }
   }
 
-  @keyframes slide-in-left {
+  @keyframes slideInLeft {
     from {
       opacity: 0;
       transform: translateX(-30px);
@@ -389,7 +561,7 @@
     }
   }
 
-  @keyframes slide-in-right {
+  @keyframes slideInRight {
     from {
       opacity: 0;
       transform: translateX(30px);
@@ -400,72 +572,31 @@
     }
   }
 
-  @keyframes slide-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-8px); }
   }
 
-  @keyframes shadow-pulse {
-    0%, 100% { opacity: 0.3; transform: translateX(-50%) scale(1); }
-    50% { opacity: 0.6; transform: translateX(-50%) scale(1.1); }
-  }
-
-  @keyframes pulse-badge {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.3); }
-    100% { transform: scale(1); }
-  }
-
-  @keyframes shimmer {
-    0% { transform: translateX(-100%) rotate(45deg); }
-    100% { transform: translateX(200%) rotate(45deg); }
-  }
-
-  /* === RESPONSIVE === */
+  /* === RESPONSIVE IMPROVEMENTS === */
   @media (max-width: 767px) {
-    .modern-cart-container {
-      padding: 16px;
+    .cart-layout {
+      gap: var(--cart-spacing-md);
     }
     
-    .modern-cart {
-      gap: 16px;
-    }
-
-    .cart-summary-section {
+    .cart-summary {
       position: static;
+      order: -1;
     }
-
-    .modern-order-summary thead {
-      display: none;
+    
+    .cart-title {
+      font-size: 1.25rem;
     }
-
-    .modern-order-summary tbody tr {
-      display: block;
-      margin-bottom: 20px;
-      background: var(--cart-glass-bg);
-      border-radius: var(--cart-border-radius);
-      overflow: hidden;
-    }
-
-    .modern-order-summary tbody td {
-      display: block;
-      padding: 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .modern-order-summary tbody td:last-child {
-      border-bottom: none;
+    
+    .checkout-btn {
+      position: sticky;
+      bottom: var(--cart-spacing-md);
+      z-index: 10;
+      margin: var(--cart-spacing-lg) 0;
     }
   }
 
@@ -489,54 +620,77 @@
     white-space: nowrap;
     border: 0;
   }
+
+  /* === LOADING STATES === */
+  .loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--cart-primary);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 </style>
 
-<div class="modern-cart-container">
-  {%- if cart.item_count == 0 -%}
-    <div class="empty-state glass-panel">
-      <div class="empty-state__icon-wrapper">
-        {%- render 'icon' with 'cart', width: 48, height: 48, stroke_width: 1 -%}
-        <span class="count-bubble count-bubble--lg">0</span>
-      </div>
-
-      <div class="prose">
-        <h2 class="h4">{{ 'cart.general.empty' | t }}</h2>
-        <p>{{ section.settings.empty_cart_message | default: 'Votre panier est vide. Découvrez nos produits !' }}</p>
-
-        {%- assign button_content = section.settings.continue_shopping_text | default: 'cart.general.continue_shopping' | t -%}
-        <a href="{{ section.settings.cart_empty_button_link | default: routes.all_products_collection_url }}" 
-           class="modern-checkout-btn" 
-           style="max-width: 300px; margin: 32px auto 0;">
-          {{ button_content }}
-        </a>
-      </div>
-    </div>
-  {%- else -%}
-    <div class="modern-cart">
-      <!-- Cart Items Section -->
-      <div class="cart-items-section">
-        <div class="glass-panel">
-          <div class="cart-header" style="padding: var(--cart-spacing); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-            <h1 class="h2" style="margin: 0;">{{ 'cart.general.title' | t }} ({{ cart.item_count }})</h1>
-            
-            {%- if section.settings.show_free_shipping_threshold and settings.cart_show_free_shipping_threshold -%}
-              <div style="margin-top: 16px;">
-                {%- render 'free-shipping-bar' -%}
-              </div>
-            {%- endif -%}
+<div class="modern-cart-wrapper">
+  <div class="modern-cart-container">
+    {%- if cart.item_count == 0 -%}
+      <!-- Empty State -->
+      <div class="glass-card">
+        <div class="empty-state">
+          <div class="empty-state__icon">
+            {%- render 'icon' with 'cart', width: 40, height: 40 -%}
           </div>
+          
+          <h2 class="empty-state__title">{{ 'cart.general.empty' | t }}</h2>
+          <p class="empty-state__message">
+            {{ section.settings.empty_cart_message | default: 'Votre panier est vide. Découvrez nos produits incroyables !' }}
+          </p>
+          
+          <a href="{{ section.settings.cart_empty_button_link | default: routes.all_products_collection_url }}" 
+             class="checkout-btn" 
+             style="max-width: 300px; margin: 0 auto;">
+            {{ section.settings.continue_shopping_text | default: 'Découvrir nos produits' }}
+          </a>
+        </div>
+      </div>
+    {%- else -%}
+      <!-- Cart with Items -->
+      <div class="cart-layout">
+        <!-- Cart Items Section -->
+        <div class="cart-items">
+          <div class="glass-card">
+            <!-- Cart Header -->
+            <div class="cart-header">
+              <h1 class="cart-title">
+                {{ 'cart.general.title' | t }}
+                <span class="cart-count">{{ cart.item_count }}</span>
+              </h1>
+              
+              {%- if section.settings.show_free_shipping_threshold and settings.cart_show_free_shipping_threshold -%}
+                <div style="margin-top: var(--cart-spacing-md);">
+                  {%- render 'free-shipping-bar' -%}
+                </div>
+              {%- endif -%}
+            </div>
 
-          <!-- Modern Order Summary Table -->
-          <table class="modern-order-summary" role="table" aria-label="{{ 'cart.general.title' | t }}">
-            <thead>
-              <tr>
-                <th scope="col">{{ 'customer.order.product' | t }}</th>
-                <th scope="col" class="text-center">{{ 'customer.order.quantity' | t }}</th>
-                <th scope="col" class="text-end">{{ 'customer.order.total' | t }}</th>
-              </tr>
-            </thead>
-
-            <tbody>
+            <!-- Cart Items List -->
+            <div class="cart-items-list">
               {%- for line_item in cart.items -%}
                 {% liquid
                   assign max_quantity = nil
@@ -551,277 +705,346 @@
                   endif
                 %}
 
-                <tr class="cart-item-row" data-line-key="{{ line_item.key }}">
-                  <td>
-                    {%- render 'line-item', line_item: line_item -%}
-                  </td>
-
-                  <td class="text-center">
-                    <div class="modern-quantity-wrapper">
-                      <button type="button" 
-                              class="quantity-btn" 
-                              onclick="updateQuantity('{{ line_item.key }}', {{ line_item.quantity | minus: 1 }})"
-                              aria-label="{{ 'cart.order.decrease_quantity' | t }}"
-                              {{ line_item.quantity | minus: 1 | at_least: 0 }}
-                              {%- if line_item.quantity <= line_item.variant.quantity_rule.min -%}disabled{%- endif -%}>
-                        −
-                      </button>
-                      
-                      <input class="quantity-input" 
-                             type="number" 
-                             is="quantity-input" 
-                             inputmode="numeric" 
-                             min="{{ line_item.variant.quantity_rule.min }}" 
-                             step="{{ line_item.variant.quantity_rule.increment }}" 
-                             {% if max_quantity != nil %}max="{{ max_quantity }}"{% endif %} 
-                             data-line-key="{{ line_item.key }}" 
-                             aria-label="{{ 'cart.order.change_quantity' | t | escape }}" 
-                             value="{{ line_item.quantity }}"
-                             onchange="updateQuantity('{{ line_item.key }}', this.value)">
-                      
-                      <button type="button" 
-                              class="quantity-btn" 
-                              onclick="updateQuantity('{{ line_item.key }}', {{ line_item.quantity | plus: 1 }})"
-                              aria-label="{{ 'cart.order.increase_quantity' | t }}"
-                              {%- if max_quantity and line_item.quantity >= max_quantity -%}disabled{%- endif -%}>
-                        +
-                      </button>
-                    </div>
-
-                    <div style="margin-top: 12px; text-align: center;">
-                      <button type="button" 
-                              class="link" 
-                              onclick="removeItem('{{ line_item.key }}')"
-                              aria-label="{{ 'cart.order.remove_with_title' | t: title: line_item.title | escape }}"
-                              style="color: var(--cart-secondary); font-size: 0.875rem; background: none; border: none; cursor: pointer; text-decoration: underline;">
-                        {{ 'cart.order.remove' | t }}
-                      </button>
-                    </div>
-                  </td>
-
-                  <td class="text-end">
-                    <strong style="font-size: 1.1rem;">{{ line_item.final_line_price | money }}</strong>
-                    {%- if line_item.original_line_price != line_item.final_line_price -%}
-                      <div style="font-size: 0.875rem; color: var(--cart-secondary); text-decoration: line-through;">
-                        {{ line_item.original_line_price | money }}
-                      </div>
+                <div class="cart-item" data-line-key="{{ line_item.key }}">
+                  <!-- Product Image -->
+                  <div class="product-image">
+                    {%- if line_item.image -%}
+                      <img src="{{ line_item.image | image_url: width: 200 }}" 
+                           alt="{{ line_item.title | escape }}"
+                           loading="lazy">
                     {%- endif -%}
-                  </td>
-                </tr>
-              {%- endfor -%}
-            </tbody>
-          </table>
+                  </div>
 
-          {%- if section.settings.show_shipping_estimator and cart.requires_shipping -%}
-            <div class="modern-accordion">
-              <div class="accordion-header" onclick="toggleAccordion(this)">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                  {%- render 'icon' with 'picto-box', width: 20, height: 20 -%}
-                  {{ 'cart.shipping_estimator.estimate_shipping' | t }}
+                  <!-- Product Info -->
+                  <div class="product-info">
+                    <h3 class="product-title">{{ line_item.product.title }}</h3>
+                    
+                    {%- unless line_item.variant.title == 'Default Title' -%}
+                      <p class="product-variant">{{ line_item.variant.title }}</p>
+                    {%- endunless -%}
+                    
+                    <div class="product-price">
+                      {%- if line_item.original_price != line_item.final_price -%}
+                        <span class="product-price--original">{{ line_item.original_price | money }}</span>
+                      {%- endif -%}
+                      <span>{{ line_item.final_price | money }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Quantity Controls -->
+                  <div class="quantity-controls">
+                    <button type="button" 
+                            class="quantity-btn" 
+                            onclick="updateQuantity('{{ line_item.key }}', {{ line_item.quantity | minus: 1 }})"
+                            aria-label="{{ 'cart.order.decrease_quantity' | t }}"
+                            {%- if line_item.quantity <= line_item.variant.quantity_rule.min -%}disabled{%- endif -%}>
+                      −
+                    </button>
+                    
+                    <input class="quantity-input" 
+                           type="number" 
+                           min="{{ line_item.variant.quantity_rule.min }}" 
+                           step="{{ line_item.variant.quantity_rule.increment }}" 
+                           {% if max_quantity != nil %}max="{{ max_quantity }}"{% endif %} 
+                           value="{{ line_item.quantity }}"
+                           onchange="updateQuantity('{{ line_item.key }}', this.value)"
+                           aria-label="{{ 'cart.order.change_quantity' | t | escape }}">
+                    
+                    <button type="button" 
+                            class="quantity-btn" 
+                            onclick="updateQuantity('{{ line_item.key }}', {{ line_item.quantity | plus: 1 }})"
+                            aria-label="{{ 'cart.order.increase_quantity' | t }}"
+                            {%- if max_quantity and line_item.quantity >= max_quantity -%}disabled{%- endif -%}>
+                      +
+                    </button>
+                  </div>
+
+                  <!-- Item Total -->
+                  <div class="item-total">
+                    {{ line_item.final_line_price | money }}
+                    <button type="button" 
+                            class="remove-item" 
+                            onclick="removeItem('{{ line_item.key }}')"
+                            aria-label="{{ 'cart.order.remove_with_title' | t: title: line_item.title | escape }}">
+                      {{ 'cart.order.remove' | t }}
+                    </button>
+                  </div>
                 </div>
-                <div class="accordion-icon">
-                  {%- render 'icon' with 'chevron-down', width: 16, height: 16 -%}
+              {%- endfor -%}
+            </div>
+
+            <!-- Shipping Estimator -->
+            {%- if section.settings.show_shipping_estimator and cart.requires_shipping -%}
+              <div class="shipping-estimator">
+                <div class="estimator-header" onclick="toggleEstimator(this)">
+                  <div style="display: flex; align-items: center; gap: var(--cart-spacing-sm);">
+                    {%- render 'icon' with 'picto-box', width: 20, height: 20 -%}
+                    <span>{{ 'cart.shipping_estimator.estimate_shipping' | t }}</span>
+                  </div>
+                  <div class="estimator-icon">
+                    {%- render 'icon' with 'chevron-down', width: 16, height: 16 -%}
+                  </div>
+                </div>
+                <div class="estimator-content">
+                  {%- render 'shipping-estimator' -%}
                 </div>
               </div>
-              <div class="accordion-content">
-                {%- render 'shipping-estimator' -%}
+            {%- endif -%}
+          </div>
+        </div>
+
+        <!-- Cart Summary Section -->
+        <div class="cart-summary">
+          <form action="{{ routes.cart_url }}" method="POST" class="cart-form">
+            <div class="glass-card">
+              <div class="summary-header">
+                <h2 class="summary-title">{{ 'cart.general.subtotal' | t }}</h2>
+              </div>
+              
+              <div class="summary-content">
+                {%- for block in section.blocks -%}
+                  {%- case block.type -%}
+                    {%- when '@app' -%}
+                      {%- render block -%}
+
+                    {%- when 'totals' -%}
+                      <div {{ block.shopify_attributes }}>
+                        {%- if block.settings.show_order_weight -%}
+                          <div class="summary-row">
+                            <span class="summary-label">{{ 'cart.general.weight' | t }}</span>
+                            <span class="summary-value">{{ cart.total_weight | weight_with_unit }}</span>
+                          </div>
+                        {%- endif -%}
+
+                        <div class="summary-row">
+                          <span class="summary-label">{{ 'cart.general.subtotal' | t }}</span>
+                          <span class="summary-value">{{ cart.items_subtotal_price | money }}</span>
+                        </div>
+
+                        {% for discount_application in cart.cart_level_discount_applications %}
+                          <div class="summary-row">
+                            <span class="discount-badge">
+                              {%- render 'icon' with 'discount', width: 12, height: 12 -%}
+                              {{ discount_application.title }}
+                            </span>
+                            <span class="summary-value" style="color: var(--cart-success);">
+                              -{{ discount_application.total_allocated_amount | money }}
+                            </span>
+                          </div>
+                        {% endfor %}
+
+                        <div class="summary-row">
+                          <span class="summary-label">{{ 'cart.general.total' | t }}</span>
+                          <span class="summary-value">{{ cart.total_price | money_with_currency }}</span>
+                        </div>
+
+                        {%- if block.settings.show_shipping_text -%}
+                          <div style="margin-top: var(--cart-spacing-md); font-size: 0.875rem; color: var(--cart-secondary); text-align: center;">
+                            {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+                              {{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                            {%- elsif cart.taxes_included -%}
+                              {{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}
+                            {%- elsif shop.shipping_policy.body != blank -%}
+                              {{ 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
+                            {%- else -%}
+                              {{ 'cart.general.taxes_and_shipping_at_checkout' | t }}
+                            {%- endif -%}
+                          </div>
+                        {%- endif -%}
+                      </div>
+
+                    {%- when 'cart_note' -%}
+                      <div class="cart-note" {{ block.shopify_attributes }}>
+                        <label for="cart-note" style="display: block; margin-bottom: var(--cart-spacing-xs); font-weight: 600;">
+                          {{ 'cart.general.order_note' | t }}
+                        </label>
+                        <textarea id="cart-note" 
+                                  name="note" 
+                                  placeholder="{{ 'cart.general.order_note_placeholder' | t }}"
+                                  maxlength="{{ block.settings.maxlength | default: 500 }}">{{ cart.note }}</textarea>
+                      </div>
+
+                    {%- when 'text' -%}
+                      {%- if block.settings.content != blank -%}
+                        <div style="margin-top: var(--cart-spacing-md);" {{ block.shopify_attributes }}>
+                          {{ block.settings.content }}
+                        </div>
+                      {%- endif -%}
+
+                    {%- when 'offer' -%}
+                      <div style="margin-top: var(--cart-spacing-md); padding: var(--cart-spacing-md); background: rgba(0,0,0,0.02); border-radius: 8px;" {{ block.shopify_attributes }}>
+                        {%- render 'offer', block: block -%}
+                      </div>
+
+                    {%- when 'accelerated_buttons' -%}
+                      {% if additional_checkout_buttons %}
+                        <div style="margin-top: var(--cart-spacing-md);" {{ block.shopify_attributes }}>
+                          {{ content_for_additional_checkout_buttons }}
+                        </div>
+                      {% endif %}
+
+                    {%- when 'checkout_button' -%}
+                      <button type="submit" 
+                              class="checkout-btn" 
+                              name="checkout" 
+                              {{ block.shopify_attributes }}>
+                        {%- render 'icon' with 'picto-lock', width: 20, height: 20 -%}
+                        {{ section.settings.checkout_button_text | default: 'Finaliser ma commande' }}
+                      </button>
+                  {%- endcase -%}
+                {%- endfor -%}
+              </div>
+            </div>
+          </form>
+
+          <!-- Payment Methods -->
+          {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+            <div class="payment-methods">
+              <div class="payment-label">{{ 'cart.general.we_accept' | t }}</div>
+              <div class="payment-icons">
+                {%- for type in shop.enabled_payment_types -%}
+                  {{ type | payment_type_svg_tag }}
+                {%- endfor -%}
               </div>
             </div>
           {%- endif -%}
         </div>
       </div>
-
-      <!-- Cart Summary Section -->
-      <div class="cart-summary-section">
-        <form action="{{ routes.cart_url }}" method="POST" class="cart-form">
-          {%- for block in section.blocks -%}
-            {%- case block.type -%}
-              {%- when '@app' -%}
-                {%- render block -%}
-
-              {%- when 'totals' -%}
-                <div class="modern-totals" {{ block.shopify_attributes }}>
-                  {%- if block.settings.show_order_weight -%}
-                    <div class="total-row">
-                      <span>{{ 'cart.general.weight' | t }}</span>
-                      <span>{{ cart.total_weight | weight_with_unit }}</span>
-                    </div>
-                  {%- endif -%}
-
-                  <div class="total-row">
-                    <span>{{ 'cart.general.subtotal' | t }}</span>
-                    <span>{{ cart.items_subtotal_price | money }}</span>
-                  </div>
-
-                  {% for discount_application in cart.cart_level_discount_applications %}
-                    <div class="total-row">
-                      <div class="badge" style="background: var(--cart-primary); color: var(--cart-accent); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;">
-                        {%- render 'icon' with 'discount' -%} {{ discount_application.title }}
-                      </div>
-                      <span style="color: #22c55e;">-{{ discount_application.total_allocated_amount | money }}</span>
-                    </div>
-                  {% endfor %}
-
-                  <div class="total-row">
-                    <span style="font-size: 1.3rem;">{{ 'cart.general.total' | t }}</span>
-                    <span style="font-size: 1.3rem;">{{ cart.total_price | money_with_currency }}</span>
-                  </div>
-
-                  {%- if block.settings.show_shipping_text -%}
-                    <div style="margin-top: 16px; font-size: 0.875rem; color: var(--cart-secondary); text-align: center;">
-                      {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
-                        {{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
-                      {%- elsif cart.taxes_included -%}
-                        {{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}
-                      {%- elsif shop.shipping_policy.body != blank -%}
-                        {{ 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
-                      {%- else -%}
-                        {{ 'cart.general.taxes_and_shipping_at_checkout' | t }}
-                      {%- endif -%}
-                    </div>
-                  {%- endif -%}
-                </div>
-
-              {%- when 'cart_note' -%}
-                <div class="glass-panel" style="margin-top: var(--cart-spacing); padding: var(--cart-spacing);" {{ block.shopify_attributes }}>
-                  <cart-note class="cart-form__note block">
-                    {%- assign order_note = 'cart.general.order_note' | t -%}
-                    {%- render 'input', name: 'note', multiline: 3, label: order_note, value: cart.note, maxlength: block.settings.maxlength -%}
-                  </cart-note>
-                </div>
-
-              {%- when 'text' -%}
-                {%- if block.settings.content != blank -%}
-                  <div class="glass-panel" style="margin-top: var(--cart-spacing); padding: var(--cart-spacing);" {{ block.shopify_attributes }}>
-                    <div class="prose">
-                      {{ block.settings.content }}
-                    </div>
-                  </div>
-                {%- endif -%}
-
-              {%- when 'offer' -%}
-                <div class="glass-panel" style="margin-top: var(--cart-spacing); padding: var(--cart-spacing);" {{ block.shopify_attributes }}>
-                  {%- render 'offer', block: block -%}
-                </div>
-
-              {%- when 'accelerated_buttons' -%}
-                {% if additional_checkout_buttons %}
-                  <div class="additional-checkout-buttons" style="margin-top: var(--cart-spacing);" {{ block.shopify_attributes }}>
-                    {{ content_for_additional_checkout_buttons }}
-                  </div>
-                {% endif %}
-
-              {%- when 'checkout_button' -%}
-                <button type="submit" 
-                        class="modern-checkout-btn" 
-                        name="checkout" 
-                        style="margin-top: var(--cart-spacing);" 
-                        {{ block.shopify_attributes }}>
-                  {%- render 'icon' with 'picto-lock', width: 20, height: 20 -%}
-                  {{ section.settings.checkout_button_text | default: 'cart.general.checkout' | t }}
-                </button>
-            {%- endcase -%}
-          {%- endfor -%}
-        </form>
-
-        {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
-          <div class="payment-icons">
-            <div style="font-size: 0.75rem; color: var(--cart-secondary); margin-bottom: 12px; text-align: center; width: 100%;">
-              {{ 'cart.general.we_accept' | t }}
-            </div>
-            {%- for type in shop.enabled_payment_types -%}
-              {{ type | payment_type_svg_tag }}
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-      </div>
-    </div>
-  {%- endif -%}
+    {%- endif -%}
+  </div>
 </div>
 
-<!-- Cart JavaScript -->
+<!-- Modern Cart JavaScript -->
 <script>
-  // Quantity Update Function
-  function updateQuantity(lineKey, newQuantity) {
-    if (newQuantity < 0) return;
-    
-    const formData = new FormData();
-    formData.append('updates[' + lineKey + ']', newQuantity);
-    
-    fetch('/cart/update.js', {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      location.reload();
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-  }
+  class ModernCart {
+    constructor() {
+      this.init();
+    }
 
-  // Remove Item Function
-  function removeItem(lineKey) {
-    updateQuantity(lineKey, 0);
-  }
+    init() {
+      this.setupEventListeners();
+      this.setupAnimations();
+    }
 
-  // Accordion Toggle
-  function toggleAccordion(header) {
-    header.classList.toggle('active');
-  }
+    setupEventListeners() {
+      // Quantity buttons
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.quantity-btn')) {
+          this.handleQuantityChange(e);
+        }
+        if (e.target.closest('.remove-item')) {
+          this.handleRemoveItem(e);
+        }
+      });
 
-  // Modern Cart Interactions
-  document.addEventListener('DOMContentLoaded', function() {
-    // Add ripple effect to buttons
-    const buttons = document.querySelectorAll('.modern-checkout-btn, .quantity-btn');
-    buttons.forEach(button => {
-      button.addEventListener('click', function(e) {
-        const ripple = document.createElement('span');
-        const rect = this.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-        
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = x + 'px';
-        ripple.style.top = y + 'px';
-        ripple.classList.add('ripple');
-        
-        this.appendChild(ripple);
+      // Quantity inputs
+      document.addEventListener('change', (e) => {
+        if (e.target.classList.contains('quantity-input')) {
+          this.handleQuantityInput(e);
+        }
+      });
+    }
+
+    setupAnimations() {
+      // Stagger cart item animations
+      const cartItems = document.querySelectorAll('.cart-item');
+      cartItems.forEach((item, index) => {
+        item.style.animationDelay = `${index * 0.1}s`;
+      });
+    }
+
+    async updateQuantity(lineKey, newQuantity) {
+      if (newQuantity < 0) return;
+
+      const cartItem = document.querySelector(`[data-line-key="${lineKey}"]`);
+      if (cartItem) cartItem.classList.add('loading');
+
+      try {
+        const formData = new FormData();
+        formData.append(`updates[${lineKey}]`, newQuantity);
+
+        const response = await fetch('/cart/update.js', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          // Smooth reload or update DOM
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error('Error updating cart:', error);
+      } finally {
+        if (cartItem) cartItem.classList.remove('loading');
+      }
+    }
+
+    async removeItem(lineKey) {
+      const cartItem = document.querySelector(`[data-line-key="${lineKey}"]`);
+      if (cartItem) {
+        cartItem.style.transform = 'translateX(-100%)';
+        cartItem.style.opacity = '0';
         
         setTimeout(() => {
-          ripple.remove();
-        }, 600);
-      });
-    });
+          this.updateQuantity(lineKey, 0);
+        }, 300);
+      }
+    }
 
-    // Smooth animations for cart updates
-    const cartRows = document.querySelectorAll('.cart-item-row');
-    cartRows.forEach((row, index) => {
-      row.style.animationDelay = (index * 0.1) + 's';
-    });
-  });
-</script>
+    handleQuantityChange(e) {
+      const btn = e.target.closest('.quantity-btn');
+      const cartItem = btn.closest('.cart-item');
+      const lineKey = cartItem.dataset.lineKey;
+      const input = cartItem.querySelector('.quantity-input');
+      const currentQty = parseInt(input.value);
+      
+      if (btn.textContent.includes('−')) {
+        this.updateQuantity(lineKey, Math.max(0, currentQty - 1));
+      } else {
+        this.updateQuantity(lineKey, currentQty + 1);
+      }
+    }
 
-<style>
-  /* Ripple Effect */
-  .ripple {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.6);
-    transform: scale(0);
-    animation: ripple-animation 0.6s linear;
-    pointer-events: none;
-  }
+    handleQuantityInput(e) {
+      const input = e.target;
+      const cartItem = input.closest('.cart-item');
+      const lineKey = cartItem.dataset.lineKey;
+      const newQty = Math.max(0, parseInt(input.value) || 0);
+      
+      this.updateQuantity(lineKey, newQty);
+    }
 
-  @keyframes ripple-animation {
-    to {
-      transform: scale(4);
-      opacity: 0;
+    handleRemoveItem(e) {
+      const cartItem = e.target.closest('.cart-item');
+      const lineKey = cartItem.dataset.lineKey;
+      this.removeItem(lineKey);
     }
   }
-</style>
+
+  // Global functions for compatibility
+  function updateQuantity(lineKey, newQuantity) {
+    window.modernCart.updateQuantity(lineKey, newQuantity);
+  }
+
+  function removeItem(lineKey) {
+    window.modernCart.removeItem(lineKey);
+  }
+
+  function toggleEstimator(header) {
+    const content = header.nextElementSibling;
+    const icon = header.querySelector('.estimator-icon');
+    
+    content.classList.toggle('active');
+    if (icon) {
+      icon.style.transform = content.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+  }
+
+  // Initialize when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    window.modernCart = new ModernCart();
+  });
+</script>
 
 {% schema %}
 {
@@ -831,7 +1054,7 @@
   "settings": [
     {
       "type": "header",
-      "content": "Couleurs et Style"
+      "content": "🎨 Couleurs et Style"
     },
     {
       "type": "color",
@@ -843,7 +1066,7 @@
       "type": "color",
       "id": "secondary_color",
       "label": "Couleur secondaire",
-      "default": "#666666"
+      "default": "#4a5568"
     },
     {
       "type": "color",
@@ -852,61 +1075,57 @@
       "default": "#ffffff"
     },
     {
+      "type": "color",
+      "id": "success_color",
+      "label": "Couleur succès",
+      "default": "#10b981"
+    },
+    {
       "type": "text",
       "id": "glass_background",
       "label": "Arrière-plan glassmorphisme",
-      "default": "rgba(255, 255, 255, 0.1)",
-      "info": "Format: rgba(255, 255, 255, 0.1)"
+      "default": "rgba(255, 255, 255, 0.95)",
+      "info": "Format: rgba(255, 255, 255, 0.95)"
     },
     {
       "type": "color",
       "id": "bg_gradient_start",
-      "label": "Début du dégradé d'arrière-plan",
-      "default": "#f8f9fa"
+      "label": "Début du dégradé",
+      "default": "#f8fafc"
     },
     {
       "type": "color",
       "id": "bg_gradient_end",
-      "label": "Fin du dégradé d'arrière-plan",
+      "label": "Fin du dégradé",
       "default": "#ffffff"
     },
     {
       "type": "header",
-      "content": "Paramètres visuels"
+      "content": "✨ Paramètres visuels"
     },
     {
       "type": "range",
       "id": "border_radius",
       "min": 0,
-      "max": 30,
+      "max": 32,
       "step": 2,
       "unit": "px",
       "label": "Rayon des bordures",
-      "default": 12
+      "default": 16
     },
     {
       "type": "range",
       "id": "glass_blur",
       "min": 0,
-      "max": 20,
+      "max": 24,
       "step": 1,
       "unit": "px",
-      "label": "Flou glassmorphisme",
-      "default": 10
-    },
-    {
-      "type": "range",
-      "id": "spacing",
-      "min": 16,
-      "max": 48,
-      "step": 4,
-      "unit": "px",
-      "label": "Espacement général",
-      "default": 24
+      "label": "Intensité du flou",
+      "default": 12
     },
     {
       "type": "header",
-      "content": "Animations"
+      "content": "⚡ Animations"
     },
     {
       "type": "select",
@@ -915,34 +1134,34 @@
       "options": [
         {
           "value": "0.2",
-          "label": "Rapide"
+          "label": "⚡ Rapide"
         },
         {
           "value": "0.3",
-          "label": "Normal"
+          "label": "🎯 Normal"
         },
         {
           "value": "0.5",
-          "label": "Lent"
+          "label": "🐌 Lent"
         }
       ],
       "default": "0.3"
     },
     {
       "type": "header",
-      "content": "Contenu"
+      "content": "📝 Contenu personnalisé"
     },
     {
       "type": "richtext",
       "id": "empty_cart_message",
       "label": "Message panier vide",
-      "default": "<p>Votre panier est vide. Découvrez nos produits !</p>"
+      "default": "<p>Votre panier est vide. Découvrez nos produits incroyables !</p>"
     },
     {
       "type": "text",
       "id": "continue_shopping_text",
-      "label": "Texte bouton continuer shopping",
-      "default": "Continuer mes achats"
+      "label": "Texte bouton shopping",
+      "default": "Découvrir nos produits"
     },
     {
       "type": "text",
@@ -953,29 +1172,29 @@
     {
       "type": "url",
       "id": "cart_empty_button_link",
-      "label": "Lien bouton panier vide",
+      "label": "Lien panier vide",
       "default": "/collections/all"
     },
     {
       "type": "header",
-      "content": "Fonctionnalités"
+      "content": "🔧 Fonctionnalités"
     },
     {
       "type": "checkbox",
       "id": "show_shipping_estimator",
-      "label": "Afficher l'estimateur de livraison",
+      "label": "Estimateur de livraison",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_free_shipping_threshold",
-      "label": "Afficher la barre de livraison gratuite",
+      "label": "Barre livraison gratuite",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_payment_icons",
-      "label": "Afficher les icônes de paiement",
+      "label": "Icônes de paiement",
       "default": true
     }
   ],
@@ -985,51 +1204,51 @@
     },
     {
       "type": "totals",
-      "name": "Totaux",
+      "name": "💰 Totaux",
       "limit": 1,
       "settings": [
         {
           "type": "checkbox",
           "id": "show_order_weight",
-          "label": "Afficher le poids de la commande",
+          "label": "Afficher le poids",
           "default": false
         },
         {
           "type": "checkbox",
           "id": "show_shipping_text",
-          "label": "Afficher le texte livraison/taxes",
+          "label": "Texte livraison/taxes",
           "default": true
         }
       ]
     },
     {
       "type": "cart_note",
-      "name": "Note de commande",
+      "name": "📝 Note commande",
       "limit": 1,
       "settings": [
         {
           "type": "number",
           "id": "maxlength",
-          "label": "Nombre maximum de caractères",
+          "label": "Caractères max",
           "default": 500
         }
       ]
     },
     {
       "type": "text",
-      "name": "Texte personnalisé",
+      "name": "📄 Texte libre",
       "settings": [
         {
           "type": "richtext",
           "id": "content",
           "label": "Contenu",
-          "default": "<p>Texte personnalisé pour votre panier</p>"
+          "default": "<p>Texte personnalisé</p>"
         }
       ]
     },
     {
       "type": "checkout_button",
-      "name": "Bouton de checkout",
+      "name": "🛒 Bouton checkout",
       "limit": 1
     },
     {
@@ -1039,19 +1258,19 @@
       "settings": [
         {
           "type": "paragraph",
-          "content": "Configurez les boutons de paiement express dans vos [paramètres de paiement](https://www.shopify.com/admin/settings/payments)."
+          "content": "Configurez dans [paramètres paiement](https://www.shopify.com/admin/settings/payments)"
         }
       ]
     },
     {
       "type": "offer",
-      "name": "Offre",
+      "name": "🎁 Offre spéciale",
       "limit": 3,
       "settings": [
         {
           "type": "select",
           "id": "text_alignment",
-          "label": "Alignement du texte",
+          "label": "Alignement",
           "options": [
             {
               "value": "start",
@@ -1066,22 +1285,6 @@
         },
         {
           "type": "select",
-          "id": "icon_position",
-          "label": "Position de l'icône",
-          "options": [
-            {
-              "value": "aligned",
-              "label": "Aligné horizontalement"
-            },
-            {
-              "value": "stacked",
-              "label": "Empilé"
-            }
-          ],
-          "default": "aligned"
-        },
-        {
-          "type": "select",
           "id": "icon",
           "label": "Icône",
           "options": [
@@ -1091,42 +1294,26 @@
             },
             {
               "value": "picto-coupon",
-              "label": "Coupon",
-              "group": "Boutique"
+              "label": "🎫 Coupon"
             },
             {
               "value": "picto-truck",
-              "label": "Camion",
-              "group": "Livraison"
+              "label": "🚚 Livraison"
             },
             {
               "value": "picto-shield",
-              "label": "Bouclier",
-              "group": "Sécurité"
+              "label": "🛡️ Sécurité"
             },
             {
               "value": "picto-return",
-              "label": "Retour",
-              "group": "Service"
+              "label": "↩️ Retour"
+            },
+            {
+              "value": "picto-gift",
+              "label": "🎁 Cadeau"
             }
           ],
           "default": "picto-coupon"
-        },
-        {
-          "type": "image_picker",
-          "id": "custom_icon",
-          "label": "Icône personnalisée",
-          "info": "240 x 240px .png recommandé"
-        },
-        {
-          "type": "range",
-          "id": "icon_width",
-          "min": 20,
-          "max": 80,
-          "step": 4,
-          "unit": "px",
-          "label": "Largeur de l'icône",
-          "default": 32
         },
         {
           "type": "text",
@@ -1138,17 +1325,12 @@
           "type": "richtext",
           "id": "content",
           "label": "Contenu",
-          "default": "<p>Profitez de la livraison gratuite dès 50€ d'achat.</p>"
+          "default": "<p>Dès 50€ d'achat</p>"
         },
         {
           "type": "color",
           "id": "background",
           "label": "Arrière-plan"
-        },
-        {
-          "type": "color",
-          "id": "text_color",
-          "label": "Couleur du texte"
         }
       ]
     }
