@@ -33,125 +33,157 @@
           </div>
         {%- endif -%}
       </div>
-      <div class="v-stack gap-6 sm:gap-8 feelcard-content">
-        <div class="cart-drawer__line-items feelcard-line-items">
-          {%- for line_item in cart.items -%}
-            <div class="feelcard-line-item-wrapper">
-              {%- render 'line-item', line_item: line_item, show_desktop_quantity: true -%}
-            </div>
-          {%- endfor -%}
-        </div>
-        {%- if section.settings.products.count > 0 -%}
-          <div class="cart-drawer__recommendations feelcard-recommendations">
-            <div class="v-stack gap-2.5 sm:gap-4">
-              {%- capture carousel_id -%}cart-drawer-recommendations{%- endcapture -%}
-              {%- liquid
-                assign horizontal_products_blends = true
-                assign product_card_background = section.settings.product_card_background | default: product.settings.product_card_background
-                if product_card_background != 'rgba(0,0,0,0)' and product_card_background != blank and product_card_background != settings.dialog_background
-                  assign horizontal_products_blends = false
-                endif
-                assign rendered_recommendations = 0
-                capture recommendations
-                  for recommended_product in section.settings.products
-                    assign item_count_in_cart = cart | line_items_for: recommended_product
-                    if item_count_in_cart.size == 0
-                      render 'horizontal-product', product: recommended_product, show_add_to_cart: true, background: section.settings.product_card_background, text_color: section.settings.product_card_text_color
-                      assign rendered_recommendations = rendered_recommendations | plus: 1
-                    endif
-                  endfor
-                endcapture
-              -%}
-              {%- if rendered_recommendations > 0 -%}
-                <div class="h-stack justify-between gap-4 feelcard-recommendations-header">
-                  {%- if section.settings.recommendations_title != blank -%}
-                    <p class="feelcard-recommendations-title">{{ section.settings.recommendations_title | escape }}</p>
-                  {%- endif -%}
-                  {%- if rendered_recommendations > 1 -%}
-                    <div class="h-stack gap-2 hidden sm:flex">
-                      <button is="prev-button" class="circle-chevron hover:colors feelcard-carousel-btn" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.previous' | t | escape }}" disabled>{%- render 'icon' with 'chevron-left-small', direction_aware: true -%}</button>
-                      <button is="next-button" class="circle-chevron hover:colors feelcard-carousel-btn" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.next' | t | escape }}">{%- render 'icon' with 'chevron-right-small', direction_aware: true -%}</button>
+      
+      <div class="feelcard-scroll-content">
+        <div class="v-stack gap-6 sm:gap-8 feelcard-content">
+          <div class="cart-drawer__line-items feelcard-line-items">
+            {%- for line_item in cart.items -%}
+              <div class="feelcard-line-item-wrapper">
+                {%- render 'line-item', line_item: line_item, show_desktop_quantity: true -%}
+              </div>
+            {%- endfor -%}
+          </div>
+          {%- if section.settings.products.count > 0 -%}
+            <div class="cart-drawer__recommendations feelcard-recommendations">
+              <div class="v-stack gap-2.5 sm:gap-4">
+                {%- capture carousel_id -%}cart-drawer-recommendations{%- endcapture -%}
+                {%- liquid
+                  assign horizontal_products_blends = true
+                  assign product_card_background = section.settings.product_card_background | default: product.settings.product_card_background
+                  if product_card_background != 'rgba(0,0,0,0)' and product_card_background != blank and product_card_background != settings.dialog_background
+                    assign horizontal_products_blends = false
+                  endif
+                  assign rendered_recommendations = 0
+                  capture recommendations
+                    for recommended_product in section.settings.products
+                      assign item_count_in_cart = cart | line_items_for: recommended_product
+                      if item_count_in_cart.size == 0
+                        render 'horizontal-product', product: recommended_product, show_add_to_cart: true, background: section.settings.product_card_background, text_color: section.settings.product_card_text_color
+                        assign rendered_recommendations = rendered_recommendations | plus: 1
+                      endif
+                    endfor
+                  endcapture
+                -%}
+                {%- if rendered_recommendations > 0 -%}
+                  <div class="h-stack justify-between gap-4 feelcard-recommendations-header">
+                    {%- if section.settings.recommendations_title != blank -%}
+                      <p class="feelcard-recommendations-title">{{ section.settings.recommendations_title | escape }}</p>
+                    {%- endif -%}
+                    {%- if rendered_recommendations > 1 -%}
+                      <div class="h-stack gap-2 hidden sm:flex">
+                        <button is="prev-button" class="circle-chevron hover:colors feelcard-carousel-btn" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.previous' | t | escape }}" disabled>{%- render 'icon' with 'chevron-left-small', direction_aware: true -%}</button>
+                        <button is="next-button" class="circle-chevron hover:colors feelcard-carousel-btn" aria-controls="{{ carousel_id }}" aria-label="{{ 'general.accessibility.next' | t | escape }}">{%- render 'icon' with 'chevron-right-small', direction_aware: true -%}</button>
+                      </div>
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+                {%- if recommendations != blank -%}
+                  <scroll-carousel selector=".horizontal-product" id="{{ carousel_id }}" class="horizontal-product-list-carousel {% unless horizontal_products_blends %}separate{% endunless %} scroll-area bleed feelcard-carousel">
+                    <div class="horizontal-product-list {% if horizontal_products_blends %}divide-x{% else %}separate{% endif %} feelcard-product-list">
+                      {{- recommendations -}}
                     </div>
-                  {%- endif -%}
-                </div>
-              {%- endif -%}
-              {%- if recommendations != blank -%}
-                <scroll-carousel selector=".horizontal-product" id="{{ carousel_id }}" class="horizontal-product-list-carousel {% unless horizontal_products_blends %}separate{% endunless %} scroll-area bleed feelcard-carousel">
-                  <div class="horizontal-product-list {% if horizontal_products_blends %}divide-x{% else %}separate{% endif %} feelcard-product-list">
-                    {{- recommendations -}}
-                  </div>
-                </scroll-carousel>
-              {%- endif -%}
-            </div>
-          </div>
-        {%- endif -%}
-      </div>
-    </div>
-    <div class="v-stack gap-4 sm:gap-6 feelcard-footer" slot="footer">
-      <div class="v-stack gap-1 feelcard-totals">
-        {% for discount_application in cart.cart_level_discount_applications %}
-          <div class="h-stack gap-4 justify-between feelcard-discount">
-            <div class="badge feelcard-discount-badge">
-              {%- render 'icon' with 'discount' -%} {{- discount_application.title -}}
-            </div>
-            <span class="text-subdued feelcard-discount-amount">-{{ discount_application.total_allocated_amount | money }}</span>
-          </div>
-        {% endfor %}
-        <div class="h-stack gap-4 justify-between feelcard-total-line">
-          <span class="h5 feelcard-total-label">{{ 'cart.general.total' | t }}</span>
-          <span class="h5 feelcard-total-price">{{- cart.total_price | money_with_currency -}}</span>
-        </div>
-        {%- if section.settings.show_shipping_text -%}
-          <div class="feelcard-shipping-info">
-            {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
-              <p class="text-subdued text-sm">{{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}</p>
-            {%- elsif cart.taxes_included -%}
-              <p class="text-subdued text-sm">{{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}</p>
-            {%- elsif shop.shipping_policy.body != blank -%}
-              <p class="text-subdued text-sm">{{ 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}</p>
-            {%- else -%}
-              <p class="text-subdued text-sm">{{ 'cart.general.taxes_and_shipping_at_checkout' | t }}</p>
-            {%- endif -%}
-          </div>
-        {%- endif -%}
-        {%- if section.settings.show_cart_note -%}
-          <button type="button" class="justify-self-start feelcard-note-toggle" aria-controls="cart-drawer-note">
-            <span class="link text-sm text-subdued">
-              {%- if cart.note == blank -%}
-                {{- 'cart.general.add_order_note' | t -}}
-              {%- else -%}
-                {{- 'cart.general.edit_order_note' | t -}}
-              {%- endif -%}
-            </span>
-          </button>
-          <cart-note-dialog id="cart-drawer-note" class="cart-drawer__note feelcard-note-dialog">
-            <div class="cart-drawer__note-inner feelcard-note-inner">
-              <div class="v-stack gap-4 sm:gap-6">
-                <p class="h5 feelcard-note-title">{{ 'cart.general.order_note' | t }}</p>
-                <cart-note class="v-stack gap-4">
-                  {%- assign order_note = 'cart.general.order_note' | t -%}
-                  {%- assign order_save_label = 'cart.general.save_note' | t -%}
-                  {%- render 'input', name: 'note', multiline: 3, label: order_note, value: cart.note -%}
-                  <div class="justify-self-start">
-                    {%- render 'button', type: 'button', content: order_save_label, size: 'lg', is: 'close-button', secondary: true, class: 'feelcard-btn-secondary' -%}
-                  </div>
-                </cart-note>
+                  </scroll-carousel>
+                {%- endif -%}
               </div>
             </div>
-          </cart-note-dialog>
-        {%- endif -%}
+          {%- endif -%}
+        </div>
       </div>
-      <form action="{{ routes.cart_url }}" method="POST" class="buy-buttons {% if section.settings.show_checkout_button %}buy-buttons--compact{% endif %} feelcard-actions">
-        {%- assign checkout_label = 'cart.general.checkout' | t -%}
-        {%- if section.settings.show_view_cart_button or section.settings.show_checkout_button == false -%}
-          <a href="{{ routes.cart_url }}" class="button button--xl {% if section.settings.show_checkout_button %}button--secondary{% endif %} feelcard-btn-secondary" data-no-instant>
-            {{- 'cart.general.view_cart' | t -}}
-          </a>
+    </div>
+    
+    <div class="feelcard-footer-sticky" slot="footer">
+      <div class="feelcard-footer-content">
+        
+        <!-- Section des réductions -->
+        {%- if cart.cart_level_discount_applications.size > 0 -%}
+          <div class="feelcard-discounts-section">
+            {% for discount_application in cart.cart_level_discount_applications %}
+              <div class="feelcard-discount-item">
+                <div class="feelcard-discount-info">
+                  <div class="feelcard-discount-badge">
+                    {%- render 'icon' with 'discount' -%}
+                    <span>{{- discount_application.title -}}</span>
+                  </div>
+                </div>
+                <span class="feelcard-discount-amount">-{{ discount_application.total_allocated_amount | money }}</span>
+              </div>
+            {% endfor %}
+          </div>
         {%- endif -%}
-        {%- if section.settings.show_checkout_button -%}
-          {%- render 'button', type: 'submit', content: checkout_label, icon: 'picto-lock', name: 'checkout', size: 'xl', class: 'feelcard-btn-primary' -%}
-        {%- endif -%}
-      </form>
+        
+        <!-- Section du total -->
+        <div class="feelcard-total-section">
+          <div class="feelcard-total-line">
+            <span class="feelcard-total-label">{{ 'cart.general.total' | t }}</span>
+            <span class="feelcard-total-price">{{- cart.total_price | money_with_currency -}}</span>
+          </div>
+          
+          {%- if section.settings.show_shipping_text -%}
+            <div class="feelcard-shipping-info">
+              {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+                <p>{{ 'cart.general.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}</p>
+              {%- elsif cart.taxes_included -%}
+                <p>{{ 'cart.general.taxes_included_but_shipping_at_checkout' | t }}</p>
+              {%- elsif shop.shipping_policy.body != blank -%}
+                <p>{{ 'cart.general.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}</p>
+              {%- else -%}
+                <p>{{ 'cart.general.taxes_and_shipping_at_checkout' | t }}</p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+          
+          {%- if section.settings.show_cart_note -%}
+            <button type="button" class="feelcard-note-toggle" aria-controls="cart-drawer-note">
+              <span class="feelcard-note-text">
+                {%- if cart.note == blank -%}
+                  {{- 'cart.general.add_order_note' | t -}}
+                {%- else -%}
+                  {{- 'cart.general.edit_order_note' | t -}}
+                {%- endif -%}
+              </span>
+            </button>
+            
+            <cart-note-dialog id="cart-drawer-note" class="feelcard-note-dialog">
+              <div class="feelcard-note-inner">
+                <div class="feelcard-note-content">
+                  <p class="feelcard-note-title">{{ 'cart.general.order_note' | t }}</p>
+                  <cart-note class="feelcard-note-form">
+                    {%- assign order_note = 'cart.general.order_note' | t -%}
+                    {%- assign order_save_label = 'cart.general.save_note' | t -%}
+                    {%- render 'input', name: 'note', multiline: 3, label: order_note, value: cart.note -%}
+                    <div class="feelcard-note-actions">
+                      {%- render 'button', type: 'button', content: order_save_label, size: 'lg', is: 'close-button', secondary: true, class: 'feelcard-btn-secondary' -%}
+                    </div>
+                  </cart-note>
+                </div>
+              </div>
+            </cart-note-dialog>
+          {%- endif -%}
+        </div>
+        
+        <!-- Section des boutons d'action -->
+        <div class="feelcard-actions-section">
+          <form action="{{ routes.cart_url }}" method="POST" class="feelcard-checkout-form">
+            <div class="feelcard-buttons-grid">
+              {%- if section.settings.show_view_cart_button or section.settings.show_checkout_button == false -%}
+                <a href="{{ routes.cart_url }}" class="feelcard-btn feelcard-btn-secondary" data-no-instant>
+                  {{- 'cart.general.view_cart' | t -}}
+                </a>
+              {%- endif -%}
+              
+              {%- if section.settings.show_checkout_button -%}
+                <button type="submit" name="checkout" class="feelcard-btn feelcard-btn-primary feelcard-checkout-btn">
+                  <span class="feelcard-btn-text">Acheter</span>
+                  <div class="feelcard-btn-loading">
+                    <div class="feelcard-spinner"></div>
+                  </div>
+                </button>
+              {%- endif -%}
+            </div>
+          </form>
+        </div>
+        
+      </div>
     </div>
   {%- endif -%}
 </cart-drawer>
@@ -201,17 +233,59 @@
   --feelcard-radius-small: 8px;
   --feelcard-radius-large: 16px;
   --feelcard-radius-xl: 20px;
+
+  /* Espacements responsifs */
+  --feelcard-spacing-xs: 0.25rem;
+  --feelcard-spacing-sm: 0.5rem;
+  --feelcard-spacing-md: 1rem;
+  --feelcard-spacing-lg: 1.5rem;
+  --feelcard-spacing-xl: 2rem;
+  --feelcard-spacing-2xl: 3rem;
+}
+
+/* ===== STRUCTURE PRINCIPALE ===== */
+.feelcard-drawer-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.feelcard-scroll-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--feelcard-gray-lighter) transparent;
+}
+
+.feelcard-scroll-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.feelcard-scroll-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.feelcard-scroll-content::-webkit-scrollbar-thumb {
+  background: var(--feelcard-gray-lighter);
+  border-radius: 3px;
+}
+
+.feelcard-scroll-content::-webkit-scrollbar-thumb:hover {
+  background: var(--feelcard-gray-light);
 }
 
 /* ===== ÉTAT VIDE AMÉLIORÉ ===== */
 .feelcard-empty-state {
   background: var(--feelcard-gradient-subtle);
   border-radius: var(--feelcard-radius-large);
-  padding: 3rem 2rem;
-  margin: 2rem;
+  padding: var(--feelcard-spacing-2xl) var(--feelcard-spacing-xl);
+  margin: var(--feelcard-spacing-xl);
   box-shadow: var(--feelcard-shadow-subtle);
   position: relative;
   overflow: hidden;
+  text-align: center;
 }
 
 .feelcard-empty-state::before {
@@ -227,7 +301,10 @@
 
 .feelcard-empty-icon {
   position: relative;
-  margin-bottom: 2rem;
+  margin-bottom: var(--feelcard-spacing-xl);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .feelcard-empty-icon::after {
@@ -249,23 +326,25 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--feelcard-spacing-lg);
+  font-size: 1.25rem;
 }
 
 /* ===== HEADER AMÉLIORÉ ===== */
 .feelcard-header {
   background: var(--feelcard-gradient-subtle);
   border-bottom: 1px solid var(--feelcard-gray-ultra-light);
-  padding: 1.5rem;
+  padding: var(--feelcard-spacing-lg);
   position: relative;
+  flex-shrink: 0;
 }
 
 .feelcard-header::after {
   content: '';
   position: absolute;
   bottom: 0;
-  left: 1.5rem;
-  right: 1.5rem;
+  left: var(--feelcard-spacing-lg);
+  right: var(--feelcard-spacing-lg);
   height: 1px;
   background: var(--feelcard-gradient-primary);
   opacity: 0.1;
@@ -277,6 +356,8 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 700;
+  font-size: 1.125rem;
+  margin: 0;
 }
 
 /* ===== COMPTEUR AMÉLIORÉ ===== */
@@ -287,6 +368,14 @@
   border: 2px solid var(--feelcard-white);
   position: relative;
   overflow: hidden;
+  font-weight: 600;
+  min-width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  font-size: 0.75rem;
 }
 
 .feelcard-count-bubble::before {
@@ -316,6 +405,7 @@
   justify-content: center !important;
   transition: all var(--feelcard-transition) !important;
   box-shadow: var(--feelcard-shadow-subtle) !important;
+  cursor: pointer;
 }
 
 .feelcard-close-btn:hover {
@@ -330,15 +420,15 @@
 
 /* ===== CONTENU PRINCIPAL ===== */
 .feelcard-content {
-  padding: 0 1.5rem;
+  padding: 0 var(--feelcard-spacing-lg);
 }
 
 /* ===== ARTICLES DU PANIER ===== */
 .feelcard-line-item-wrapper {
   background: var(--feelcard-gradient-subtle);
   border-radius: var(--feelcard-radius);
-  padding: 1rem;
-  margin-bottom: 1rem;
+  padding: var(--feelcard-spacing-md);
+  margin-bottom: var(--feelcard-spacing-md);
   box-shadow: var(--feelcard-shadow-subtle);
   border: 1px solid var(--feelcard-gray-ultra-light);
   transition: all var(--feelcard-transition);
@@ -371,15 +461,16 @@
 .feelcard-recommendations {
   background: var(--feelcard-gradient-subtle);
   border-radius: var(--feelcard-radius-large);
-  padding: 1.5rem;
+  padding: var(--feelcard-spacing-lg);
   box-shadow: var(--feelcard-shadow-subtle);
   border: 1px solid var(--feelcard-gray-ultra-light);
+  margin-bottom: var(--feelcard-spacing-lg);
 }
 
 .feelcard-recommendations-header {
   border-bottom: 1px solid var(--feelcard-gray-ultra-light);
-  padding-bottom: 1rem;
-  margin-bottom: 1rem;
+  padding-bottom: var(--feelcard-spacing-md);
+  margin-bottom: var(--feelcard-spacing-md);
 }
 
 .feelcard-recommendations-title {
@@ -388,6 +479,8 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 600;
+  font-size: 1rem;
+  margin: 0;
 }
 
 .feelcard-carousel-btn {
@@ -395,6 +488,12 @@
   border: 1px solid var(--feelcard-gray-ultra-light) !important;
   transition: all var(--feelcard-transition) !important;
   box-shadow: var(--feelcard-shadow-subtle) !important;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .feelcard-carousel-btn:hover {
@@ -407,55 +506,79 @@
   color: var(--feelcard-white) !important;
 }
 
-/* ===== FOOTER ===== */
-.feelcard-footer {
+/* ===== FOOTER STICKY ===== */
+.feelcard-footer-sticky {
   background: var(--feelcard-gradient-subtle);
   border-top: 1px solid var(--feelcard-gray-ultra-light);
-  padding: 1.5rem;
-  position: relative;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
 }
 
-.feelcard-footer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 1.5rem;
-  right: 1.5rem;
-  height: 1px;
-  background: var(--feelcard-gradient-primary);
-  opacity: 0.1;
+.feelcard-footer-content {
+  padding: var(--feelcard-spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--feelcard-spacing-lg);
 }
 
-/* ===== RÉDUCTIONS ===== */
-.feelcard-discount {
+/* ===== SECTION DES RÉDUCTIONS ===== */
+.feelcard-discounts-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--feelcard-spacing-sm);
+}
+
+.feelcard-discount-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background: var(--feelcard-gradient-subtle);
   border-radius: var(--feelcard-radius-small);
-  padding: 0.75rem;
-  margin-bottom: 0.5rem;
+  padding: var(--feelcard-spacing-sm) var(--feelcard-spacing-md);
   border: 1px solid var(--feelcard-gray-ultra-light);
 }
 
 .feelcard-discount-badge {
-  background: var(--feelcard-gradient-primary) !important;
-  color: var(--feelcard-white) !important;
-  border-radius: var(--feelcard-radius-small) !important;
-  padding: 0.25rem 0.75rem !important;
-  font-size: 0.75rem !important;
-  font-weight: 600 !important;
+  display: flex;
+  align-items: center;
+  gap: var(--feelcard-spacing-xs);
+  background: var(--feelcard-gradient-primary);
+  color: var(--feelcard-white);
+  border-radius: var(--feelcard-radius-small);
+  padding: var(--feelcard-spacing-xs) var(--feelcard-spacing-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.feelcard-discount-badge svg {
+  width: 14px;
+  height: 14px;
 }
 
 .feelcard-discount-amount {
-  color: #059669 !important;
-  font-weight: 600 !important;
+  color: #059669;
+  font-weight: 600;
+  font-size: 0.875rem;
 }
 
-/* ===== TOTAL ===== */
+/* ===== SECTION DU TOTAL ===== */
+.feelcard-total-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--feelcard-spacing-md);
+}
+
 .feelcard-total-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background: var(--feelcard-gradient-subtle);
-  border-radius: var(--feelcard-radius-small);
-  padding: 1rem;
+  border-radius: var(--feelcard-radius);
+  padding: var(--feelcard-spacing-lg);
   border: 2px solid var(--feelcard-gray-ultra-light);
-  margin: 1rem 0;
+  box-shadow: var(--feelcard-shadow-subtle);
 }
 
 .feelcard-total-label,
@@ -465,18 +588,125 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 700;
+  font-size: 1.125rem;
+  margin: 0;
 }
 
-/* ===== BOUTONS PRINCIPAUX ===== */
+.feelcard-shipping-info {
+  text-align: center;
+}
+
+.feelcard-shipping-info p {
+  color: var(--feelcard-gray);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.feelcard-shipping-info a {
+  color: var(--feelcard-black);
+  text-decoration: underline;
+}
+
+/* ===== NOTE DE COMMANDE ===== */
+.feelcard-note-toggle {
+  background: none;
+  border: none;
+  padding: var(--feelcard-spacing-sm) 0;
+  cursor: pointer;
+  transition: color var(--feelcard-transition);
+  text-align: center;
+}
+
+.feelcard-note-text {
+  color: var(--feelcard-gray);
+  font-size: 0.875rem;
+  text-decoration: underline;
+  transition: color var(--feelcard-transition);
+}
+
+.feelcard-note-toggle:hover .feelcard-note-text {
+  color: var(--feelcard-black);
+}
+
+.feelcard-note-dialog {
+  background: var(--feelcard-gradient-subtle);
+  border-radius: var(--feelcard-radius-large);
+  box-shadow: var(--feelcard-shadow-dramatic);
+  border: 1px solid var(--feelcard-gray-ultra-light);
+  max-width: 90vw;
+  width: 400px;
+}
+
+.feelcard-note-inner {
+  padding: var(--feelcard-spacing-xl);
+}
+
+.feelcard-note-title {
+  background: var(--feelcard-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin: 0 0 var(--feelcard-spacing-lg) 0;
+}
+
+.feelcard-note-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--feelcard-spacing-lg);
+}
+
+.feelcard-note-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ===== SECTION DES BOUTONS ===== */
+.feelcard-actions-section {
+  margin-top: auto;
+}
+
+.feelcard-checkout-form {
+  width: 100%;
+}
+
+.feelcard-buttons-grid {
+  display: grid;
+  gap: var(--feelcard-spacing-md);
+  grid-template-columns: 1fr;
+}
+
+/* Si les deux boutons sont présents */
+.feelcard-buttons-grid:has(.feelcard-btn-secondary) {
+  grid-template-columns: 1fr 2fr;
+}
+
+/* ===== BOUTONS AMÉLIORÉS ===== */
+.feelcard-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--feelcard-spacing-sm);
+  padding: var(--feelcard-spacing-lg) var(--feelcard-spacing-xl);
+  border-radius: var(--feelcard-radius);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--feelcard-transition);
+  position: relative;
+  overflow: hidden;
+  border: none;
+  min-height: 48px;
+  white-space: nowrap;
+}
+
 .feelcard-btn-primary {
-  background: var(--feelcard-gradient-primary) !important;
-  color: var(--feelcard-white) !important;
-  border: none !important;
-  border-radius: var(--feelcard-radius) !important;
-  box-shadow: var(--feelcard-shadow-medium) !important;
-  transition: all var(--feelcard-transition) !important;
-  position: relative !important;
-  overflow: hidden !important;
+  background: var(--feelcard-gradient-primary);
+  color: var(--feelcard-white);
+  box-shadow: var(--feelcard-shadow-medium);
 }
 
 .feelcard-btn-primary::before {
@@ -491,9 +721,9 @@
 }
 
 .feelcard-btn-primary:hover {
-  background: var(--feelcard-gradient-hover) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: var(--feelcard-shadow-strong) !important;
+  background: var(--feelcard-gradient-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--feelcard-shadow-strong);
 }
 
 .feelcard-btn-primary:hover::before {
@@ -501,56 +731,75 @@
 }
 
 .feelcard-btn-secondary {
-  background: var(--feelcard-gradient-secondary) !important;
-  color: var(--feelcard-black) !important;
-  border: 1px solid var(--feelcard-gray-ultra-light) !important;
-  border-radius: var(--feelcard-radius) !important;
-  box-shadow: var(--feelcard-shadow-subtle) !important;
-  transition: all var(--feelcard-transition) !important;
+  background: var(--feelcard-gradient-secondary);
+  color: var(--feelcard-black);
+  border: 1px solid var(--feelcard-gray-ultra-light);
+  box-shadow: var(--feelcard-shadow-subtle);
 }
 
 .feelcard-btn-secondary:hover {
-  background: var(--feelcard-gradient-accent) !important;
-  color: var(--feelcard-white) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: var(--feelcard-shadow-medium) !important;
+  background: var(--feelcard-gradient-accent);
+  color: var(--feelcard-white);
+  transform: translateY(-1px);
+  box-shadow: var(--feelcard-shadow-medium);
 }
 
-/* ===== NOTE DE COMMANDE ===== */
-.feelcard-note-toggle {
-  color: var(--feelcard-gray) !important;
-  transition: color var(--feelcard-transition) !important;
+/* ===== BOUTON CHECKOUT AVEC LOADING ===== */
+.feelcard-checkout-btn {
+  position: relative;
 }
 
-.feelcard-note-toggle:hover {
-  color: var(--feelcard-black) !important;
+.feelcard-btn-text {
+  transition: opacity var(--feelcard-transition);
 }
 
-.feelcard-note-dialog {
-  background: var(--feelcard-gradient-subtle) !important;
-  border-radius: var(--feelcard-radius-large) !important;
-  box-shadow: var(--feelcard-shadow-dramatic) !important;
-  border: 1px solid var(--feelcard-gray-ultra-light) !important;
+.feelcard-btn-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--feelcard-transition);
 }
 
-.feelcard-note-title {
-  background: var(--feelcard-gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 600;
+.feelcard-checkout-btn.loading .feelcard-btn-text {
+  opacity: 0;
+}
+
+.feelcard-checkout-btn.loading .feelcard-btn-loading {
+  opacity: 1;
+  visibility: visible;
+}
+
+.feelcard-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid var(--feelcard-white);
+  border-radius: 50%;
+  animation: feelcard-spin 1s linear infinite;
 }
 
 /* ===== BARRE DE LIVRAISON ===== */
 .feelcard-shipping-wrapper {
-  margin-top: 1rem;
-  padding: 1rem;
+  margin-top: var(--feelcard-spacing-md);
+  padding: var(--feelcard-spacing-md);
   background: var(--feelcard-gradient-subtle);
   border-radius: var(--feelcard-radius);
   border: 1px solid var(--feelcard-gray-ultra-light);
 }
 
 /* ===== ANIMATIONS ===== */
+@keyframes feelcard-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 @keyframes feelcard-shimmer {
   0% {
     transform: translateX(-100%);
@@ -569,21 +818,167 @@
   }
 }
 
-/* ===== RESPONSIVE ===== */
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablettes (768px et moins) */
 @media (max-width: 768px) {
+  .feelcard-enhanced {
+    --feelcard-spacing-xs: 0.25rem;
+    --feelcard-spacing-sm: 0.375rem;
+    --feelcard-spacing-md: 0.75rem;
+    --feelcard-spacing-lg: 1rem;
+    --feelcard-spacing-xl: 1.5rem;
+    --feelcard-spacing-2xl: 2rem;
+  }
+
   .feelcard-header,
   .feelcard-content,
-  .feelcard-footer {
-    padding-left: 1rem;
-    padding-right: 1rem;
+  .feelcard-footer-content {
+    padding-left: var(--feelcard-spacing-md);
+    padding-right: var(--feelcard-spacing-md);
   }
   
   .feelcard-line-item-wrapper {
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--feelcard-spacing-sm);
   }
   
   .feelcard-recommendations {
-    padding: 1rem;
+    padding: var(--feelcard-spacing-md);
+    margin-bottom: var(--feelcard-spacing-md);
+  }
+
+  .feelcard-total-line {
+    padding: var(--feelcard-spacing-md);
+  }
+
+  .feelcard-total-label,
+  .feelcard-total-price {
+    font-size: 1rem;
+  }
+
+  .feelcard-btn {
+    padding: var(--feelcard-spacing-md) var(--feelcard-spacing-lg);
+    font-size: 0.875rem;
+    min-height: 44px;
+  }
+
+  .feelcard-buttons-grid:has(.feelcard-btn-secondary) {
+    grid-template-columns: 1fr 1.5fr;
+    gap: var(--feelcard-spacing-sm);
+  }
+}
+
+/* Mobiles (480px et moins) */
+@media (max-width: 480px) {
+  .feelcard-enhanced {
+    --feelcard-spacing-xs: 0.25rem;
+    --feelcard-spacing-sm: 0.375rem;
+    --feelcard-spacing-md: 0.5rem;
+    --feelcard-spacing-lg: 0.75rem;
+    --feelcard-spacing-xl: 1rem;
+    --feelcard-spacing-2xl: 1.5rem;
+  }
+
+  .feelcard-empty-state {
+    padding: var(--feelcard-spacing-xl) var(--feelcard-spacing-lg);
+    margin: var(--feelcard-spacing-lg) var(--feelcard-spacing-md);
+  }
+
+  .feelcard-empty-title {
+    font-size: 1.125rem;
+  }
+
+  .feelcard-title {
+    font-size: 1rem;
+  }
+
+  .feelcard-line-item-wrapper {
+    padding: var(--feelcard-spacing-sm);
+  }
+
+  .feelcard-total-line {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--feelcard-spacing-xs);
+    text-align: left;
+  }
+
+  .feelcard-total-label,
+  .feelcard-total-price {
+    font-size: 0.875rem;
+  }
+
+  .feelcard-buttons-grid {
+    grid-template-columns: 1fr;
+    gap: var(--feelcard-spacing-sm);
+  }
+
+  .feelcard-btn {
+    padding: var(--feelcard-spacing-sm) var(--feelcard-spacing-md);
+    font-size: 0.8125rem;
+    min-height: 42px;
+  }
+
+  .feelcard-discount-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--feelcard-spacing-xs);
+  }
+
+  .feelcard-shipping-info p {
+    font-size: 0.6875rem;
+  }
+
+  .feelcard-note-dialog {
+    width: 95vw;
+    max-width: none;
+  }
+
+  .feelcard-note-inner {
+    padding: var(--feelcard-spacing-lg);
+  }
+
+  .feelcard-carousel-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .feelcard-close-btn {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .feelcard-count-bubble {
+    min-width: 20px;
+    height: 20px;
+    font-size: 0.6875rem;
+  }
+}
+
+/* Très petits écrans (360px et moins) */
+@media (max-width: 360px) {
+  .feelcard-enhanced {
+    --feelcard-spacing-xs: 0.25rem;
+    --feelcard-spacing-sm: 0.25rem;
+    --feelcard-spacing-md: 0.5rem;
+    --feelcard-spacing-lg: 0.5rem;
+    --feelcard-spacing-xl: 0.75rem;
+    --feelcard-spacing-2xl: 1rem;
+  }
+
+  .feelcard-btn {
+    font-size: 0.75rem;
+    min-height: 40px;
+  }
+
+  .feelcard-total-label,
+  .feelcard-total-price {
+    font-size: 0.8125rem;
+  }
+
+  .feelcard-discount-badge {
+    font-size: 0.6875rem;
+    padding: 0.125rem var(--feelcard-spacing-xs);
   }
 }
 
@@ -594,6 +989,7 @@
     --feelcard-white-soft: #2a2a2a;
     --feelcard-gray-subtle: #2a2a2a;
     --feelcard-gray-ultra-light: #333333;
+    --feelcard-gray-very-light: #4a4a4a;
     --feelcard-black: #ffffff;
     --feelcard-gradient-subtle: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
     --feelcard-gradient-secondary: linear-gradient(135deg, #2a2a2a 0%, #333333 100%);
@@ -602,7 +998,9 @@
 
 /* ===== ACCESSIBILITÉ ===== */
 @media (prefers-reduced-motion: reduce) {
-  .feelcard-enhanced * {
+  .feelcard-enhanced *,
+  .feelcard-enhanced *::before,
+  .feelcard-enhanced *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -614,6 +1012,31 @@
 .feelcard-enhanced a:focus-visible {
   outline: 2px solid var(--feelcard-black);
   outline-offset: 2px;
+}
+
+/* ===== AMÉLIORATION DE LA LISIBILITÉ ===== */
+.feelcard-enhanced {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.feelcard-enhanced h1,
+.feelcard-enhanced h2,
+.feelcard-enhanced h3,
+.feelcard-enhanced h4,
+.feelcard-enhanced h5,
+.feelcard-enhanced h6 {
+  line-height: 1.3;
+}
+
+/* ===== OPTIMISATIONS PERFORMANCE ===== */
+.feelcard-enhanced * {
+  will-change: auto;
+}
+
+.feelcard-enhanced .feelcard-btn:hover,
+.feelcard-enhanced .feelcard-line-item-wrapper:hover {
+  will-change: transform, box-shadow;
 }
 </style>
 
