@@ -659,7 +659,7 @@
           "type": "item",
           "settings": {
             "title": "📞 Besoin d’aide ?",
-            "content": "<p>Notre équipe est disponible pour vous accompagner de la commande à l’activation.<br/><br/>👉 Contactez-nous via le formulaire en ligne ou par e-mail : hello<a>@feelcard.io</a></p>"
+            "content": "<p>Notre équipe est disponible pour vous accompagner de la commande à l’activation.<br/><br/>👉 Contactez-nous via le formulaire en ligne ou par e-mail : <a href=\"/pages/contact\" title=\"Contact\">hello@feelcard.io</a></p>"
           }
         }
       },
