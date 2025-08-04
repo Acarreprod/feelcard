@@ -519,6 +519,66 @@
         "heading_gradient": ""
       }
     },
+    "testimonials_KJEbKa": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_t66yrA": {
+          "type": "testimonial",
+          "settings": {
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 5,
+            "author": "Mélanie D.",
+            "title": "J’adore ce produit !",
+            "content": "<p>Il est devenu tellement plus simple de demander des avis Google à mes clients. Plus besoin pour eux de me chercher sur le site, il leur suffit de scanner mon QR code et hop, ma page Google s’affiche instantanément.<br/><br/>Grâce à cette plaque, j’ai obtenu beaucoup plus d’avis et ma visibilité en ligne a clairement augmenté.<br/><br/>Merci Feelcard !</p>"
+          }
+        },
+        "testimonial_eQxNU8": {
+          "type": "testimonial",
+          "settings": {
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 5,
+            "author": "Mary U.",
+            "title": "Testimonial 2",
+            "content": "<p>Share what your customers are saying about your products, customer service or shipping rates.</p>"
+          }
+        },
+        "testimonial_yBfMEf": {
+          "type": "testimonial",
+          "settings": {
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 4,
+            "author": "Joshua A.",
+            "title": "Testimonial 3",
+            "content": "<p>Share what your customers are saying about your products, customer service or shipping rates.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_t66yrA",
+        "testimonial_eQxNU8",
+        "testimonial_yBfMEf"
+      ],
+      "name": "Testimonials",
+      "settings": {
+        "full_width": true,
+        "stack_testimonials": true,
+        "subheading": "",
+        "title": "Testimonials",
+        "content": "",
+        "link_url": "",
+        "link_text": "",
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": "",
+        "testimonial_card_background": "",
+        "testimonial_card_text_color": ""
+      }
+    },
     "faq": {
       "type": "faq",
       "blocks": {
@@ -752,6 +812,7 @@
     "multiple-images-with-text",
     "featured_product_RFmzrc",
     "tabs_8g6iLH",
+    "testimonials_KJEbKa",
     "faq",
     "contact_iLnFCw",
     "17511353467e04f9df"
