@@ -615,10 +615,10 @@
           "settings": {
             "round_avatar": true,
             "show_rating": true,
-            "rating": 4,
-            "author": "",
-            "title": "Testimonial",
-            "content": "<p>Share what your customers are saying about your products, customer service or shipping rates.</p>"
+            "rating": 5,
+            "author": "Anthony B",
+            "title": "",
+            "content": "<p>On les colle partout ! Les clients adorent la simplicité d’utilisation. C’est un excellent moyen de lancer la conversation. On sait tout de suite s’ils sont satisfaits, avant même qu’ils ne quittent le magasin. On aurait dû faire ça depuis des années.</p>"
           }
         }
       },
