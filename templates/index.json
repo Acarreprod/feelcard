@@ -593,7 +593,7 @@
           "settings": {
             "round_avatar": true,
             "show_rating": true,
-            "rating": 4,
+            "rating": 5,
             "author": "Anne",
             "title": "",
             "content": "<p>Produit incroyable ! La qualité est au rendez-vous. Je suis vraiment satisfait dans l’ensemble. Un grand merci !</p>"
@@ -604,10 +604,10 @@
           "settings": {
             "round_avatar": true,
             "show_rating": true,
-            "rating": 4,
+            "rating": 5,
             "author": "",
-            "title": "Testimonial",
-            "content": "<p>Share what your customers are saying about your products, customer service or shipping rates.</p>"
+            "title": "Merci Feelcard",
+            "content": "<p>Ce produit rend l’obtention d’avis et de nouveaux abonnés vraiment simple et rapide.</p>"
           }
         },
         "testimonial_TrP9k9": {
