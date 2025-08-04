@@ -560,15 +560,106 @@
         "item_VWm8Vn": {
           "type": "item",
           "settings": {
-            "title": "Puis-je suivre plusieurs objets avec la carte myTRACKERR ?",
-            "content": "<p>Oui, la carte myTRACKERR ne se limite pas à votre portefeuille. Vous pouvez également l’utiliser pour suivre d’autres objets du quotidien comme vos bagages, sacs, passeports, téléphones, etc. Elle offre une solution de localisation complète pour vos essentiels.</p>"
+            "title": "Dois-je avoir une fiche Google My Business pour utiliser Feelcard.io ?",
+            "content": "<p>Oui, Feelcard.io redirige les utilisateurs vers votre fiche Google. Si vous n’en avez pas encore, nous vous aidons à en créer une gratuitement.</p>"
           }
         },
         "item_JVGUxq": {
           "type": "item",
           "settings": {
-            "title": "La carte est-elle waterproof ?",
-            "content": "<p>Oui, la carte myTRACKERR est <strong>waterproof</strong>. Elle reste parfaitement fonctionnelle après une immersion dans l’eau jusqu’à 1 mètre de profondeur pendant 30 minutes. Vous pouvez donc l’utiliser en toute confiance, même dans des conditions difficiles.</p>"
+            "title": "Feelcard.io est-il affilié à Google ou une autre plateforme ?",
+            "content": "<p>Non. Feelcard.io est une solution indépendante qui facilite la redirection vers votre fiche Google, TripAdvisor, Trustpilot, ou tout autre lien d’avis.</p>"
+          }
+        },
+        "item_rJfqTf": {
+          "type": "item",
+          "settings": {
+            "title": "Comment activer ma carte NFC ou plaque QR code Feelcard.io ?",
+            "content": "<ol><li>Scannez le QR code présent sur votre carte ou plaque.</li><li>Connectez-vous ou créez un compte Feelcard.io.</li><li>Entrez le code d’activation.</li><li>Sélectionnez ou ajoutez votre établissement.</li><li>Votre carte est prête à être utilisée avec vos clients.</li></ol>"
+          }
+        },
+        "item_c73pzJ": {
+          "type": "item",
+          "settings": {
+            "title": "Est-ce que mes clients ont besoin d’un compte Google ?",
+            "content": "<p>Oui, pour laisser un avis sur Google, ils doivent être connectés à leur compte Google (Gmail, YouTube, Maps…). C’est le cas de la majorité des utilisateurs de smartphone.</p>"
+          }
+        },
+        "item_YQgNX4": {
+          "type": "item",
+          "settings": {
+            "title": "La technologie NFC est-elle compatible avec tous les smartphones ?",
+            "content": "<p>La majorité des téléphones récents sont compatibles NFC. Tous les téléphones peuvent scanner le QR code, ce qui garantit une compatibilité à 100 %.</p>"
+          }
+        },
+        "item_cQPGkp": {
+          "type": "item",
+          "settings": {
+            "title": "Quels sont les délais de fabrication et de livraison ?",
+            "content": "<ul><li>Traitement de commande : 24 à 48h (jours ouvrés)</li><li>Livraison en France : 2 à 5 jours ouvrés</li><li>Livraison à l’international : 5 à 9 jours selon la destination</li></ul>"
+          }
+        },
+        "item_dyF3TN": {
+          "type": "item",
+          "settings": {
+            "title": "Puis-je suivre ma commande ?",
+            "content": "<p>Oui, un lien de suivi vous est envoyé dès l’expédition de votre commande.</p>"
+          }
+        },
+        "item_Pwb677": {
+          "type": "item",
+          "settings": {
+            "title": "Que faire si ma carte est défectueuse ou abîmée ?",
+            "content": "<p>Feelcard.io offre une garantie de remplacement à vie en cas de défaut de fabrication. Contactez-nous pour un échange gratuit.</p>"
+          }
+        },
+        "item_FRqc7i": {
+          "type": "item",
+          "settings": {
+            "title": "Y a-t-il des frais d’abonnement ?",
+            "content": "<p>Non. Feelcard.io fonctionne sans abonnement. Vous ne payez qu’une seule fois pour votre carte ou plaque.</p>"
+          }
+        },
+        "item_xHAXie": {
+          "type": "item",
+          "settings": {
+            "title": "Puis-je commander en grande quantité ?",
+            "content": "<p>Oui. Nous proposons des tarifs dégressifs pour les professionnels, réseaux de franchises ou agences marketing. Contactez-nous pour une offre sur mesure.</p>"
+          }
+        },
+        "item_RRqQKQ": {
+          "type": "item",
+          "settings": {
+            "title": "Est-il possible de personnaliser ma carte ou plaque Feelcard.io ?",
+            "content": "<p>Oui. Vous pouvez ajouter votre logo, vos couleurs ou votre URL personnalisée. Nous proposons des options de personnalisation sur demande.</p>"
+          }
+        },
+        "item_AniaXy": {
+          "type": "item",
+          "settings": {
+            "title": "Comment Feelcard.io m’aide-t-il à obtenir plus d’avis Google ?",
+            "content": "<p>Nos cartes et plaques intelligentes permettent à vos clients de laisser un avis en un seul geste (NFC ou scan). Plus rapide = plus d’avis.</p>"
+          }
+        },
+        "item_tHpw6X": {
+          "type": "item",
+          "settings": {
+            "title": "Puis-je envoyer des demandes d’avis par SMS ou email ?",
+            "content": "<p>Des options complémentaires existent pour automatiser l’envoi de demandes d’avis (via votre CRM ou par intégration). Contactez-nous pour en savoir plus.</p>"
+          }
+        },
+        "item_yd6f7P": {
+          "type": "item",
+          "settings": {
+            "title": "Feelcard.io permet-il de centraliser les avis ?",
+            "content": "<p>Oui, vous pouvez lier plusieurs plateformes (Google, TripAdvisor, Trustpilot…) et rediriger vos clients vers celle de votre choix.</p>"
+          }
+        },
+        "item_Q9aYc8": {
+          "type": "item",
+          "settings": {
+            "title": "📞 Besoin d’aide ?",
+            "content": "<p>Notre équipe est disponible pour vous accompagner de la commande à l’activation.<br/><br/>👉 Contactez-nous via le formulaire en ligne ou par e-mail : hello<a>@feelcard.io</a></p>"
           }
         }
       },
@@ -579,7 +670,20 @@
         "item_7RDEtm",
         "item_n8gTAC",
         "item_VWm8Vn",
-        "item_JVGUxq"
+        "item_JVGUxq",
+        "item_rJfqTf",
+        "item_c73pzJ",
+        "item_YQgNX4",
+        "item_cQPGkp",
+        "item_dyF3TN",
+        "item_Pwb677",
+        "item_FRqc7i",
+        "item_xHAXie",
+        "item_RRqQKQ",
+        "item_AniaXy",
+        "item_tHpw6X",
+        "item_yd6f7P",
+        "item_Q9aYc8"
       ],
       "settings": {
         "full_width": true,
