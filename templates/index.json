@@ -553,8 +553,8 @@
         "item_n8gTAC": {
           "type": "item",
           "settings": {
-            "title": "La carte est-elle compatible avec des appareils non-Apple ?",
-            "content": "<p>Actuellement, la carte myTRACKERR est conçue exclusivement pour les appareils Apple et fonctionne via l’application <strong>Find My</strong>. Cependant, nous explorons activement des options pour élargir la compatibilité à d’autres plateformes à l’avenir.</p>"
+            "title": "À quoi sert Feelcard.io ?",
+            "content": "<p>Feelcard.io aide les entreprises locales à obtenir plus d’avis Google grâce à une carte intelligente (NFC/QR Code) à poser sur un comptoir, à porter ou à remettre aux clients.</p>"
           }
         },
         "item_VWm8Vn": {
