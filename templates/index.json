@@ -525,29 +525,29 @@
         "166442457738b23caf-0": {
           "type": "item",
           "settings": {
-            "title": "Comment fonctionne la carte myTRACKERR ?",
-            "content": "<p>La carte de localisation myTRACKERR utilise le réseau <strong>Apple Find My</strong> pour suivre en toute simplicité votre portefeuille et vos objets essentiels. Il vous suffit de l’intégrer à votre appareil iOS via l’application <strong>Find My</strong> pour localiser vos affaires à tout moment.</p>"
+            "title": "Est-ce que Feelcard.io fonctionne sans engagement ?",
+            "content": "<p>Oui, Feelcard.io ne nécessite aucun abonnement mensuel ni engagement à long terme. Vous achetez une carte ou plaque NFC une seule fois, et vous l’utilisez à vie.</p>"
           }
         },
         "166442457738b23caf-1": {
           "type": "item",
           "settings": {
-            "title": "Quelle est l'épaisseur de la carte myTRACKERR ?",
-            "content": "<p>La carte <strong>myTRACKERR</strong> possède un design ultra-fin, avec seulement <strong>1,8 mm d’épaisseur</strong>. Elle se glisse discrètement dans votre portefeuille, sans l’alourdir ni le déformer.</p>"
+            "title": "Quels moyens de paiement acceptez-vous ?",
+            "content": "<p>Nous acceptons les cartes bancaires (Visa, Mastercard, American Express) ainsi que PayPal. Le paiement est 100 % sécurisé.</p>"
           }
         },
         "166442457738b23caf-2": {
           "type": "item",
           "settings": {
-            "title": "La carte a-t-elle besoin d’être rechargée ?",
-            "content": "<p>Oui, la carte myTRACKERR se recharge sans fil pour plus de praticité. Il suffit de la poser sur un support de charge compatible. Une charge complète offre jusqu’à <strong>5 mois d’autonomie</strong>. Une LED change de couleur pour indiquer l’état de la batterie. <strong>Réutilisable à volonté</strong>, elle est aussi bien plus économique que les cartes jetables.</p>"
+            "title": "Comment contacter le support Feelcard.io ?",
+            "content": "<p>Notre service client est joignable à tout moment via le bouton \"Contact\" en bas à droite de notre site. Une réponse vous est généralement apportée sous 24h.</p>"
           }
         },
         "item_7RDEtm": {
           "type": "item",
           "settings": {
-            "title": "Comment puis-je contacter le service client pour obtenir de l’aide ?",
-            "content": "<p>Pour toute question ou demande d’assistance concernant les produits myTRACKERR, vous pouvez nous contacter par e-mail à <a><strong>hello@mytrackerr.com</strong></a> ou via notre formulaire de contact sur le site.<br/><br/>Notre équipe est là pour vous aider !</p>"
+            "title": "Comment fonctionne une carte ou plaque Feelcard.io pour les avis clients ?",
+            "content": "<ol><li>Vous commandez votre carte NFC ou plaque QR code personnalisée.</li><li>Dès réception, vous l’activez en quelques clics (code unique fourni).</li><li>Vos clients scannent la plaque ou approchent leur téléphone NFC.</li><li>Ils sont redirigés vers votre fiche Google pour laisser un avis en 30 secondes.</li><li>Vous augmentez votre nombre d’avis positifs, donc votre visibilité locale sur Google.</li></ol><p><br/></p>"
           }
         },
         "item_n8gTAC": {
