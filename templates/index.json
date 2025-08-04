@@ -554,17 +554,89 @@
             "title": "",
             "content": "<p>Le meilleur gadget pour obtenir de vrais avis de vos clients ! Il est super facile à installer et à utiliser.<br/><br/>Je le recommande à 100 %.</p>"
           }
+        },
+        "testimonial_rKNbRq": {
+          "type": "testimonial",
+          "settings": {
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 5,
+            "author": "Mohamed A",
+            "title": "",
+            "content": "<p>Très bon produit, il fonctionne parfaitement.</p>"
+          }
+        },
+        "testimonial_cQdYPj": {
+          "type": "testimonial",
+          "settings": {
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 4,
+            "author": "",
+            "title": "Testimonial",
+            "content": "<p>Share what your customers are saying about your products, customer service or shipping rates.</p>"
+          }
+        },
+        "testimonial_NWKAX6": {
+          "type": "testimonial",
+          "settings": {
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 4,
+            "author": "",
+            "title": "Testimonial",
+            "content": "<p>Share what your customers are saying about your products, customer service or shipping rates.</p>"
+          }
+        },
+        "testimonial_hXcV8i": {
+          "type": "testimonial",
+          "settings": {
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 4,
+            "author": "",
+            "title": "Testimonial",
+            "content": "<p>Share what your customers are saying about your products, customer service or shipping rates.</p>"
+          }
+        },
+        "testimonial_PLtNDr": {
+          "type": "testimonial",
+          "settings": {
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 4,
+            "author": "",
+            "title": "Testimonial",
+            "content": "<p>Share what your customers are saying about your products, customer service or shipping rates.</p>"
+          }
+        },
+        "testimonial_TrP9k9": {
+          "type": "testimonial",
+          "settings": {
+            "round_avatar": true,
+            "show_rating": true,
+            "rating": 4,
+            "author": "",
+            "title": "Testimonial",
+            "content": "<p>Share what your customers are saying about your products, customer service or shipping rates.</p>"
+          }
         }
       },
       "block_order": [
         "testimonial_t66yrA",
         "testimonial_eQxNU8",
-        "testimonial_yBfMEf"
+        "testimonial_yBfMEf",
+        "testimonial_rKNbRq",
+        "testimonial_cQdYPj",
+        "testimonial_NWKAX6",
+        "testimonial_hXcV8i",
+        "testimonial_PLtNDr",
+        "testimonial_TrP9k9"
       ],
       "name": "Testimonials",
       "settings": {
         "full_width": true,
-        "stack_testimonials": true,
+        "stack_testimonials": false,
         "subheading": "",
         "title": "Testimonials",
         "content": "",
