@@ -68,8 +68,8 @@
       "name": "Scrolling text",
       "settings": {
         "full_width": true,
-        "text": "Promotion text",
-        "text_size": "small",
+        "text": "Profitez de -10% avec le code MERCI10",
+        "text_size": "xsmall",
         "text_style": "fill",
         "scrolling_mode": "auto",
         "scrolling_speed": 10,
@@ -163,7 +163,7 @@
         "logo_iVHWP6": {
           "type": "logo",
           "settings": {
-            "logo": "shopify://shop_images/Le_Monde.svg_-1.png",
+            "logo": "shopify://shop_images/logo_transparentArtboard_1_4x_c53af8bb-6514-4735-9f74-c4273c58a101.png",
             "logo_width": 300,
             "link": ""
           }
