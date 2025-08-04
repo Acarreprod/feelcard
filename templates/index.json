@@ -639,16 +639,16 @@
         "stack_testimonials": false,
         "subheading": "",
         "title": "Nos clients nous adorent",
-        "content": "",
+        "content": "<h4>Pourquoi plus de 100 000 commerces locaux utilisent Feelcard chaque jour :</h4>",
         "link_url": "",
         "link_text": "",
-        "background": "",
+        "background": "#f0f0f0",
         "background_gradient": "",
-        "text_color": "",
+        "text_color": "#000000",
         "heading_color": "",
         "heading_gradient": "",
         "testimonial_card_background": "",
-        "testimonial_card_text_color": ""
+        "testimonial_card_text_color": "#000000"
       }
     },
     "faq": {
