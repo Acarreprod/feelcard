@@ -983,14 +983,14 @@
                     {%- if quantity == 2 -%}
                       {%- assign badge_text = 'Le plus choisi' -%}
                       {%- assign badge_style = 'popular' -%}
-                      {%- assign bonus_text = '+ Ebook Gratuit' -%}
+                      {% comment %}{%- assign bonus_text = '+ Ebook Gratuit' -%}{% endcomment %}
                     {%- elsif quantity == 5 -%}
-                      {%- assign bonus_text = '+ Ebook Gratuit & Cadeau 🎁' -%}
+                      {% comment %}{%- assign bonus_text = '+ Ebook Gratuit & Cadeau 🎁' -%}{% endcomment %}
                       {%- assign is_default = true -%}
                     {%- elsif quantity == 10 -%}
                       {%- assign badge_text = 'Meilleure offre' -%}
                       {%- assign badge_style = 'best' -%}
-                      {%- assign bonus_text = '+ Ebook Gratuit & Cadeau 🎁' -%}
+                      {% comment %}{%- assign bonus_text = '+ Ebook Gratuit & Cadeau 🎁' -%}{% endcomment %}
                     {%- endif -%}
 
                     <div class="offer-option{% if is_default %} selected{% endif %}" 
@@ -1139,7 +1139,7 @@
                   <div class="offer-main-content">
                     <div class="offer-details">
                       <div class="offer-title">2 Plaques</div>
-                      <div class="offer-bonus">+ Ebook Gratuit</div>
+                      {% comment %}<div class="offer-bonus">+ Ebook Gratuit</div>{% endcomment %}
                       <div class="offer-savings">Économisez 40%</div>
                     </div>
                     <div class="offer-pricing">
@@ -1157,7 +1157,7 @@
                   <div class="offer-main-content">
                     <div class="offer-details">
                       <div class="offer-title">5 Plaques</div>
-                      <div class="offer-bonus">+ Ebook Gratuit & Cadeau 🎁</div>
+                      {% comment %}<div class="offer-bonus">+ Ebook Gratuit & Cadeau 🎁</div>{% endcomment %}
                       <div class="offer-savings">Économisez 60%</div>
                     </div>
                     <div class="offer-pricing">
@@ -1176,7 +1176,7 @@
                   <div class="offer-main-content">
                     <div class="offer-details">
                       <div class="offer-title">10 Plaques</div>
-                      <div class="offer-bonus">+ Ebook Gratuit & Cadeau 🎁</div>
+                      {% comment %}<div class="offer-bonus">+ Ebook Gratuit & Cadeau 🎁</div>{% endcomment %}
                       <div class="offer-savings">Économisez 65%</div>
                     </div>
                     <div class="offer-pricing">
