@@ -66,6 +66,7 @@
       "settings": {
         "enable_sticky": true,
         "hide_on_scroll": true,
+        "logo": "shopify://shop_images/Layer_1.svg",
         "logo_max_width": 120,
         "logo_mobile_max_width": 100,
         "menu": "main-menu",
