@@ -11,6 +11,24 @@ NOTE TO DEVELOPERS: welcome to Impact theme! We hope that you will enjoy editing
 
 <html lang="{{ request.locale.iso_code }}" dir="{% render 'direction' %}">
   <head>
+    <script>
+      (function () {
+        var path = window.location.pathname;
+    
+        // 1. /activation/:id → https://app.feelcard.io/activation/:id
+        var actMatch = path.match(/^\/activation\/([^\/]+)$/);
+        if (actMatch) {
+          var token = encodeURIComponent(actMatch[1]);
+          window.location.replace('https://app.feelcard.io/activation/' + token);
+          return;
+        }
+    
+        // 2. /review → https://fr.trustpilot.com/evaluate/feelcard.io
+        if (path === '/review') {
+          window.location.replace('https://fr.trustpilot.com/evaluate/feelcard.io');
+        }
+      })();
+    </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, maximum-scale=1.0">
     <meta name="theme-color" content="{{ settings.header_background }}">
