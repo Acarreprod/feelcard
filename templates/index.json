@@ -154,6 +154,7 @@
         },
         "logo_wadxwd": {
           "type": "logo",
+          "disabled": true,
           "settings": {
             "logo": "shopify://shop_images/Logo_M6__2020__fond_clair__svg.png",
             "logo_width": 300,
@@ -175,13 +176,22 @@
             "logo_width": 300,
             "link": ""
           }
+        },
+        "logo_McGhrN": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/20230110142910.webp",
+            "logo_width": 120,
+            "link": ""
+          }
         }
       },
       "block_order": [
         "logo_cwBGfw",
         "logo_wadxwd",
         "logo_iVHWP6",
-        "logo_GBTkEe"
+        "logo_GBTkEe",
+        "logo_McGhrN"
       ],
       "name": "Logo list",
       "settings": {
