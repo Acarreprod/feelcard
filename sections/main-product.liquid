@@ -461,14 +461,14 @@
                   {%- if quantity == 2 -%}
                     {%- assign badge_text = 'Le plus choisi' -%}
                     {%- assign badge_style = 'popular' -%}
-                    {%- assign bonus_text = '+ Ebook Gratuit' -%}
+                    {% comment %}{%- assign bonus_text = '+ Ebook Gratuit' -%}{% endcomment %}
                   {%- elsif quantity == 5 -%}
-                    {%- assign bonus_text = '+ Ebook Gratuit & Cadeau 🎁' -%}
+                    {% comment %}{%- assign bonus_text = '+ Ebook Gratuit & Cadeau 🎁' -%}{% endcomment %}
                     {%- assign is_default = true -%}
                   {%- elsif quantity == 10 -%}
                     {%- assign badge_text = 'Meilleure offre' -%}
                     {%- assign badge_style = 'best' -%}
-                    {%- assign bonus_text = '+ Ebook Gratuit & Cadeau 🎁' -%}
+                    {% comment %}{%- assign bonus_text = '+ Ebook Gratuit & Cadeau 🎁' -%}{% endcomment %}
                   {%- endif -%}
 
                   {%- if forloop.first and is_default == false -%}
